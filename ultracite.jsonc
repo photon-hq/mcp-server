@@ -1,0 +1,14 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": ["ultracite/biome/core"],
+  "files": {
+    "includes": [
+      "packages/*/src/**",
+      "packages/*/test/**",
+      "packages/*/scripts/**",
+      "packages/*/*.config.ts",
+      "!packages/*/src/generated/**",
+      "!packages/*/catalog/**"
+    ]
+  }
+}

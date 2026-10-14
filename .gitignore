@@ -1,0 +1,10 @@
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+*.tgz
+.env
+.env.*
+!.env.example
+.release/
+packages/mcp/src/generated/runtime-release.ts

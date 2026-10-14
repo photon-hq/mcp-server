@@ -1,0 +1,19 @@
+[
+  "account:create_project",
+  "account:read",
+  "account:read_projects",
+  "account:write",
+  "billing:read",
+  "events:read",
+  "organization:create_project",
+  "organization:read",
+  "organization:read_projects",
+  "platforms:read",
+  "platforms:write",
+  "project:delete",
+  "project:read",
+  "project:read_usage",
+  "project:write",
+  "ten_dlc:read",
+  "ten_dlc:write"
+]
