@@ -1,7 +1,13 @@
 {
   "name": "@photon-ai/mcp-core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Compile an OpenAPI document into MCP tools and execute them over HTTP.",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "openapi",
+    "photon"
+  ],
   "homepage": "https://github.com/photon-hq/mcp-server/tree/main/packages/core#readme",
   "bugs": "https://github.com/photon-hq/mcp-server/issues",
   "repository": {

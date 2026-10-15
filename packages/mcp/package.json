@@ -2,6 +2,13 @@
   "name": "@photon-ai/mcp",
   "version": "0.1.1",
   "description": "Run Photon's MCP tools locally over stdio with your own Photon API key.",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "photon",
+    "imessage"
+  ],
   "homepage": "https://github.com/photon-hq/mcp-server/tree/main/packages/mcp#readme",
   "bugs": "https://github.com/photon-hq/mcp-server/issues",
   "repository": {
