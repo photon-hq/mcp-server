@@ -1,0 +1,94 @@
+name: Refresh catalog
+
+# Keeps the local server's tools in step with the production API. Daily, it
+# refreshes the committed catalog source from api.photon.codes; when the
+# source changes it verifies the build, bumps @photon-ai/mcp's patch version
+# and opens a pull request that lists added and removed tools. Publish the
+# merged version with an mcp-v<version> release.
+on:
+  schedule:
+    - cron: "23 8 * * *"
+  workflow_dispatch:
+
+# The org blocks Actions from opening pull requests, and pull requests opened
+# with GITHUB_TOKEN would not run CI: a GitHub App token opens them instead.
+permissions:
+  contents: read
+
+concurrency:
+  group: refresh-catalog
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Record the current tools
+        run: |
+          pnpm build
+          cp -R packages/mcp/.release/production "$RUNNER_TEMP/before"
+      - run: pnpm --filter @photon-ai/mcp refresh-catalog
+      - id: diff
+        run: |
+          if git diff --quiet -- packages/mcp/catalog; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Verify the refreshed catalog
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          pnpm verify
+          pnpm --filter @photon-ai/mcp smoke
+      - name: Bump the patch version and describe the change
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          IFS=. read -r major minor patch < <(jq -r .version packages/mcp/package.json)
+          version="$major.$minor.$((patch + 1))"
+          (cd packages/mcp && npm pkg set "version=$version")
+          after=packages/mcp/.release/production
+          {
+            echo "Refreshes the local server's tools from the production OpenAPI and bumps \`@photon-ai/mcp\` to $version."
+            echo
+            echo "**Tools:** $(wc -l < "$RUNNER_TEMP/before/tools.txt" | tr -d ' ') → $(wc -l < "$after/tools.txt" | tr -d ' ')"
+            echo
+            echo '```diff'
+            diff -U0 "$RUNNER_TEMP/before/tools.txt" "$after/tools.txt" | grep -E '^[+-][^+-]' || echo "  (same tools; schemas or descriptions changed)"
+            echo '```'
+            echo
+            echo "**Operations outside OAuth scopes:**"
+            echo
+            echo '```diff'
+            diff -U0 "$RUNNER_TEMP/before/excluded.json" "$after/excluded.json" | grep -E '^[+-][^+-]' || echo "  (unchanged)"
+            echo '```'
+            echo
+            echo "CI ran \`pnpm verify\` and the stdio smoke test on this catalog. After merging, publish with a \`mcp-v$version\` release."
+          } > "$RUNNER_TEMP/body.md"
+      - id: app-token
+        if: steps.diff.outputs.changed == 'true'
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      - if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          branch: chore/refresh-catalog
+          delete-branch: true
+          commit-message: Refresh the local catalog from the production API
+          title: Refresh the local catalog from the production API
+          body-path: ${{ runner.temp }}/body.md
+          add-paths: |
+            packages/mcp/catalog
+            packages/mcp/package.json

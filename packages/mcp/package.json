@@ -1,0 +1,40 @@
+{
+  "name": "@photon-ai/mcp",
+  "version": "0.1.0",
+  "description": "Run Photon's MCP tools locally over stdio with your own Photon API key.",
+  "homepage": "https://github.com/photon-hq/photon-mcp/tree/main/packages/mcp#readme",
+  "bugs": "https://github.com/photon-hq/photon-mcp/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/photon-hq/photon-mcp.git",
+    "directory": "packages/mcp"
+  },
+  "license": "Apache-2.0",
+  "type": "module",
+  "bin": {
+    "photon-mcp": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "node -e \"fs.rmSync('dist', { force: true, recursive: true })\" && tsc -p tsconfig.build.json && node scripts/generate-release.mjs && tsc -p tsconfig.build.json",
+    "check-types": "tsc --noEmit",
+    "prepublishOnly": "node scripts/require-release.mjs",
+    "refresh-catalog": "node scripts/refresh-catalog.mjs",
+    "smoke": "node scripts/smoke.mjs",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "2.0.0",
+    "@photon-ai/mcp-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.0",
+    "typescript": "5.9.3",
+    "vitest": "4.1.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
