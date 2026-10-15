@@ -223,7 +223,6 @@ describe("registry invocation", () => {
         },
         input: {
           body: { enabled: true, name: "alpha" },
-          headers: { "content-type": "text/plain" },
           path: { projectId: "project-1" },
         },
       }),
@@ -251,10 +250,7 @@ describe("registry invocation", () => {
           method: "POST",
           requestMediaType: "application/vnd.photon+json",
         },
-        input: {
-          headers: { "content-type": "text/plain" },
-          path: { projectId: "project-1" },
-        },
+        input: { path: { projectId: "project-1" } },
       }),
       absentBody.dependency
     );
@@ -585,6 +581,10 @@ describe("registry invocation", () => {
     "x-workload-id",
     "x-pho-user-id",
     "x-photon-mcp-operation",
+    "proxy-authorization",
+    "x-api-key",
+    "x-http-method-override",
+    "content-length",
   ])("rejects the trust-boundary header %s before fetch", async (header) => {
     const { dependency, requests } = dependencies();
     await expect(

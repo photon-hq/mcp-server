@@ -1,3 +1,4 @@
+import { reservedHeaderName } from "../headers.js";
 import type { Capability, SuccessRepresentation } from "../release.js";
 import {
   compareUtf8,
@@ -153,12 +154,14 @@ function stringArray(value: unknown, message: string): readonly string[] {
 function parameterSchema(
   parameterValue: unknown,
   components: unknown
-): {
-  readonly group: "headers" | "path" | "query";
-  readonly name: string;
-  readonly required: boolean;
-  readonly schema: unknown;
-} {
+):
+  | {
+      readonly group: "headers" | "path" | "query";
+      readonly name: string;
+      readonly required: boolean;
+      readonly schema: unknown;
+    }
+  | undefined {
   const parameter = object(parameterValue, "invalid_openapi_parameter");
   const location = parameter.in;
   if (location !== "path" && location !== "query" && location !== "header") {
@@ -173,8 +176,12 @@ function parameterSchema(
   if (location === "path" && parameter.required !== true) {
     fail("path_parameter_not_required");
   }
-  if (location === "header" && forbiddenHeader(parameter.name)) {
-    fail("forbidden_header_parameter");
+  if (location === "header" && reservedHeaderName.test(parameter.name)) {
+    // The runtime would reject it, so an optional one is left out of the tool.
+    if (parameter.required === true) {
+      fail("forbidden_header_parameter");
+    }
+    return;
   }
   assertParameterSerialization(parameter, location, components);
   return {
@@ -286,18 +293,6 @@ function assertParameterSerialization(
   ) {
     fail("unsupported_parameter_serialization");
   }
-}
-
-function forbiddenHeader(name: string): boolean {
-  const normalized = name.toLowerCase();
-  return (
-    normalized === "authorization" ||
-    normalized === "content-type" ||
-    normalized === "cookie" ||
-    normalized.includes("workload") ||
-    normalized.includes("trace") ||
-    normalized === "baggage"
-  );
 }
 
 function isIdempotencyParameter(value: unknown): boolean {
@@ -524,6 +519,9 @@ function groupedParameters(
       continue;
     }
     const parameter = parameterSchema(candidate, components);
+    if (parameter === undefined) {
+      continue;
+    }
     const identity = `${parameter.group}:${parameter.name.toLowerCase()}`;
     if (seen.has(identity)) {
       fail("duplicate_parameter");

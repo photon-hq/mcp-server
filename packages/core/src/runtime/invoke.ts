@@ -1,11 +1,10 @@
+import { reservedHeaderName } from "../headers.js";
 import type { Capability } from "../release.js";
 import type { ExecutionPrincipal } from "./principal.js";
 import type { Telemetry } from "./telemetry.js";
 
 // An origin with no path; every target must resolve back to it.
 export type UpstreamUrl = string;
-const forbiddenHeader =
-  /^(?:authorization|cookie|forwarded|host|idempotency-key|traceparent|tracestate|baggage|via|x-forwarded-|x-original-|x-real-ip|x-pho-|x-photon-|x-(?:release|operation|workload)(?:-|$)|cf-access-)/iu;
 const pathParameter = /\{([^}]+)\}/gu;
 const retryAfterDeltaSeconds = /^[0-9]+$/u;
 const retryAfterHttpDate =
@@ -171,7 +170,7 @@ function requestHeaders(request: InvocationRequest): Headers {
   for (const [name, value] of Object.entries(
     object(object(request.input).headers)
   )) {
-    if (forbiddenHeader.test(name)) {
+    if (reservedHeaderName.test(name)) {
       throw new InvocationError("forbidden_header");
     }
     headers.set(name, simple(value, false));

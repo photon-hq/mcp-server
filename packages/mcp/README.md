@@ -33,7 +33,8 @@ For clients configured with JSON:
 | Variable | Default | Purpose |
 | --- | --- | --- |
 | `PHOTON_API_KEY` | required | Bearer credential sent to the Photon API |
-| `PHOTON_API_URL` | `https://api.photon.codes` | API origin; https, or http on loopback for development |
+| `PHOTON_API_URL` | `https://api.photon.codes` | API origin: an https `photon.codes` host, or a loopback host for development |
+| `PHOTON_ALLOW_CUSTOM_API_URL` | unset | Set to `1` to allow any other https origin in `PHOTON_API_URL` |
 
 ## What the key can do
 
@@ -41,14 +42,16 @@ An Account Service Key acts with your account's live roles. The local tool
 catalog only includes operations whose required permissions are all available
 to OAuth applications (`GET /v1/auth/oauth/scopes`), the same boundary as the
 hosted server. Account security, API key, SSO and billing-checkout operations
-are not exposed. Photon still authorizes every call; the catalog is not a
+are not exposed, nor are operations that return, set or rotate a secret or a
+verification code. Photon still authorizes every call; the catalog is not a
 permission check.
 
 Your MCP client decides when to ask before running a tool. The server does not
 add its own confirmation step, so configure your client to confirm writes.
 
 Keys are only read from the environment and only sent to `PHOTON_API_URL`.
-Tool results never include upstream error bodies.
+For an upstream error, tool results include only its status and the filtered
+`code`, `title`, `type` and request ID, never the response body.
 
 ## License
 

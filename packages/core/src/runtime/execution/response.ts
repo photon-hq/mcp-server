@@ -12,7 +12,7 @@ type ExecutionPlan =
   ActivatedRuntimeRelease["registrationPlan"][number]["execution"];
 
 const unsafeProblem =
-  /(?:api[ _-]?key|authorization|bearer|client[ _-]?secret|credential|password|private[ _-]?key|signed|token|pin)/iu;
+  /(?:api[ _-]?key|authorization|bearer|client[ _-]?secret|credential|password|private[ _-]?key|signed|token|pin|pho_[a-z]+_)/iu;
 const safeProblemIdentifier = /^[A-Za-z0-9][A-Za-z0-9._:-]*$/u;
 const safeProblemUrn = /^[A-Za-z0-9][A-Za-z0-9._:-]*$/u;
 const privateHostnamePattern = /(?:^|[.-])(?:internal|private)(?:[.-]|$)/u;
