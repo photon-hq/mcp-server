@@ -7,7 +7,18 @@ const defaultApiUrl = "https://api.photon.codes";
 const loopbackHosts = new Set(["127.0.0.1", "[::1]", "localhost"]);
 const bearerToken = /^[\x21-\x7e]{1,512}$/u;
 
-function apiOrigin(value: string): string {
+// The key is sent as a bearer token to this origin, so a config file must not
+// be able to point it elsewhere without an explicit opt-in.
+function trustedHost(url: URL, allowCustom: boolean): boolean {
+  return (
+    allowCustom ||
+    loopbackHosts.has(url.hostname) ||
+    url.hostname === "photon.codes" ||
+    url.hostname.endsWith(".photon.codes")
+  );
+}
+
+function apiOrigin(value: string, allowCustom: boolean): string {
   let url: URL;
   try {
     url = new URL(value);
@@ -31,6 +42,11 @@ function apiOrigin(value: string): string {
       "PHOTON_API_URL must be an https origin with no path, query or credentials."
     );
   }
+  if (!trustedHost(url, allowCustom)) {
+    throw new Error(
+      "PHOTON_API_URL must be a photon.codes or loopback origin; set PHOTON_ALLOW_CUSTOM_API_URL=1 to use another host."
+    );
+  }
   return url.origin;
 }
 
@@ -43,5 +59,11 @@ export function loadLocalConfig(
       "Set PHOTON_API_KEY to a Photon Account Service Key (pho_ask_...)."
     );
   }
-  return { apiKey, apiUrl: apiOrigin(env.PHOTON_API_URL || defaultApiUrl) };
+  return {
+    apiKey,
+    apiUrl: apiOrigin(
+      env.PHOTON_API_URL || defaultApiUrl,
+      env.PHOTON_ALLOW_CUSTOM_API_URL === "1"
+    ),
+  };
 }

@@ -63,6 +63,25 @@ describe("restrictToOauthScopes", () => {
     });
   });
 
+  it("disables secret operations even within OAuth scopes", () => {
+    const path =
+      "/v1/projects/{projectId}/webhooks/destinations/{destinationId}/secret-rotations";
+    const { excluded } = restrictToOauthScopes(
+      {
+        paths: {
+          [path]: {
+            post: {
+              ...operation(["project:write"]),
+              operationId: "rotateWebhookSigningSecret",
+            },
+          },
+        },
+      },
+      ["project:write"]
+    );
+    expect(excluded).toEqual([`POST ${path}`]);
+  });
+
   it("overrides producer MCP options when excluding", () => {
     const { aggregate } = restrictToOauthScopes(
       {

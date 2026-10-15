@@ -9,19 +9,36 @@ describe("loadLocalConfig", () => {
     });
   });
 
-  it("accepts an https origin or a loopback http origin", () => {
+  it("accepts a photon.codes https origin or a loopback http origin", () => {
     expect(
       loadLocalConfig({
         PHOTON_API_KEY: "key",
-        PHOTON_API_URL: "https://api.example.com/",
+        PHOTON_API_URL: "https://api.photon.codes/",
       }).apiUrl
-    ).toBe("https://api.example.com");
+    ).toBe("https://api.photon.codes");
     expect(
       loadLocalConfig({
         PHOTON_API_KEY: "key",
         PHOTON_API_URL: "http://127.0.0.1:8787",
       }).apiUrl
     ).toBe("http://127.0.0.1:8787");
+  });
+
+  it("requires an opt-in for any other host", () => {
+    const env = {
+      PHOTON_API_KEY: "key",
+      PHOTON_API_URL: "https://api.example.com",
+    };
+    expect(() => loadLocalConfig(env)).toThrow("PHOTON_ALLOW_CUSTOM_API_URL");
+    expect(() =>
+      loadLocalConfig({
+        ...env,
+        PHOTON_API_URL: "https://photon.codes.example.com",
+      })
+    ).toThrow("PHOTON_ALLOW_CUSTOM_API_URL");
+    expect(
+      loadLocalConfig({ ...env, PHOTON_ALLOW_CUSTOM_API_URL: "1" }).apiUrl
+    ).toBe("https://api.example.com");
   });
 
   it.each([

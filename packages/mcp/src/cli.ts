@@ -19,6 +19,9 @@ async function packageVersion(): Promise<string> {
 // stdout carries the MCP protocol; diagnostics go to stderr only.
 async function main(): Promise<void> {
   const config = loadLocalConfig(process.env);
+  if (config.apiUrl !== "https://api.photon.codes") {
+    process.stderr.write(`photon-mcp: using API ${config.apiUrl}\n`);
+  }
   const release = await activateRuntimeRelease(
     runtimeRelease,
     runtimeReleaseChecksum

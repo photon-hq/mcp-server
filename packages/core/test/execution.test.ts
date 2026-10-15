@@ -866,6 +866,7 @@ describe("capability execution lifecycle and responses", () => {
     ["title", "title", { title: "signed URL https://private.example" }],
     ["single-label title", "title", { title: "See https://backend/failure" }],
     ["bearer title", "title", { title: "Bearer abcdef" }],
+    ["Photon key title", "title", { title: "Key pho_sk_abcdef revoked" }],
     ["detail", "detail", { detail: "password=private" }],
     ["API key detail", "detail", { detail: "api_key=private-value" }],
     [

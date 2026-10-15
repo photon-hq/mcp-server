@@ -358,12 +358,19 @@ describe("compileRelease", () => {
     ["cookie", "Cookie"],
     ["workload", "X-Workload-Identity"],
     ["trace", "Traceparent"],
-  ])("rejects forbidden %s header", (_name, name) => {
+  ])("rejects a required forbidden %s header", (_name, name) => {
     expect(() =>
       compileRelease(
         makeCompileInput({
           operation: {
-            parameters: [{ in: "header", name, schema: { type: "string" } }],
+            parameters: [
+              {
+                in: "header",
+                name,
+                required: true,
+                schema: { type: "string" },
+              },
+            ],
           },
         })
       )
@@ -1177,7 +1184,7 @@ describe("compileRelease", () => {
     });
   });
 
-  it("rejects Content-Type OpenAPI header parameters", () => {
+  it("rejects a required reserved OpenAPI header parameter", () => {
     expect(() =>
       compileRelease(
         makeCompileInput({
@@ -1186,6 +1193,7 @@ describe("compileRelease", () => {
               {
                 in: "header",
                 name: "Content-Type",
+                required: true,
                 schema: { type: "string" },
               },
             ],
@@ -1193,6 +1201,22 @@ describe("compileRelease", () => {
         })
       )
     ).toThrow("forbidden_header_parameter");
+  });
+
+  it.each([
+    "Content-Type",
+    "X-Photon-Version",
+    "Proxy-Authorization",
+    "X-Api-Key",
+  ])("leaves the optional reserved header %s out of the tool", (name) => {
+    const result = compileRelease(
+      makeCompileInput({
+        operation: {
+          parameters: [{ in: "header", name, schema: { type: "string" } }],
+        },
+      })
+    );
+    expect(JSON.stringify(capability(result).inputSchema)).not.toContain(name);
   });
 
   it("ignores non-JSON request alternatives when JSON is available", () => {
