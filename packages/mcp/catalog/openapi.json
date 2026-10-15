@@ -4726,6 +4726,55 @@
           }
         ]
       },
+      "CompleteAccountOnboardingForbiddenProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ForbiddenProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InsufficientScopeProblem"
+          },
+          {
+            "$ref": "#/components/schemas/OrganizationSsoRequiredProblem"
+          },
+          {
+            "$ref": "#/components/schemas/ResourceMismatchProblem"
+          }
+        ]
+      },
+      "CompleteAccountOnboardingGatewayTimeoutProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/UpstreamTimeoutProblem"
+          },
+          {
+            "$ref": "#/components/schemas/RequestTimeoutProblem"
+          }
+        ]
+      },
+      "CompleteAccountOnboardingInternalServerErrorProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InternalErrorProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidAuthContextProblem"
+          }
+        ]
+      },
+      "CompleteAccountOnboardingResponse": {
+        "additionalProperties": {},
+        "properties": {
+          "onboarded": {
+            "const": true,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "onboarded"
+        ],
+        "type": "object"
+      },
       "CompletedCall": {
         "additionalProperties": false,
         "properties": {
@@ -12575,6 +12624,123 @@
           }
         ]
       },
+      "GetAccountOnboardingForbiddenProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ForbiddenProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InsufficientScopeProblem"
+          },
+          {
+            "$ref": "#/components/schemas/OrganizationSsoRequiredProblem"
+          },
+          {
+            "$ref": "#/components/schemas/ResourceMismatchProblem"
+          }
+        ]
+      },
+      "GetAccountOnboardingGatewayTimeoutProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/UpstreamTimeoutProblem"
+          },
+          {
+            "$ref": "#/components/schemas/RequestTimeoutProblem"
+          }
+        ]
+      },
+      "GetAccountOnboardingInternalServerErrorProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InternalErrorProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidAuthContextProblem"
+          }
+        ]
+      },
+      "GetAccountOnboardingResponse": {
+        "additionalProperties": {},
+        "properties": {
+          "background": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "companyName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "companyUrl": {
+            "anyOf": [
+              {
+                "format": "uri",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "onboarded": {
+            "type": "boolean"
+          },
+          "platforms": {
+            "anyOf": [
+              {
+                "items": {
+                  "enum": [
+                    "imessage",
+                    "sms",
+                    "whatsapp",
+                    "slack",
+                    "discord",
+                    "telegram",
+                    "voice"
+                  ],
+                  "type": "string"
+                },
+                "maxItems": 7,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "referralSource": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "background",
+          "companyName",
+          "companyUrl",
+          "onboarded",
+          "platforms",
+          "referralSource"
+        ],
+        "type": "object"
+      },
       "GetAgentProfileForbiddenProblem": {
         "oneOf": [
           {
@@ -19428,6 +19594,57 @@
           "callingCode",
           "countryCode",
           "displayName"
+        ],
+        "type": "object"
+      },
+      "OnboardingCompletedProblem": {
+        "additionalProperties": {
+          "$ref": "#/components/schemas/JsonValue"
+        },
+        "example": {
+          "code": "ONBOARDING_COMPLETED",
+          "status": 409,
+          "title": "Onboarding Completed",
+          "type": "https://photon.codes/docs/problems/onboarding-completed"
+        },
+        "properties": {
+          "code": {
+            "const": "ONBOARDING_COMPLETED",
+            "type": "string"
+          },
+          "detail": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "instance": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "remediation": {
+            "not": {}
+          },
+          "requestId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "status": {
+            "const": 409,
+            "type": "number"
+          },
+          "title": {
+            "const": "Onboarding Completed",
+            "type": "string"
+          },
+          "type": {
+            "const": "https://photon.codes/docs/problems/onboarding-completed",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "status",
+          "title",
+          "type"
         ],
         "type": "object"
       },
@@ -30071,6 +30288,218 @@
           }
         ]
       },
+      "UpdateAccountOnboardingBadRequestProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/HttpErrorProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidArgumentProblem"
+          },
+          {
+            "$ref": "#/components/schemas/IdempotencyKeyInvalidProblem"
+          },
+          {
+            "$ref": "#/components/schemas/IdempotencyKeyRequiredProblem"
+          }
+        ]
+      },
+      "UpdateAccountOnboardingForbiddenProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ForbiddenProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InsufficientScopeProblem"
+          },
+          {
+            "$ref": "#/components/schemas/OrganizationSsoRequiredProblem"
+          },
+          {
+            "$ref": "#/components/schemas/ResourceMismatchProblem"
+          }
+        ]
+      },
+      "UpdateAccountOnboardingGatewayTimeoutProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/UpstreamTimeoutProblem"
+          },
+          {
+            "$ref": "#/components/schemas/RequestTimeoutProblem"
+          }
+        ]
+      },
+      "UpdateAccountOnboardingInternalServerErrorProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InternalErrorProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidAuthContextProblem"
+          }
+        ]
+      },
+      "UpdateAccountOnboardingRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "background": {
+            "anyOf": [
+              {
+                "enum": [
+                  "hobbyist",
+                  "company"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "companyName": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "companyUrl": {
+            "anyOf": [
+              {
+                "format": "uri",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "platforms": {
+            "items": {
+              "enum": [
+                "imessage",
+                "sms",
+                "whatsapp",
+                "slack",
+                "discord",
+                "telegram",
+                "voice"
+              ],
+              "type": "string"
+            },
+            "maxItems": 7,
+            "type": "array"
+          },
+          "referralSource": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object"
+      },
+      "UpdateAccountOnboardingResponse": {
+        "additionalProperties": {},
+        "properties": {
+          "background": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "companyName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "companyUrl": {
+            "anyOf": [
+              {
+                "format": "uri",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "onboarded": {
+            "type": "boolean"
+          },
+          "platforms": {
+            "anyOf": [
+              {
+                "items": {
+                  "enum": [
+                    "imessage",
+                    "sms",
+                    "whatsapp",
+                    "slack",
+                    "discord",
+                    "telegram",
+                    "voice"
+                  ],
+                  "type": "string"
+                },
+                "maxItems": 7,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "referralSource": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "background",
+          "companyName",
+          "companyUrl",
+          "onboarded",
+          "platforms",
+          "referralSource"
+        ],
+        "type": "object"
+      },
+      "UpdateAccountOnboardingUnprocessableEntityProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IdempotencyKeyReusedProblem"
+          },
+          {
+            "$ref": "#/components/schemas/ValidationFailedProblem"
+          }
+        ]
+      },
       "UpdateAccountRequest": {
         "additionalProperties": false,
         "properties": {
@@ -39460,6 +39889,1611 @@
         "summary": "Revoke connected application",
         "tags": [
           "Connected Applications"
+        ]
+      }
+    },
+    "/v1/account/onboarding": {
+      "get": {
+        "description": "Returns the authenticated account's current onboarding state and collected onboarding information. Reading the state does not complete onboarding or modify the supplied account information.",
+        "operationId": "getAccountOnboarding",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAccountOnboardingResponse"
+                }
+              }
+            },
+            "description": "The authenticated account's onboarding state.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotAuthenticatedProblem"
+                }
+              }
+            },
+            "description": "NOT_AUTHENTICATED: Not Authenticated",
+            "headers": {
+              "Link": {
+                "description": "Optional related resources.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit": {
+                "description": "Optional rate limit information.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit-Policy": {
+                "description": "Optional rate limit policy.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Retry-After": {
+                "description": "Optional retry delay or HTTP date.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "WWW-Authenticate": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "X-Request-ID": {
+                "description": "Application request identifier.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAccountOnboardingForbiddenProblem"
+                }
+              }
+            },
+            "description": "FORBIDDEN: Forbidden; RESOURCE_MISMATCH: Resource Mismatch\n\nFORBIDDEN: Forbidden; INSUFFICIENT_SCOPE: Insufficient Scope; ORGANIZATION_SSO_REQUIRED: Organization SSO Required",
+            "headers": {
+              "Deprecation": {
+                "description": "RFC 9745 structured-field Date at which the operation was or will be deprecated: `@` followed by Unix seconds, for example `@1767225599`.",
+                "schema": {
+                  "pattern": "^@-?[0-9]+$",
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "description": "True when this response was replayed from an earlier attempt.",
+                "schema": {
+                  "type": "boolean"
+                }
+              },
+              "Link": {
+                "description": "Links related to lifecycle or remediation documentation.\n\nOptional related resources.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit": {
+                "description": "Current rate-limit state.\n\nOptional rate limit information.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit-Policy": {
+                "description": "Rate-limit policy applied by the gateway.\n\nOptional rate limit policy.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Retry-After": {
+                "description": "Delay before retrying, in seconds or as an HTTP date.\n\nOptional retry delay or HTTP date.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Sunset": {
+                "description": "RFC 8594 HTTP-date (IMF-fixdate) after which the operation may become unavailable, for example `Thu, 31 Dec 2026 23:59:59 GMT`.",
+                "schema": {
+                  "pattern": "^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), [0-9]{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) [0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2} GMT$",
+                  "type": "string"
+                }
+              },
+              "X-Request-ID": {
+                "description": "Identifier for this HTTP attempt.\n\nApplication request identifier.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "X-Trace-ID": {
+                "description": "Trace ID of this request. Sent alongside X-Request-ID when a middleware published a trace ID for the request.",
+                "schema": {
+                  "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountNotFoundProblem"
+                }
+              }
+            },
+            "description": "ACCOUNT_NOT_FOUND: Account Not Found",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountDeletedProblem"
+                }
+              }
+            },
+            "description": "ACCOUNT_DELETED: Account Deleted",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAccountOnboardingInternalServerErrorProblem"
+                }
+              }
+            },
+            "description": "INVALID_AUTH_CONTEXT: Invalid Authentication Context\n\nINTERNAL_ERROR: Internal Server Error",
+            "headers": {
+              "Deprecation": {
+                "description": "RFC 9745 structured-field Date at which the operation was or will be deprecated: `@` followed by Unix seconds, for example `@1767225599`.",
+                "schema": {
+                  "pattern": "^@-?[0-9]+$",
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "description": "True when this response was replayed from an earlier attempt.",
+                "schema": {
+                  "type": "boolean"
+                }
+              },
+              "Link": {
+                "description": "Links related to lifecycle or remediation documentation.\n\nOptional related resources.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit": {
+                "description": "Current rate-limit state.\n\nOptional rate limit information.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit-Policy": {
+                "description": "Rate-limit policy applied by the gateway.\n\nOptional rate limit policy.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Retry-After": {
+                "description": "Delay before retrying, in seconds or as an HTTP date.\n\nOptional retry delay or HTTP date.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Sunset": {
+                "description": "RFC 8594 HTTP-date (IMF-fixdate) after which the operation may become unavailable, for example `Thu, 31 Dec 2026 23:59:59 GMT`.",
+                "schema": {
+                  "pattern": "^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), [0-9]{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) [0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2} GMT$",
+                  "type": "string"
+                }
+              },
+              "X-Request-ID": {
+                "description": "Identifier for this HTTP attempt.\n\nApplication request identifier.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "X-Trace-ID": {
+                "description": "Trace ID of this request. Sent alongside X-Request-ID when a middleware published a trace ID for the request.",
+                "schema": {
+                  "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "502": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpstreamFailureProblem"
+                }
+              }
+            },
+            "description": "UPSTREAM_FAILURE: Upstream Service Failure",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "503": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpstreamUnavailableProblem"
+                }
+              }
+            },
+            "description": "UPSTREAM_UNAVAILABLE: Upstream Service Unavailable",
+            "headers": {
+              "Deprecation": {
+                "description": "RFC 9745 structured-field Date at which the operation was or will be deprecated: `@` followed by Unix seconds, for example `@1767225599`.",
+                "schema": {
+                  "pattern": "^@-?[0-9]+$",
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "description": "True when this response was replayed from an earlier attempt.",
+                "schema": {
+                  "type": "boolean"
+                }
+              },
+              "Link": {
+                "description": "Links related to lifecycle or remediation documentation.\n\nOptional related resources.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit": {
+                "description": "Current rate-limit state.\n\nOptional rate limit information.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit-Policy": {
+                "description": "Rate-limit policy applied by the gateway.\n\nOptional rate limit policy.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Retry-After": {
+                "description": "Delay before retrying, in seconds or as an HTTP date.\n\nOptional retry delay or HTTP date.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Sunset": {
+                "description": "RFC 8594 HTTP-date (IMF-fixdate) after which the operation may become unavailable, for example `Thu, 31 Dec 2026 23:59:59 GMT`.",
+                "schema": {
+                  "pattern": "^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), [0-9]{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) [0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2} GMT$",
+                  "type": "string"
+                }
+              },
+              "X-Request-ID": {
+                "description": "Identifier for this HTTP attempt.\n\nApplication request identifier.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "X-Trace-ID": {
+                "description": "Trace ID of this request. Sent alongside X-Request-ID when a middleware published a trace ID for the request.",
+                "schema": {
+                  "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "504": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAccountOnboardingGatewayTimeoutProblem"
+                }
+              }
+            },
+            "description": "UPSTREAM_TIMEOUT: Upstream Service Timeout; REQUEST_TIMEOUT: Request Timeout",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "accountServiceKey": []
+          },
+          {
+            "oauth2": [
+              "account:read"
+            ]
+          }
+        ],
+        "summary": "Get onboarding state",
+        "tags": [
+          "Account Onboarding"
+        ],
+        "x-required-permissions": [
+          "account:read"
+        ]
+      },
+      "patch": {
+        "description": "Updates the authenticated account's submitted onboarding information, including the documented company, background, platform and referral fields. Returns the updated onboarding state. Completed onboarding cannot be edited through this operation; completion is performed separately with completeAccountOnboarding. Supply the required Idempotency-Key header.",
+        "operationId": "updateAccountOnboarding",
+        "parameters": [
+          {
+            "description": "Identifies one logical mutation across retries.",
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "maxLength": 255,
+              "minLength": 1,
+              "pattern": "^[\\x21-\\x7e]{1,255}$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAccountOnboardingRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAccountOnboardingResponse"
+                }
+              }
+            },
+            "description": "The updated onboarding state.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAccountOnboardingBadRequestProblem"
+                }
+              }
+            },
+            "description": "HTTP_ERROR: Request Failed; INVALID_ARGUMENT: Invalid Argument; IDEMPOTENCY_KEY_INVALID: Idempotency Key Invalid; IDEMPOTENCY_KEY_REQUIRED: Idempotency Key Required",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotAuthenticatedProblem"
+                }
+              }
+            },
+            "description": "NOT_AUTHENTICATED: Not Authenticated",
+            "headers": {
+              "Link": {
+                "description": "Optional related resources.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit": {
+                "description": "Optional rate limit information.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit-Policy": {
+                "description": "Optional rate limit policy.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Retry-After": {
+                "description": "Optional retry delay or HTTP date.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "WWW-Authenticate": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "X-Request-ID": {
+                "description": "Application request identifier.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAccountOnboardingForbiddenProblem"
+                }
+              }
+            },
+            "description": "FORBIDDEN: Forbidden; RESOURCE_MISMATCH: Resource Mismatch\n\nFORBIDDEN: Forbidden; INSUFFICIENT_SCOPE: Insufficient Scope; ORGANIZATION_SSO_REQUIRED: Organization SSO Required",
+            "headers": {
+              "Deprecation": {
+                "description": "RFC 9745 structured-field Date at which the operation was or will be deprecated: `@` followed by Unix seconds, for example `@1767225599`.",
+                "schema": {
+                  "pattern": "^@-?[0-9]+$",
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "description": "True when this response was replayed from an earlier attempt.",
+                "schema": {
+                  "type": "boolean"
+                }
+              },
+              "Link": {
+                "description": "Links related to lifecycle or remediation documentation.\n\nOptional related resources.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit": {
+                "description": "Current rate-limit state.\n\nOptional rate limit information.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit-Policy": {
+                "description": "Rate-limit policy applied by the gateway.\n\nOptional rate limit policy.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Retry-After": {
+                "description": "Delay before retrying, in seconds or as an HTTP date.\n\nOptional retry delay or HTTP date.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Sunset": {
+                "description": "RFC 8594 HTTP-date (IMF-fixdate) after which the operation may become unavailable, for example `Thu, 31 Dec 2026 23:59:59 GMT`.",
+                "schema": {
+                  "pattern": "^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), [0-9]{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) [0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2} GMT$",
+                  "type": "string"
+                }
+              },
+              "X-Request-ID": {
+                "description": "Identifier for this HTTP attempt.\n\nApplication request identifier.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "X-Trace-ID": {
+                "description": "Trace ID of this request. Sent alongside X-Request-ID when a middleware published a trace ID for the request.",
+                "schema": {
+                  "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountNotFoundProblem"
+                }
+              }
+            },
+            "description": "ACCOUNT_NOT_FOUND: Account Not Found",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "409": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingCompletedProblem"
+                }
+              }
+            },
+            "description": "ONBOARDING_COMPLETED: Onboarding Completed",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountDeletedProblem"
+                }
+              }
+            },
+            "description": "ACCOUNT_DELETED: Account Deleted",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "413": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PayloadTooLargeProblem"
+                }
+              }
+            },
+            "description": "PAYLOAD_TOO_LARGE: Payload Too Large",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAccountOnboardingUnprocessableEntityProblem"
+                }
+              }
+            },
+            "description": "IDEMPOTENCY_KEY_REUSED: Idempotency Key Reused; VALIDATION_FAILED: Request Validation Failed",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAccountOnboardingInternalServerErrorProblem"
+                }
+              }
+            },
+            "description": "INVALID_AUTH_CONTEXT: Invalid Authentication Context\n\nINTERNAL_ERROR: Internal Server Error",
+            "headers": {
+              "Deprecation": {
+                "description": "RFC 9745 structured-field Date at which the operation was or will be deprecated: `@` followed by Unix seconds, for example `@1767225599`.",
+                "schema": {
+                  "pattern": "^@-?[0-9]+$",
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "description": "True when this response was replayed from an earlier attempt.",
+                "schema": {
+                  "type": "boolean"
+                }
+              },
+              "Link": {
+                "description": "Links related to lifecycle or remediation documentation.\n\nOptional related resources.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit": {
+                "description": "Current rate-limit state.\n\nOptional rate limit information.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit-Policy": {
+                "description": "Rate-limit policy applied by the gateway.\n\nOptional rate limit policy.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Retry-After": {
+                "description": "Delay before retrying, in seconds or as an HTTP date.\n\nOptional retry delay or HTTP date.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Sunset": {
+                "description": "RFC 8594 HTTP-date (IMF-fixdate) after which the operation may become unavailable, for example `Thu, 31 Dec 2026 23:59:59 GMT`.",
+                "schema": {
+                  "pattern": "^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), [0-9]{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) [0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2} GMT$",
+                  "type": "string"
+                }
+              },
+              "X-Request-ID": {
+                "description": "Identifier for this HTTP attempt.\n\nApplication request identifier.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "X-Trace-ID": {
+                "description": "Trace ID of this request. Sent alongside X-Request-ID when a middleware published a trace ID for the request.",
+                "schema": {
+                  "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "502": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpstreamFailureProblem"
+                }
+              }
+            },
+            "description": "UPSTREAM_FAILURE: Upstream Service Failure",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "503": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpstreamUnavailableProblem"
+                }
+              }
+            },
+            "description": "UPSTREAM_UNAVAILABLE: Upstream Service Unavailable",
+            "headers": {
+              "Deprecation": {
+                "description": "RFC 9745 structured-field Date at which the operation was or will be deprecated: `@` followed by Unix seconds, for example `@1767225599`.",
+                "schema": {
+                  "pattern": "^@-?[0-9]+$",
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "description": "True when this response was replayed from an earlier attempt.",
+                "schema": {
+                  "type": "boolean"
+                }
+              },
+              "Link": {
+                "description": "Links related to lifecycle or remediation documentation.\n\nOptional related resources.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit": {
+                "description": "Current rate-limit state.\n\nOptional rate limit information.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit-Policy": {
+                "description": "Rate-limit policy applied by the gateway.\n\nOptional rate limit policy.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Retry-After": {
+                "description": "Delay before retrying, in seconds or as an HTTP date.\n\nOptional retry delay or HTTP date.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Sunset": {
+                "description": "RFC 8594 HTTP-date (IMF-fixdate) after which the operation may become unavailable, for example `Thu, 31 Dec 2026 23:59:59 GMT`.",
+                "schema": {
+                  "pattern": "^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), [0-9]{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) [0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2} GMT$",
+                  "type": "string"
+                }
+              },
+              "X-Request-ID": {
+                "description": "Identifier for this HTTP attempt.\n\nApplication request identifier.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "X-Trace-ID": {
+                "description": "Trace ID of this request. Sent alongside X-Request-ID when a middleware published a trace ID for the request.",
+                "schema": {
+                  "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "504": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAccountOnboardingGatewayTimeoutProblem"
+                }
+              }
+            },
+            "description": "UPSTREAM_TIMEOUT: Upstream Service Timeout; REQUEST_TIMEOUT: Request Timeout",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "accountServiceKey": []
+          },
+          {
+            "oauth2": [
+              "account:write"
+            ]
+          }
+        ],
+        "summary": "Update onboarding state",
+        "tags": [
+          "Account Onboarding"
+        ],
+        "x-required-permissions": [
+          "account:write"
+        ]
+      }
+    },
+    "/v1/account/onboarding/complete": {
+      "post": {
+        "description": "Marks the authenticated account's onboarding flow complete and returns a confirmation with onboarded set to true. No prior update is required, but submit any onboarding information you want to keep with updateAccountOnboarding first, because further edits through updateAccountOnboarding are rejected after completion.",
+        "operationId": "completeAccountOnboarding",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompleteAccountOnboardingResponse"
+                }
+              }
+            },
+            "description": "The completed onboarding state.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotAuthenticatedProblem"
+                }
+              }
+            },
+            "description": "NOT_AUTHENTICATED: Not Authenticated",
+            "headers": {
+              "Link": {
+                "description": "Optional related resources.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit": {
+                "description": "Optional rate limit information.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit-Policy": {
+                "description": "Optional rate limit policy.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Retry-After": {
+                "description": "Optional retry delay or HTTP date.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "WWW-Authenticate": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "X-Request-ID": {
+                "description": "Application request identifier.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompleteAccountOnboardingForbiddenProblem"
+                }
+              }
+            },
+            "description": "FORBIDDEN: Forbidden; RESOURCE_MISMATCH: Resource Mismatch\n\nFORBIDDEN: Forbidden; INSUFFICIENT_SCOPE: Insufficient Scope; ORGANIZATION_SSO_REQUIRED: Organization SSO Required",
+            "headers": {
+              "Deprecation": {
+                "description": "RFC 9745 structured-field Date at which the operation was or will be deprecated: `@` followed by Unix seconds, for example `@1767225599`.",
+                "schema": {
+                  "pattern": "^@-?[0-9]+$",
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "description": "True when this response was replayed from an earlier attempt.",
+                "schema": {
+                  "type": "boolean"
+                }
+              },
+              "Link": {
+                "description": "Links related to lifecycle or remediation documentation.\n\nOptional related resources.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit": {
+                "description": "Current rate-limit state.\n\nOptional rate limit information.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit-Policy": {
+                "description": "Rate-limit policy applied by the gateway.\n\nOptional rate limit policy.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Retry-After": {
+                "description": "Delay before retrying, in seconds or as an HTTP date.\n\nOptional retry delay or HTTP date.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Sunset": {
+                "description": "RFC 8594 HTTP-date (IMF-fixdate) after which the operation may become unavailable, for example `Thu, 31 Dec 2026 23:59:59 GMT`.",
+                "schema": {
+                  "pattern": "^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), [0-9]{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) [0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2} GMT$",
+                  "type": "string"
+                }
+              },
+              "X-Request-ID": {
+                "description": "Identifier for this HTTP attempt.\n\nApplication request identifier.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "X-Trace-ID": {
+                "description": "Trace ID of this request. Sent alongside X-Request-ID when a middleware published a trace ID for the request.",
+                "schema": {
+                  "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountNotFoundProblem"
+                }
+              }
+            },
+            "description": "ACCOUNT_NOT_FOUND: Account Not Found",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountDeletedProblem"
+                }
+              }
+            },
+            "description": "ACCOUNT_DELETED: Account Deleted",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompleteAccountOnboardingInternalServerErrorProblem"
+                }
+              }
+            },
+            "description": "INVALID_AUTH_CONTEXT: Invalid Authentication Context\n\nINTERNAL_ERROR: Internal Server Error",
+            "headers": {
+              "Deprecation": {
+                "description": "RFC 9745 structured-field Date at which the operation was or will be deprecated: `@` followed by Unix seconds, for example `@1767225599`.",
+                "schema": {
+                  "pattern": "^@-?[0-9]+$",
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "description": "True when this response was replayed from an earlier attempt.",
+                "schema": {
+                  "type": "boolean"
+                }
+              },
+              "Link": {
+                "description": "Links related to lifecycle or remediation documentation.\n\nOptional related resources.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit": {
+                "description": "Current rate-limit state.\n\nOptional rate limit information.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit-Policy": {
+                "description": "Rate-limit policy applied by the gateway.\n\nOptional rate limit policy.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Retry-After": {
+                "description": "Delay before retrying, in seconds or as an HTTP date.\n\nOptional retry delay or HTTP date.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Sunset": {
+                "description": "RFC 8594 HTTP-date (IMF-fixdate) after which the operation may become unavailable, for example `Thu, 31 Dec 2026 23:59:59 GMT`.",
+                "schema": {
+                  "pattern": "^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), [0-9]{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) [0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2} GMT$",
+                  "type": "string"
+                }
+              },
+              "X-Request-ID": {
+                "description": "Identifier for this HTTP attempt.\n\nApplication request identifier.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "X-Trace-ID": {
+                "description": "Trace ID of this request. Sent alongside X-Request-ID when a middleware published a trace ID for the request.",
+                "schema": {
+                  "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "502": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpstreamFailureProblem"
+                }
+              }
+            },
+            "description": "UPSTREAM_FAILURE: Upstream Service Failure",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "503": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpstreamUnavailableProblem"
+                }
+              }
+            },
+            "description": "UPSTREAM_UNAVAILABLE: Upstream Service Unavailable",
+            "headers": {
+              "Deprecation": {
+                "description": "RFC 9745 structured-field Date at which the operation was or will be deprecated: `@` followed by Unix seconds, for example `@1767225599`.",
+                "schema": {
+                  "pattern": "^@-?[0-9]+$",
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "description": "True when this response was replayed from an earlier attempt.",
+                "schema": {
+                  "type": "boolean"
+                }
+              },
+              "Link": {
+                "description": "Links related to lifecycle or remediation documentation.\n\nOptional related resources.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit": {
+                "description": "Current rate-limit state.\n\nOptional rate limit information.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "RateLimit-Policy": {
+                "description": "Rate-limit policy applied by the gateway.\n\nOptional rate limit policy.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Retry-After": {
+                "description": "Delay before retrying, in seconds or as an HTTP date.\n\nOptional retry delay or HTTP date.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Sunset": {
+                "description": "RFC 8594 HTTP-date (IMF-fixdate) after which the operation may become unavailable, for example `Thu, 31 Dec 2026 23:59:59 GMT`.",
+                "schema": {
+                  "pattern": "^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), [0-9]{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) [0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2} GMT$",
+                  "type": "string"
+                }
+              },
+              "X-Request-ID": {
+                "description": "Identifier for this HTTP attempt.\n\nApplication request identifier.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "X-Trace-ID": {
+                "description": "Trace ID of this request. Sent alongside X-Request-ID when a middleware published a trace ID for the request.",
+                "schema": {
+                  "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "504": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompleteAccountOnboardingGatewayTimeoutProblem"
+                }
+              }
+            },
+            "description": "UPSTREAM_TIMEOUT: Upstream Service Timeout; REQUEST_TIMEOUT: Request Timeout",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "accountServiceKey": []
+          },
+          {
+            "oauth2": [
+              "account:write"
+            ]
+          }
+        ],
+        "summary": "Complete onboarding",
+        "tags": [
+          "Account Onboarding"
+        ],
+        "x-required-permissions": [
+          "account:write"
         ]
       }
     },
