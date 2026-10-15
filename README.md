@@ -1,4 +1,4 @@
-# Photon MCP
+# Photon MCP Server
 
 Use Photon from any MCP client. This repository contains the local MCP server
 and the compiler and runtime it shares with Photon's hosted MCP server.

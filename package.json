@@ -1,5 +1,5 @@
 {
-  "name": "photon-mcp-workspace",
+  "name": "mcp-server-workspace",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@11.9.0",

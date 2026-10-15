@@ -2,11 +2,11 @@
   "name": "@photon-ai/mcp",
   "version": "0.1.0",
   "description": "Run Photon's MCP tools locally over stdio with your own Photon API key.",
-  "homepage": "https://github.com/photon-hq/photon-mcp/tree/main/packages/mcp#readme",
-  "bugs": "https://github.com/photon-hq/photon-mcp/issues",
+  "homepage": "https://github.com/photon-hq/mcp-server/tree/main/packages/mcp#readme",
+  "bugs": "https://github.com/photon-hq/mcp-server/issues",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/photon-hq/photon-mcp.git",
+    "url": "git+https://github.com/photon-hq/mcp-server.git",
     "directory": "packages/mcp"
   },
   "license": "Apache-2.0",
