@@ -37,7 +37,6 @@ Cursor, Claude Desktop and other JSON-configured clients:
 | --- | --- | --- |
 | `PHOTON_API_KEY` | required | Your Account Service Key |
 | `PHOTON_API_URL` | `https://api.photon.codes` | API origin. Only `photon.codes` and loopback hosts are accepted |
-| `PHOTON_ALLOW_CUSTOM_API_URL` | unset | Set to `1` to allow any other https origin |
 
 The server offers the same tools as the hosted server. Operations that manage
 keys, account security, SSO or billing checkout are not available. Your client

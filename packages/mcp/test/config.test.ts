@@ -24,21 +24,13 @@ describe("loadLocalConfig", () => {
     ).toBe("http://127.0.0.1:8787");
   });
 
-  it("requires an opt-in for any other host", () => {
-    const env = {
-      PHOTON_API_KEY: "key",
-      PHOTON_API_URL: "https://api.example.com",
-    };
-    expect(() => loadLocalConfig(env)).toThrow("PHOTON_ALLOW_CUSTOM_API_URL");
+  it.each([
+    "https://api.example.com",
+    "https://photon.codes.example.com",
+  ])("rejects the non-Photon host %s", (value) => {
     expect(() =>
-      loadLocalConfig({
-        ...env,
-        PHOTON_API_URL: "https://photon.codes.example.com",
-      })
-    ).toThrow("PHOTON_ALLOW_CUSTOM_API_URL");
-    expect(
-      loadLocalConfig({ ...env, PHOTON_ALLOW_CUSTOM_API_URL: "1" }).apiUrl
-    ).toBe("https://api.example.com");
+      loadLocalConfig({ PHOTON_API_KEY: "key", PHOTON_API_URL: value })
+    ).toThrow("photon.codes or loopback");
   });
 
   it.each([
