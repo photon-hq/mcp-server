@@ -29,4 +29,4 @@ photon-mcp-compile verify-bundle --bundle bundle --expected-checksum <checksum>
 
 ## License
 
-[Apache 2.0](https://github.com/photon-hq/photon-mcp/blob/main/LICENSE)
+[Apache 2.0](https://github.com/photon-hq/mcp-server/blob/main/LICENSE)

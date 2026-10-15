@@ -52,4 +52,4 @@ Tool results never include upstream error bodies.
 
 ## License
 
-[Apache 2.0](https://github.com/photon-hq/photon-mcp/blob/main/LICENSE)
+[Apache 2.0](https://github.com/photon-hq/mcp-server/blob/main/LICENSE)
