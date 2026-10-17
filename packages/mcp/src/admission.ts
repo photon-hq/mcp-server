@@ -12,6 +12,12 @@ const secretOperations = new Set([
   "startAccountPhoneVerification",
 ]);
 
+// Operations an API key needs that no OAuth client can be granted. An API key
+// is bound to an account rather than an organization, so listing the account's
+// organizations is how an agent finds the organizationId other tools take; the
+// hosted server reads it from the grant with getCurrentOrganization instead.
+const accountKeyOperations = new Set(["listOrganizations"]);
+
 export interface LocalAdmission {
   readonly aggregate: Readonly<Record<string, unknown>>;
   readonly excluded: readonly string[];
@@ -37,9 +43,29 @@ function grantable(
   );
 }
 
+// An operation with no security alternative an Account Service Key satisfies
+// alone can only be refused for one, such as getCurrentOrganization, which
+// needs a credential bound to an organization. An alternative requires every
+// scheme it names. An empty or missing declaration is left to the other checks.
+function acceptsAccountKey(
+  operation: Readonly<Record<string, unknown>>
+): boolean {
+  const { security } = operation;
+  return (
+    !Array.isArray(security) ||
+    security.length === 0 ||
+    security.some((requirement) =>
+      Object.keys(record(requirement)).every(
+        (scheme) => scheme === "accountServiceKey"
+      )
+    )
+  );
+}
+
 // An API key acts with the account's full first-party authority. Keep the local
 // catalog to operations an OAuth client could be granted, as the hosted server
-// does, minus the secret operations above.
+// does, plus the account-key operations and minus the secret operations above,
+// and drop operations that refuse an API key.
 export function restrictToOauthScopes(
   aggregate: Readonly<Record<string, unknown>>,
   scopes: readonly string[]
@@ -50,11 +76,23 @@ export function restrictToOauthScopes(
     Object.entries(record(aggregate.paths)).map(([path, value]) => {
       const item = { ...record(value) };
       for (const method of methods) {
+        if (item[method] === undefined) {
+          continue;
+        }
         const operation = record(item[method]);
-        if (
-          item[method] !== undefined &&
-          (!grantable(operation, allowed) ||
-            secretOperations.has(operation.operationId as string))
+        const operationId = operation.operationId as string;
+        if (accountKeyOperations.has(operationId)) {
+          item[method] = {
+            ...operation,
+            "x-photon-mcp": {
+              ...record(operation["x-photon-mcp"]),
+              enabled: true,
+            },
+          };
+        } else if (
+          !grantable(operation, allowed) ||
+          secretOperations.has(operationId) ||
+          !acceptsAccountKey(operation)
         ) {
           item[method] = { ...operation, "x-photon-mcp": { enabled: false } };
           excluded.push(`${method.toUpperCase()} ${path}`);

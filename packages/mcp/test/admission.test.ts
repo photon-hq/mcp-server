@@ -105,4 +105,70 @@ describe("restrictToOauthScopes", () => {
       },
     });
   });
+
+  it("disables operations whose security refuses an API key", () => {
+    const { excluded } = restrictToOauthScopes(
+      {
+        paths: {
+          "/v1/organizations/{organizationId}/members": {
+            get: {
+              ...operation(["organization:read"]),
+              security: [
+                { accountServiceKey: [] },
+                { oauth2: ["organization:read"] },
+              ],
+            },
+          },
+          "/v1/organizations/current": {
+            get: {
+              ...operation(["organization:read"]),
+              operationId: "getCurrentOrganization",
+              security: [
+                { serviceIdentityBearer: [] },
+                { oauth2: ["organization:read"] },
+              ],
+            },
+          },
+        },
+      },
+      ["organization:read"]
+    );
+    expect(excluded).toEqual(["GET /v1/organizations/current"]);
+  });
+
+  it("disables operations that need another scheme alongside an API key", () => {
+    const { excluded } = restrictToOauthScopes(
+      {
+        paths: {
+          "/v1/machines": {
+            get: {
+              ...operation(["organization:read"]),
+              security: [{ accountServiceKey: [], serviceIdentityBearer: [] }],
+            },
+          },
+        },
+      },
+      ["organization:read"]
+    );
+    expect(excluded).toEqual(["GET /v1/machines"]);
+  });
+
+  it("enables account-key operations outside OAuth scopes", () => {
+    const listOrganizations = {
+      ...operation(["account:read_organizations"]),
+      operationId: "listOrganizations",
+      security: [{ accountServiceKey: [] }],
+      "x-photon-mcp": { enabled: false },
+    };
+    const { aggregate, excluded } = restrictToOauthScopes(
+      { paths: { "/v1/organizations": { get: listOrganizations } } },
+      ["organization:read"]
+    );
+    expect(excluded).toEqual([]);
+    expect(aggregate.paths).toEqual({
+      "/v1/organizations": {
+        get: { ...listOrganizations, "x-photon-mcp": { enabled: true } },
+      },
+    });
+  });
 });
