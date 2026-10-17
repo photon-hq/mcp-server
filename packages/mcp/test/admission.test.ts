@@ -136,6 +136,23 @@ describe("restrictToOauthScopes", () => {
     expect(excluded).toEqual(["GET /v1/organizations/current"]);
   });
 
+  it("disables operations that need another scheme alongside an API key", () => {
+    const { excluded } = restrictToOauthScopes(
+      {
+        paths: {
+          "/v1/machines": {
+            get: {
+              ...operation(["organization:read"]),
+              security: [{ accountServiceKey: [], serviceIdentityBearer: [] }],
+            },
+          },
+        },
+      },
+      ["organization:read"]
+    );
+    expect(excluded).toEqual(["GET /v1/machines"]);
+  });
+
   it("enables account-key operations outside OAuth scopes", () => {
     const listOrganizations = {
       ...operation(["account:read_organizations"]),

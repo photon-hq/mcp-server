@@ -43,10 +43,10 @@ function grantable(
   );
 }
 
-// An operation whose declared security excludes Account Service Keys can only
-// be refused for one, such as getCurrentOrganization, which needs a credential
-// bound to an organization. An empty or missing declaration is left to the
-// other checks.
+// An operation with no security alternative an Account Service Key satisfies
+// alone can only be refused for one, such as getCurrentOrganization, which
+// needs a credential bound to an organization. An alternative requires every
+// scheme it names. An empty or missing declaration is left to the other checks.
 function acceptsAccountKey(
   operation: Readonly<Record<string, unknown>>
 ): boolean {
@@ -54,7 +54,11 @@ function acceptsAccountKey(
   return (
     !Array.isArray(security) ||
     security.length === 0 ||
-    security.some((requirement) => "accountServiceKey" in record(requirement))
+    security.some((requirement) =>
+      Object.keys(record(requirement)).every(
+        (scheme) => scheme === "accountServiceKey"
+      )
+    )
   );
 }
 
