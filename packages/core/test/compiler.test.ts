@@ -1590,6 +1590,25 @@ describe("compileRelease", () => {
       {
         description: "Get project\n\nReturns a project by identifier.",
         name: "getProject",
+        title: "Get project",
+      },
+    ]);
+  });
+
+  it("titles a tool by its operation ID when it has no summary", () => {
+    const result = compileRelease(
+      makeCompileInput({
+        operation: {
+          description: "Returns a project by identifier.",
+          summary: "",
+        },
+      })
+    );
+    expect(result.tools).toEqual([
+      {
+        description: "Returns a project by identifier.",
+        name: "getProject",
+        title: "getProject",
       },
     ]);
   });

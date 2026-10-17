@@ -21,7 +21,11 @@ export interface SemanticReleaseSnapshot extends ReleaseDocuments {
   readonly compilerVersion: "0.1.0";
   readonly environment: "production" | "staging";
   readonly openapi: Readonly<Record<string, unknown>>;
-  readonly tools: readonly Readonly<{ description: string; name: string }>[];
+  readonly tools: readonly Readonly<{
+    description: string;
+    name: string;
+    title?: string;
+  }>[];
 }
 
 interface RouteFact {
@@ -67,6 +71,8 @@ const snapshotKeys = new Set([
   "tools",
 ]);
 const toolKeys = new Set(["description", "name"]);
+// Releases compiled before tools carried a title omit it.
+const titledToolKeys = new Set(["description", "name", "title"]);
 
 /** @internal */
 export function parseReleaseTools(
@@ -77,11 +83,19 @@ export function parseReleaseTools(
   }
   return value.map((item) => {
     const tool = record(item);
-    exactKeys(tool, toolKeys);
-    if (typeof tool.name !== "string" || typeof tool.description !== "string") {
+    exactKeys(tool, "title" in tool ? titledToolKeys : toolKeys);
+    if (
+      typeof tool.name !== "string" ||
+      typeof tool.description !== "string" ||
+      !(tool.title === undefined || typeof tool.title === "string")
+    ) {
       throw new Error("invalid_tools");
     }
-    return { description: tool.description, name: tool.name };
+    return {
+      description: tool.description,
+      name: tool.name,
+      ...(tool.title === undefined ? {} : { title: tool.title }),
+    };
   });
 }
 

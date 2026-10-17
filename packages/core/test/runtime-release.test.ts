@@ -132,6 +132,26 @@ describe("runtime release loading", () => {
     expect(capability.pathTemplate).toBe(originalPath);
   });
 
+  it("registers tool titles and accepts releases compiled without them", async () => {
+    const titled = await makeRuntimeRelease({ withTitles: true });
+    const withTitles = await activateRuntimeRelease(
+      titled.value,
+      titled.checksum
+    );
+    expect(withTitles.registrationPlan[0]?.options.title).toBe(
+      "Title of getAlpha"
+    );
+
+    const untitled = await makeRuntimeRelease();
+    const withoutTitles = await activateRuntimeRelease(
+      untitled.value,
+      untitled.checksum
+    );
+    expect(withoutTitles.registrationPlan[0]?.options).not.toHaveProperty(
+      "title"
+    );
+  });
+
   it("returns a cloned and frozen auth permission vocabulary", async () => {
     const fixture = await makeRuntimeRelease();
     const release = await activateRuntimeRelease(

@@ -67,6 +67,17 @@ function toolDescription(
   return summary || description || operationId;
 }
 
+// Clients show the title in place of the tool name; the summary is the
+// operation's short human-readable name.
+function toolTitle(
+  operation: Readonly<Record<string, unknown>>,
+  operationId: string
+): string {
+  const summary =
+    typeof operation.summary === "string" ? operation.summary.trim() : "";
+  return summary || operationId;
+}
+
 function validateInput(input: CompileReleaseInput): void {
   if (Object.keys(input).some((key) => !compileInputKeys.has(key))) {
     throw new Error("invalid_compile_input");
@@ -234,6 +245,7 @@ export function compileRelease(value: unknown): CompiledRelease {
   const tools = compiled.map(({ capability, operation }) => ({
     description: toolDescription(operation, capability.operationId),
     name: capability.operationId,
+    title: toolTitle(operation, capability.operationId),
   }));
 
   const snapshot: SemanticReleaseSnapshot = {

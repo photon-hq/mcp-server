@@ -27,6 +27,7 @@ interface RuntimeReleaseIdentity {
 interface RuntimeTool {
   readonly description: string;
   readonly name: string;
+  readonly title?: string;
 }
 
 interface RouteFact {
@@ -77,6 +78,7 @@ export interface ActivatedRuntimeRelease {
       description: string;
       inputSchema: StandardSchemaWithJSON;
       outputSchema: StandardSchemaWithJSON;
+      title?: string;
     }>;
   }>[];
   readonly releaseIdentity: string;
@@ -117,6 +119,8 @@ const schemaKeys = new Set(["input", "output", "responses"]);
 const responseWitnessKeys = new Set(["mediaType", "status"]);
 const bodylessResponseWitnessKeys = new Set(["status"]);
 const toolKeys = new Set(["description", "name"]);
+// Releases compiled before tools carried a title omit it.
+const titledToolKeys = new Set(["description", "name", "title"]);
 const checksumPattern = /^[a-f0-9]{64}$/u;
 const operationIdPattern = /^[A-Za-z0-9][A-Za-z0-9._-]*$/u;
 const encoder = new TextEncoder();
@@ -224,16 +228,24 @@ function parseTools(value: unknown): readonly RuntimeTool[] {
   }
   return value.map((item) => {
     const tool = record(item);
-    exactKeys(tool, toolKeys);
+    exactKeys(tool, "title" in tool ? titledToolKeys : toolKeys);
     if (
       typeof tool.name !== "string" ||
       tool.name.length === 0 ||
       typeof tool.description !== "string" ||
-      tool.description.length === 0
+      tool.description.length === 0 ||
+      !(
+        tool.title === undefined ||
+        (typeof tool.title === "string" && tool.title.length > 0)
+      )
     ) {
       fail("invalid_runtime_release");
     }
-    return { description: tool.description, name: tool.name };
+    return {
+      description: tool.description,
+      name: tool.name,
+      ...(tool.title === undefined ? {} : { title: tool.title }),
+    };
   });
 }
 
@@ -603,6 +615,7 @@ export async function activateRuntimeRelease(
         description: tool.description,
         inputSchema: execution.inputSchema,
         outputSchema: execution.outputSchema,
+        ...(tool.title === undefined ? {} : { title: tool.title }),
       });
       const operationGetter = capability.operationGetter
         ? executions.get(capability.operationGetter)

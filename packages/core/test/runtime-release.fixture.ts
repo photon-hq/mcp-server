@@ -53,13 +53,14 @@ interface RuntimeReleaseFixtureValue {
       >;
     }
   >;
-  tools: Array<{ description: string; name: string }>;
+  tools: Array<{ description: string; name: string; title?: string }>;
   [key: string]: unknown;
 }
 
 export interface RuntimeReleaseFixtureOptions {
   readonly mutate?: (value: RuntimeReleaseFixtureValue) => void;
   readonly withOperationGetter?: boolean;
+  readonly withTitles?: boolean;
 }
 
 export interface RuntimeReleaseFixture {
@@ -262,7 +263,9 @@ export async function makeRuntimeRelease(
     { description: "Reads alpha.", name: "getAlpha" },
     { description: "Reads public data.", name: "publicTool" },
     { description: "Writes alpha.", name: "writeAlpha" },
-  ];
+  ].map((tool) =>
+    options.withTitles ? { ...tool, title: `Title of ${tool.name}` } : tool
+  );
   const releaseFacts = {
     admissionModel: "producer_metadata_only",
     aggregateEtag: '"runtime-1"',
