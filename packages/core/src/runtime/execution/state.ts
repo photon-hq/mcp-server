@@ -126,14 +126,17 @@ async function continuation(
   hash: string,
   key?: string
 ): Promise<Result | undefined> {
-  if (response.status !== 202) {
+  // A 202 from an operation that links no getter is its final answer: the
+  // upstream accepted the request, and failing it would invite a retry of work
+  // that already happened.
+  if (
+    response.status !== 202 ||
+    request.execution.capability.operationGetter === undefined
+  ) {
     return;
   }
   const getter = request.operationGetter;
-  if (
-    request.execution.capability.operationGetter === undefined ||
-    getter === undefined
-  ) {
+  if (getter === undefined) {
     response.body?.cancel().catch(() => undefined);
     return errorResult("upstream_contract_violation");
   }

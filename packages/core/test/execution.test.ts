@@ -1179,25 +1179,38 @@ describe("capability execution lifecycle and responses", () => {
     expect(JSON.stringify(result)).not.toContain("must-not-escape");
   });
 
-  it.each([
-    "unsigned source",
-    "unresolved signed getter",
-  ])("fails a 202 closed for an %s", async (kind) => {
+  it("returns a 202 without polling when the source links no getter", async () => {
     const {
       operationGetter: _operationGetter,
       operationPollLimit: _limit,
       ...withoutGetter
     } = asyncCapability;
-    const source = kind === "unsigned source" ? withoutGetter : asyncCapability;
+    const { minted, requests, result } = await execute202(
+      {
+        operationId: "operation-1",
+        projectId: "project-1",
+        state: "running",
+      },
+      { source: withoutGetter }
+    );
+
+    expect(result.isError).not.toBe(true);
+    expect(result.structuredContent).toMatchObject({
+      data: { operationId: "operation-1", state: "running" },
+      status: 202,
+    });
+    expect(requests).toHaveLength(1);
+    expect(minted).toHaveLength(0);
+  });
+
+  it("fails a 202 closed for an unresolved signed getter", async () => {
     const { requests, result } = await execute202(
       {
         operationId: "operation-1",
         projectId: "project-1",
         state: "running",
       },
-      {
-        source,
-      }
+      { source: asyncCapability }
     );
 
     expect(result).toMatchObject({
