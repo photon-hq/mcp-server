@@ -36,12 +36,23 @@ function object(value: unknown): Readonly<Record<string, unknown>> {
     : {};
 }
 
-export function errorResult(code: string): CallToolResult {
+// Clients that read only text content still see the sanitized error fields, as
+// the MCP spec recommends for structured results.
+function errorContent(
+  summary: string,
+  structuredContent: Readonly<Record<string, unknown>>
+): CallToolResult {
   return {
-    content: [{ text: "Request could not be completed.", type: "text" }],
+    content: [
+      { text: `${summary} ${JSON.stringify(structuredContent)}`, type: "text" },
+    ],
     isError: true,
-    structuredContent: { code },
+    structuredContent: { ...structuredContent },
   };
+}
+
+export function errorResult(code: string): CallToolResult {
+  return errorContent("Request could not be completed.", { code });
 }
 
 export function upstreamContractViolation(
@@ -69,15 +80,12 @@ export function upstreamContractViolation(
   ) {
     responseType = mediaType;
   }
-  return {
-    ...errorResult("upstream_contract_violation"),
-    structuredContent: {
-      code: "upstream_contract_violation",
-      responseType,
-      stage,
-      upstreamStatus: status,
-    },
-  };
+  return errorContent("Request could not be completed.", {
+    code: "upstream_contract_violation",
+    responseType,
+    stage,
+    upstreamStatus: status,
+  });
 }
 
 export function completedResult(
@@ -366,23 +374,17 @@ async function mapProblemResponse(response: Response): Promise<CallToolResult> {
     const status = safeProblemStatus(problem.status, response.status);
     const title = safeProblemText(problem.title, 160);
     const type = safeProblemType(problem.type);
-    return {
-      content: [
-        { text: "The upstream service rejected the request.", type: "text" },
-      ],
-      isError: true,
-      structuredContent: {
-        code: code ?? "upstream_problem",
-        ...(status === undefined ? {} : { status }),
-        ...(title === undefined ? {} : { title }),
-        ...(type === undefined ? {} : { type }),
-        ...(requestId === undefined ? {} : { requestId }),
-        ...(typeof problem.retryable === "boolean"
-          ? { retryable: problem.retryable }
-          : {}),
-        ...(retryAfter === undefined ? {} : { retryAfter }),
-      },
-    };
+    return errorContent("The upstream service rejected the request.", {
+      code: code ?? "upstream_problem",
+      ...(status === undefined ? {} : { status }),
+      ...(title === undefined ? {} : { title }),
+      ...(type === undefined ? {} : { type }),
+      ...(requestId === undefined ? {} : { requestId }),
+      ...(typeof problem.retryable === "boolean"
+        ? { retryable: problem.retryable }
+        : {}),
+      ...(retryAfter === undefined ? {} : { retryAfter }),
+    });
   } catch (error) {
     if (
       error instanceof InvocationError ||

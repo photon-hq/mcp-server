@@ -848,6 +848,10 @@ describe("capability execution lifecycle and responses", () => {
       isError: true,
       structuredContent: { code: "not_found", status: 404, title: "Not found" },
     });
+    const [text] = result.content as [{ text: string; type: "text" }];
+    expect(text.text).toBe(
+      `The upstream service rejected the request. ${JSON.stringify(result.structuredContent)}`
+    );
     expect(JSON.stringify(result)).not.toContain("credential=private");
   });
 
