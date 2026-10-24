@@ -54,10 +54,16 @@ version is not on npm.
 
 ## How tools are built
 
-Each tool is one Photon HTTP operation. The compiler reads the OpenAPI
+Each generated tool is one Photon HTTP operation. The compiler reads the OpenAPI
 document, keeps the operations producers have not excluded with
 `x-photon-mcp: { enabled: false }`, and emits a checksummed release. At
 runtime the server validates arguments against the compiled schema, calls the
 operation, validates the response, and polls asynchronous Operations within a
 30-second budget. Mutations that declare an idempotency header get a generated
 key and are retried only with that key.
+
+The runtime also registers `search_docs` and `read_docs` separately from the
+generated API catalog. They use public Mintlify content and enforce Beta in
+`packages/core/src/runtime/docs.ts`. Changes to this shared runtime reach the
+hosted server after releasing `@photon-ai/mcp-core` and upgrading its dependency
+in `photon-hq/mcp-internal`.

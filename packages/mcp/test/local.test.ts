@@ -123,7 +123,7 @@ describe("createLocalServerFactory", () => {
       (listed.result as { tools: { name: string }[] }).tools.map(
         (tool) => tool.name
       )
-    ).toEqual(["getProject"]);
+    ).toEqual(["getProject", "search_docs", "read_docs"]);
 
     const called = await call(factory, "tools/call", {
       arguments: { path: { id: "project-1" } },

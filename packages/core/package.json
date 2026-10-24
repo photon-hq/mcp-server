@@ -35,6 +35,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@modelcontextprotocol/client": "2.0.0",
     "jose": "6.2.10",
     "zod": "4.1.12"
   },
