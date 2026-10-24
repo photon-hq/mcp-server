@@ -2,6 +2,7 @@
 // embeds, and writes a reviewable bundle to .release/production/.
 import { createHash } from "node:crypto";
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 import { compileRelease } from "@photon-ai/mcp-core/compiler/compile";
 import {
   writeBundle,
@@ -29,7 +30,7 @@ const compiled = compileRelease({
 
 await rm(output, { force: true, recursive: true });
 await mkdir(output, { recursive: true });
-await writeBundle(compiled, new URL("bundle", output).pathname);
+await writeBundle(compiled, fileURLToPath(new URL("bundle", output)));
 await writeFile(
   new URL("excluded.json", output),
   `${JSON.stringify(excluded, null, 2)}\n`
@@ -43,7 +44,7 @@ await writeFile(
 );
 await writeRuntimeModule(
   compiled,
-  new URL("../src/generated/runtime-release.ts", import.meta.url).pathname
+  fileURLToPath(new URL("../src/generated/runtime-release.ts", import.meta.url))
 );
 console.log(
   `Compiled ${compiled.tools.length} tools; ${excluded.length} operations outside OAuth scopes excluded.`
