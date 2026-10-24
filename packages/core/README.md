@@ -13,11 +13,16 @@ server at `https://mcp.photon.codes/mcp`.
 - `runtime/server`: registers the release's tools on an MCP server and executes
   them: argument and response validation, retries with idempotency keys, and
   polling of asynchronous operations with encrypted continuations.
+- `runtime/docs`: adds `search_docs` and `read_docs` for public Photon Beta
+  documentation through Mintlify's MCP. Searches force the Beta filter and
+  discard off-version hits; reads accept only individual `/beta/` page paths.
+  These calls use a separate unauthenticated connection with a 15-second limit.
 
 The host supplies the principal, the upstream origin and `fetch`, the
 request-state keys and telemetry, so the core holds no credentials and makes no
-assumptions about where it runs. `@modelcontextprotocol/server` is a peer
-dependency.
+assumptions about where it runs. Documentation uses the fixed public endpoint
+`https://photon.codes/docs/mcp` and never uses the host's authenticated API fetch.
+`@modelcontextprotocol/server` is a peer dependency.
 
 The `photon-mcp-compile` command compiles and verifies bundles from the command
 line:

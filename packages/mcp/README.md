@@ -42,6 +42,19 @@ The server offers the same tools as the hosted server. Operations that manage
 keys, account security, SSO or billing checkout are not available. Your client
 decides when to ask before running a tool, so set it to confirm writes.
 
+## Documentation tools
+
+`search_docs` searches Photon Beta documentation and returns snippets and page
+paths. `read_docs` reads one of those pages, using a path such as
+`/beta/ai-tools/mcp`. Both tools are read-only and always use Beta, which matches
+the current Photon API. Stable documentation and arbitrary filesystem commands
+are not available through these tools.
+
+Documentation comes from the public Mintlify MCP at
+`https://photon.codes/docs/mcp`. Calls send no Photon credentials, time out after
+15 seconds, and return `docs_unavailable` if retrieval fails. API tools remain
+available independently of the documentation service.
+
 ## License
 
 [Apache 2.0](https://github.com/photon-hq/mcp-server/blob/main/LICENSE)

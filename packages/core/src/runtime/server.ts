@@ -3,6 +3,7 @@ import {
   McpServer,
   type ServerContext,
 } from "@modelcontextprotocol/server";
+import { registerBetaDocsTools } from "./docs.js";
 import {
   type CapabilityProtocolFacts,
   executeCapability,
@@ -148,6 +149,7 @@ export function createServerFactory(
         )
       );
     }
+    registerBetaDocsTools(server, release.validator);
     return server;
   };
 }
