@@ -603,6 +603,149 @@ export function assertClosedSchema(value: unknown): void {
   visit(root, true);
 }
 
+function primitiveTypes(values: readonly unknown[]): string[] | undefined {
+  const types = new Set<string>();
+  for (const value of values) {
+    if (value === null) {
+      types.add("null");
+    } else if (["boolean", "number", "string"].includes(typeof value)) {
+      types.add(typeof value);
+    } else {
+      return;
+    }
+  }
+  return [...types].sort(compareUtf8);
+}
+
+/**
+ * Gives every definition an `if` or `not` subschema reaches a closed copy,
+ * keyed by the original name, so predicates keep matching what they matched.
+ */
+function predicateDefinitions(
+  root: JsonObject,
+  definitions: JsonObject
+): Map<string, string> {
+  const copies = new Map<string, string>();
+  const taken = new Set(Object.keys(definitions));
+  const visit = (schema: unknown, inPredicate: boolean): void => {
+    if (!isObject(schema)) {
+      return;
+    }
+    for (const [key, item] of Object.entries(schema)) {
+      if (key !== "$ref") {
+        mapSchemaChildren(key, item, (child) => {
+          visit(child, inPredicate || key === "if" || key === "not");
+        });
+        continue;
+      }
+      const name = closedLocalReference(item);
+      if (!inPredicate || copies.has(name)) {
+        continue;
+      }
+      let copy = `closed_${name}`;
+      while (taken.has(copy)) {
+        copy = `${copy}_`;
+      }
+      taken.add(copy);
+      copies.set(name, copy);
+      visit(definitions[name], true);
+    }
+  };
+  visit(root, false);
+  return copies;
+}
+
+/**
+ * Relaxes a closed response schema so that additive upstream changes still
+ * validate: objects accept unknown properties, primitive enums accept any value
+ * of their type, and oneOf becomes anyOf because open branches can overlap.
+ * Missing required properties, changed types and const literals still fail.
+ * `if` and `not` subschemas are predicates and are kept as written: opening
+ * them would change which values they match, not just accept more. The
+ * definitions they reference are kept closed as separate copies.
+ */
+export function openSchema(value: unknown): JsonObject {
+  const root = object(value, "invalid_schema");
+  const definitions =
+    root.$defs === undefined
+      ? {}
+      : object(root.$defs, "invalid_schema_property_map");
+  const copies = predicateDefinitions(root, definitions);
+  const closed = (schema: unknown): unknown => {
+    if (!isObject(schema)) {
+      return schema;
+    }
+    return Object.fromEntries(
+      Object.entries(schema).map(([key, item]) => {
+        if (key === "$ref") {
+          const copy = copies.get(closedLocalReference(item));
+          if (copy === undefined) {
+            fail("dangling_local_reference");
+          }
+          return [key, `#/$defs/${encodePointerSegment(copy)}`];
+        }
+        const mapped = mapSchemaChildren(key, item, closed);
+        return [key, mapped === undefined ? jsonClone(item) : mapped];
+      })
+    );
+  };
+  const open = (schema: unknown): unknown => {
+    if (schema === true || schema === false) {
+      return schema;
+    }
+    const source = object(schema, "invalid_schema");
+    const { oneOf, ...opened }: JsonObject = Object.fromEntries(
+      Object.entries(source).map(([key, item]) => {
+        if (key === "if" || key === "not") {
+          return [key, closed(item)];
+        }
+        if (
+          (key === "additionalProperties" || key === "unevaluatedProperties") &&
+          item === false
+        ) {
+          return [key, true];
+        }
+        const mapped = mapSchemaChildren(key, item, open);
+        return [key, mapped === undefined ? jsonClone(item) : mapped];
+      })
+    );
+    if (oneOf !== undefined && opened.anyOf === undefined) {
+      opened.anyOf = oneOf;
+    } else if (oneOf !== undefined) {
+      opened.allOf = [...schemaArray(opened.allOf ?? []), { anyOf: oneOf }];
+    }
+    const { enum: values, ...rest } = opened;
+    const types =
+      values === undefined
+        ? undefined
+        : primitiveTypes(jsonArray(values, "invalid_schema_enum"));
+    if (types === undefined) {
+      return opened;
+    }
+    return {
+      ...rest,
+      description: [
+        rest.description,
+        `Known values: ${JSON.stringify(values)}. Others may be added.`,
+      ]
+        .filter((description) => description !== undefined)
+        .join("\n\n"),
+      type: rest.type ?? (types.length === 1 ? types[0] : types),
+    };
+  };
+  const opened = object(open(root), "invalid_schema");
+  if (copies.size > 0) {
+    opened.$defs = {
+      ...object(opened.$defs, "invalid_schema_property_map"),
+      ...Object.fromEntries(
+        [...copies].map(([name, copy]) => [copy, closed(definitions[name])])
+      ),
+    };
+  }
+  assertClosedSchema(opened);
+  return opened;
+}
+
 /**
  * Closes an admitted schema into a self-contained root-$defs document.
  * A definition prefix is used only when embedding independently closed schemas

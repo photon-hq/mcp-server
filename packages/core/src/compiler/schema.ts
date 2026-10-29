@@ -5,7 +5,7 @@ import {
   normalizeJsonMediaType,
   normalizeSuccessMediaType,
 } from "../release.js";
-import { closeSchema, componentSchema } from "../schema.js";
+import { closeSchema, componentSchema, openSchema } from "../schema.js";
 import type { McpOptions } from "./extension.js";
 import { canonicalJson } from "./release-snapshot.js";
 
@@ -803,7 +803,9 @@ function responseSchemas(
     if (media.schema === undefined) {
       fail("missing_response_schema");
     }
-    const schema = closeSchema(media.schema, components);
+    // Producers add fields and enum values within an API version, and a
+    // catalog compiled before such a change must still read the response.
+    const schema = openSchema(closeSchema(media.schema, components));
     const existing = representations.get(normalized);
     if (
       existing !== undefined &&
