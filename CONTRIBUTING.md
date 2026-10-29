@@ -61,3 +61,9 @@ runtime the server validates arguments against the compiled schema, calls the
 operation, validates the response, and polls asynchronous Operations within a
 30-second budget. Mutations that declare an idempotency header get a generated
 key and are retried only with that key.
+
+Arguments are checked strictly; responses are read openly. A response may
+carry properties and enum values the release does not know, because producers
+add them without changing the API version and a published catalog cannot be
+recompiled for every API deployment. Missing required properties, changed
+types and different `const` values are still rejected.

@@ -196,7 +196,114 @@ describe("compileRelease", () => {
     ).toBe(false);
     expect(
       validate({ data: { extra: true, operations: [] }, status: 200 }).valid
-    ).toBe(false);
+    ).toBe(true);
+  });
+
+  it("reads success responses openly while request bodies stay closed", () => {
+    const input = makeCompileInput({
+      method: "post",
+      operation: {
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/Resource" },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/Resource" },
+              },
+            },
+          },
+        },
+      },
+    });
+    Object.assign(input.aggregate.components.schemas, {
+      Owner: {
+        oneOf: [
+          {
+            additionalProperties: false,
+            properties: { id: { type: "string" } },
+            required: ["id"],
+            type: "object",
+          },
+          {
+            additionalProperties: false,
+            properties: { id: { type: "string" }, name: { type: "string" } },
+            required: ["id", "name"],
+            type: "object",
+          },
+        ],
+      },
+      Resource: {
+        additionalProperties: false,
+        properties: {
+          failure: { not: {} },
+          id: { type: "string" },
+          kind: { const: "number", type: "string" },
+          owner: { $ref: "#/components/schemas/Owner" },
+          state: {
+            description: "Lifecycle state.",
+            enum: ["unallocated", "active", "retired"],
+            type: "string",
+          },
+        },
+        required: ["id", "kind", "state"],
+        type: "object",
+      },
+    });
+    const compiled = capability(compileRelease(input));
+    const [representation] = compiled.successRepresentations;
+    if (!(representation && "schema" in representation)) {
+      throw new Error("missing success representation");
+    }
+    // Both owner branches match once objects are open, which oneOf rejects.
+    const resource = {
+      id: "resource-1",
+      kind: "number",
+      owner: { id: "owner-1", name: "Owner" },
+      state: "active",
+    };
+    for (const validator of [
+      new AjvJsonSchemaValidator(),
+      new CfWorkerJsonSchemaValidator({ draft: "2020-12" }),
+    ]) {
+      // The released schemas are frozen; cfworker annotates what it validates.
+      const output = validator.getValidator(
+        structuredClone(compiled.outputSchema)
+      );
+      const response = validator.getValidator(
+        structuredClone(representation.schema)
+      );
+      const read = (data: unknown) => [
+        output({ data, status: 200 }).valid,
+        response(data).valid,
+      ];
+      expect(read(resource)).toEqual([true, true]);
+      expect(read({ ...resource, added: true, state: "provisioning" })).toEqual(
+        [true, true]
+      );
+      expect(read({ ...resource, failure: "x" })).toEqual([false, false]);
+      expect(read({ ...resource, kind: "other" })).toEqual([false, false]);
+      expect(read({ ...resource, state: 1 })).toEqual([false, false]);
+      const { state: _state, ...withoutState } = resource;
+      expect(read(withoutState)).toEqual([false, false]);
+
+      const request = validator.getValidator(
+        structuredClone(compiled.inputSchema)
+      );
+      const call = (body: unknown) =>
+        request({ body, path: { projectId: "project-1" } }).valid;
+      expect(call(resource)).toBe(true);
+      expect(call({ ...resource, state: "provisioning" })).toBe(false);
+      expect(call({ ...resource, added: true })).toBe(false);
+    }
+    expect(JSON.stringify(compiled.outputSchema)).toContain(
+      'Lifecycle state.\\n\\nKnown values: [\\"unallocated\\",\\"active\\",\\"retired\\"]. Others may be added.'
+    );
   });
   it("rejects the reserved release operation ID at compile admission", () => {
     expect(() =>
