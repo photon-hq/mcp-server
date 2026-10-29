@@ -323,7 +323,7 @@ describe("compileRelease", () => {
     );
   });
 
-  it("keeps a response closed when a predicate references a definition", () => {
+  it("keeps the definitions a predicate references closed", () => {
     const input = makeCompileInput({
       operation: {
         responses: {
@@ -348,21 +348,32 @@ describe("compileRelease", () => {
         type: "object",
       },
     });
-    const [representation] = capability(
-      compileRelease(input)
-    ).successRepresentations;
+    const compiled = capability(compileRelease(input));
+    const [representation] = compiled.successRepresentations;
     if (!(representation && "schema" in representation)) {
       throw new Error("missing success representation");
     }
-    // Opening the shared Code definition would make `not` reject every string.
-    const read = new AjvJsonSchemaValidator().getValidator(
-      structuredClone(representation.schema)
-    );
-    expect(read({ previous: "b" }).valid).toBe(true);
-    expect(read({ previous: "a" }).valid).toBe(false);
-    expect(read({ code: "b" }).valid).toBe(false);
-    expect(read({ added: true }).valid).toBe(false);
+    for (const validator of [
+      new AjvJsonSchemaValidator(),
+      new CfWorkerJsonSchemaValidator({ draft: "2020-12" }),
+    ]) {
+      const output = validator.getValidator(
+        structuredClone(compiled.outputSchema)
+      );
+      const response = validator.getValidator(
+        structuredClone(representation.schema)
+      );
+      const read = (data: unknown) => [
+        output({ data, status: 200 }).valid,
+        response(data).valid,
+      ];
+      // An opened Code would make `not` reject every string.
+      expect(read({ previous: "b" })).toEqual([true, true]);
+      expect(read({ previous: "a" })).toEqual([false, false]);
+      expect(read({ added: true, code: "b" })).toEqual([true, true]);
+    }
   });
+
   it("rejects the reserved release operation ID at compile admission", () => {
     expect(() =>
       compileRelease(
