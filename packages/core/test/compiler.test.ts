@@ -10,6 +10,8 @@ import { makeCompileInput } from "./fixtures.js";
 const idempotencyPattern = /idempotency/iu;
 const releaseIdentityPattern = /^[a-f0-9]{64}$/u;
 const advertisedSuccessDefinition = /^#\/\$defs\/success_200_/u;
+const externalDocsLink =
+  /\n\nAPI reference: https:\/\/example\.com\/get-project$/u;
 
 function capability(
   result: ReturnType<typeof compileRelease>,
@@ -784,7 +786,7 @@ describe("compileRelease", () => {
     ).toThrow("nested_schema_definitions");
   });
 
-  it("lifts generated request definitions to the final input schema root", () => {
+  it("types the body argument by inlining its referenced definition", () => {
     const result = compileRelease(
       makeCompileInput({
         operation: {
@@ -801,8 +803,130 @@ describe("compileRelease", () => {
 
     expect(capability(result).inputSchema).toMatchObject({
       $defs: { Project: { type: "object" } },
-      properties: { body: { $ref: "#/$defs/Project" } },
+      properties: {
+        body: {
+          additionalProperties: false,
+          required: ["id", "name"],
+          type: "object",
+        },
+      },
     });
+  });
+
+  it.each([
+    ["every branch is an object", { type: "object" }, "object"],
+    ["a branch is not an object", { type: "string" }, undefined],
+  ])("types a union body only when %s", (_name, second, type) => {
+    const input = makeCompileInput({
+      operation: {
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/Change" },
+            },
+          },
+        },
+      },
+    });
+    Object.assign(input.aggregate.components.schemas, {
+      Change: {
+        anyOf: [
+          { $ref: "#/components/schemas/Project" },
+          { $ref: "#/components/schemas/Second" },
+        ],
+      },
+      Second: second,
+    });
+    const { body } = (
+      capability(compileRelease(input)).inputSchema as {
+        properties: { body: Record<string, unknown> };
+      }
+    ).properties;
+    expect(body.type).toBe(type);
+    expect(body).toHaveProperty(type === undefined ? "$ref" : "anyOf");
+  });
+
+  it.each([
+    [
+      "an alias",
+      { $ref: "#/components/schemas/Alias" },
+      { $ref: "#/components/schemas/Project", description: "Alias" },
+      "Alias",
+    ],
+    [
+      "an annotated alias",
+      { $ref: "#/components/schemas/Alias", description: "Body" },
+      { $ref: "#/components/schemas/Project", description: "Alias" },
+      "Body",
+    ],
+  ])("types a body that references %s by the object it resolves to", (_name, bodySchema, alias, description) => {
+    const input = makeCompileInput({
+      method: "post",
+      operation: {
+        requestBody: {
+          content: { "application/json": { schema: bodySchema } },
+          required: true,
+        },
+      },
+    });
+    Object.assign(input.aggregate.components.schemas, { Alias: alias });
+    const { inputSchema } = capability(compileRelease(input));
+    const { body } = (
+      inputSchema as { properties: { body: Record<string, unknown> } }
+    ).properties;
+    expect(body).not.toHaveProperty("$ref");
+    expect(body).toMatchObject({ description, type: "object" });
+    for (const validator of [
+      new AjvJsonSchemaValidator(),
+      new CfWorkerJsonSchemaValidator({ draft: "2020-12" }),
+    ]) {
+      const validate = validator.getValidator(structuredClone(inputSchema));
+      const call = (value: unknown) =>
+        validate({ body: value, path: { projectId: "project-1" } }).valid;
+      expect(call({ id: "project-1", name: "Project" })).toBe(true);
+      expect(call({ extra: true, id: "project-1", name: "Project" })).toBe(
+        false
+      );
+    }
+  });
+
+  it("leaves a body reference with its own constraints as written", () => {
+    const { inputSchema } = capability(
+      compileRelease(
+        makeCompileInput({
+          method: "post",
+          operation: {
+            requestBody: {
+              content: {
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/Project",
+                    additionalProperties: true,
+                  },
+                },
+              },
+              required: true,
+            },
+          },
+        })
+      )
+    );
+    const { body } = (
+      inputSchema as { properties: { body: Record<string, unknown> } }
+    ).properties;
+    expect(body).toEqual({
+      $ref: "#/$defs/Project",
+      additionalProperties: true,
+    });
+    const validate = new AjvJsonSchemaValidator().getValidator(
+      structuredClone(inputSchema)
+    );
+    expect(
+      validate({
+        body: { extra: true, id: "project-1", name: "Project" },
+        path: { projectId: "project-1" },
+      }).valid
+    ).toBe(false);
   });
 
   it("keeps async request definitions at the final input root despite component name collisions", () => {
@@ -873,7 +997,7 @@ describe("compileRelease", () => {
     }
 
     expect(schema.$defs.Value).toEqual({ type: "string" });
-    expect(initialBranch.properties.body).toEqual({ $ref: "#/$defs/Value" });
+    expect(initialBranch.properties.body).toEqual({ type: "string" });
   });
 
   it("lifts success definitions to the advertised output schema root", () => {
@@ -1580,6 +1704,7 @@ describe("compileRelease", () => {
       idempotentHint: true,
       openWorldHint: true,
       readOnlyHint: true,
+      title: "Get project",
     });
     expect(item.requiredPermissions).toEqual([
       "projects:read",
@@ -1593,6 +1718,46 @@ describe("compileRelease", () => {
         title: "Get project",
       },
     ]);
+  });
+
+  it.each([
+    [
+      ["Organization Members"],
+      "Leave an organization; Owners must transfer or close first",
+      "https://photon.codes/docs/beta/api-reference/organization-members/leave-an-organization%3B-owners-must-transfer-or-close-first",
+    ],
+    [
+      ["Messaging & Voice Metrics"],
+      "Get the project's metrics",
+      "https://photon.codes/docs/beta/api-reference/messaging-%26-voice-metrics/get-the-projects-metrics",
+    ],
+    [
+      ["Projects"],
+      "Create a one-time key",
+      "https://photon.codes/docs/beta/api-reference/projects/create-a-one-time-key",
+    ],
+  ])("links %s %s to its API reference page", (tags, summary, url) => {
+    const result = compileRelease(
+      makeCompileInput({ operation: { summary, tags } })
+    );
+    expect(result.tools[0]?.description).toBe(
+      `${summary}\n\nReturns a project by identifier.\n\nAPI reference: ${url}`
+    );
+  });
+
+  it("prefers the producer's externalDocs link and omits a link without a tag", () => {
+    const linked = compileRelease(
+      makeCompileInput({
+        operation: {
+          externalDocs: { url: "https://example.com/get-project" },
+          tags: ["Projects"],
+        },
+      })
+    );
+    expect(linked.tools[0]?.description).toMatch(externalDocsLink);
+    expect(compileRelease(makeCompileInput()).tools[0]?.description).toBe(
+      "Get project\n\nReturns a project by identifier."
+    );
   });
 
   it("titles a tool by its operation ID when it has no summary", () => {

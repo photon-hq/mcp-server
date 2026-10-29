@@ -26,6 +26,7 @@ export interface Capability {
     destructiveHint: boolean;
     idempotentHint: boolean;
     openWorldHint: true;
+    title?: string;
   }>;
   readonly idempotency: "none" | "header";
   readonly idempotencyKeySchema?: Readonly<Record<string, unknown>>;
@@ -75,6 +76,8 @@ const capabilitySchema = z
         idempotentHint: z.boolean(),
         openWorldHint: z.literal(true),
         readOnlyHint: z.boolean(),
+        // Releases compiled before annotations carried a title omit it.
+        title: z.string().min(1).optional(),
       })
       .strict(),
     idempotency: z.enum(["none", "header"]),
@@ -496,6 +499,7 @@ function normalizeCapability(
   capability: z.infer<typeof capabilitySchema>
 ): Capability {
   const {
+    annotations: { title, ...hints },
     idempotencyKeySchema,
     operationGetter,
     operationPollLimit,
@@ -506,6 +510,7 @@ function normalizeCapability(
 
   return {
     ...requiredFields,
+    annotations: { ...hints, ...(title === undefined ? {} : { title }) },
     ...(idempotencyKeySchema === undefined ? {} : { idempotencyKeySchema }),
     successRepresentations: successRepresentations.map((representation) =>
       "mediaType" in representation

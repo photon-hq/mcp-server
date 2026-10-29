@@ -344,6 +344,81 @@ function idempotencyContract(
   };
 }
 
+const definitionPrefix = "#/$defs/";
+
+// The type a definition validates as: its own, its reference's, or "object"
+// when every union branch is an object.
+function definitionType(schema: unknown, definitions: JsonObject): unknown {
+  const resolve = (node: unknown, followed: readonly string[]): unknown => {
+    if (!isObject(node)) {
+      return;
+    }
+    if (node.type !== undefined) {
+      return node.type;
+    }
+    if (
+      typeof node.$ref === "string" &&
+      node.$ref.startsWith(definitionPrefix)
+    ) {
+      const name = node.$ref.slice(definitionPrefix.length);
+      return followed.includes(name)
+        ? undefined
+        : resolve(definitions[name], [...followed, name]);
+    }
+    const branches = node.anyOf ?? node.oneOf;
+    return Array.isArray(branches) &&
+      branches.length > 0 &&
+      branches.every((branch) => resolve(branch, followed) === "object")
+      ? "object"
+      : undefined;
+  };
+  return resolve(schema, []);
+}
+
+const annotationKeywords = new Set([
+  "$comment",
+  "default",
+  "description",
+  "examples",
+  "readOnly",
+  "title",
+  "writeOnly",
+]);
+
+// Clients and directories read an argument's type from the argument itself, so
+// a body that only references a definition takes that definition's place.
+// References are followed through aliases, and only when their other keywords
+// are annotations; the outermost annotations win. A body that would still be
+// a reference, or that carries its own constraints, is left as written.
+function typedBody(schema: JsonObject, definitions: unknown): JsonObject {
+  if (schema.type !== undefined || !isObject(definitions)) {
+    return schema;
+  }
+  let body = schema;
+  const followed: string[] = [];
+  for (;;) {
+    const { $ref: reference, ...siblings } = body;
+    if (
+      typeof reference !== "string" ||
+      !reference.startsWith(definitionPrefix) ||
+      !Object.keys(siblings).every((key) => annotationKeywords.has(key))
+    ) {
+      break;
+    }
+    const name = reference.slice(definitionPrefix.length);
+    const target = definitions[name];
+    if (!isObject(target) || followed.includes(name)) {
+      return schema;
+    }
+    followed.push(name);
+    body = { ...target, ...siblings };
+  }
+  const type = definitionType(body, definitions);
+  return body === schema || body.$ref !== undefined || type === undefined
+    ? schema
+    : { ...body, type };
+}
+
 function inputSchema(
   pathOperation: PathOperation,
   components: unknown,
@@ -357,7 +432,7 @@ function inputSchema(
   if (body) {
     const { $defs, ...schema } = body.schema;
     definitions = $defs;
-    properties.body = schema;
+    properties.body = typedBody(schema, $defs);
     if (body.required) {
       required.push("body");
     }
@@ -841,6 +916,17 @@ export function operationPermissions(
   return permissions.sort(compareUtf8);
 }
 
+// Clients show the title in place of the tool name; the summary is the
+// operation's short human-readable name.
+export function operationTitle(
+  operation: Readonly<JsonObject>,
+  fallback: string
+): string {
+  const summary =
+    typeof operation.summary === "string" ? operation.summary.trim() : "";
+  return summary || fallback;
+}
+
 export function compileCapability(
   pathOperation: PathOperation,
   components: unknown,
@@ -861,6 +947,8 @@ export function compileCapability(
       openWorldHint: true,
       readOnlyHint:
         extension?.readOnly ?? (method === "GET" || method === "HEAD"),
+      // Directories read the display name from the annotations.
+      title: operationTitle(operation, id),
     },
     ...idempotencyContract(pathOperation, components),
     inputSchema: inputSchema(pathOperation, components, asyncOperation, body),
