@@ -375,23 +375,48 @@ function definitionType(schema: unknown, definitions: JsonObject): unknown {
   return resolve(schema, []);
 }
 
+const annotationKeywords = new Set([
+  "$comment",
+  "default",
+  "description",
+  "examples",
+  "readOnly",
+  "title",
+  "writeOnly",
+]);
+
 // Clients and directories read an argument's type from the argument itself, so
 // a body that only references a definition takes that definition's place.
+// References are followed through aliases, and only when their other keywords
+// are annotations; the outermost annotations win. A body that would still be
+// a reference, or that carries its own constraints, is left as written.
 function typedBody(schema: JsonObject, definitions: unknown): JsonObject {
-  const { $ref: reference, ...siblings } = schema;
-  if (
-    schema.type !== undefined ||
-    typeof reference !== "string" ||
-    !reference.startsWith(definitionPrefix) ||
-    !isObject(definitions)
-  ) {
+  if (schema.type !== undefined || !isObject(definitions)) {
     return schema;
   }
-  const target = definitions[reference.slice(definitionPrefix.length)];
-  const type = definitionType(target, definitions);
-  return isObject(target) && type !== undefined
-    ? { ...target, ...siblings, type }
-    : schema;
+  let body = schema;
+  const followed: string[] = [];
+  for (;;) {
+    const { $ref: reference, ...siblings } = body;
+    if (
+      typeof reference !== "string" ||
+      !reference.startsWith(definitionPrefix) ||
+      !Object.keys(siblings).every((key) => annotationKeywords.has(key))
+    ) {
+      break;
+    }
+    const name = reference.slice(definitionPrefix.length);
+    const target = definitions[name];
+    if (!isObject(target) || followed.includes(name)) {
+      return schema;
+    }
+    followed.push(name);
+    body = { ...target, ...siblings };
+  }
+  const type = definitionType(body, definitions);
+  return body === schema || body.$ref !== undefined || type === undefined
+    ? schema
+    : { ...body, type };
 }
 
 function inputSchema(

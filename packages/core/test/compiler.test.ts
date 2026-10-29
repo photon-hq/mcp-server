@@ -846,6 +846,89 @@ describe("compileRelease", () => {
     expect(body).toHaveProperty(type === undefined ? "$ref" : "anyOf");
   });
 
+  it.each([
+    [
+      "an alias",
+      { $ref: "#/components/schemas/Alias" },
+      { $ref: "#/components/schemas/Project", description: "Alias" },
+      "Alias",
+    ],
+    [
+      "an annotated alias",
+      { $ref: "#/components/schemas/Alias", description: "Body" },
+      { $ref: "#/components/schemas/Project", description: "Alias" },
+      "Body",
+    ],
+  ])("types a body that references %s by the object it resolves to", (_name, bodySchema, alias, description) => {
+    const input = makeCompileInput({
+      method: "post",
+      operation: {
+        requestBody: {
+          content: { "application/json": { schema: bodySchema } },
+          required: true,
+        },
+      },
+    });
+    Object.assign(input.aggregate.components.schemas, { Alias: alias });
+    const { inputSchema } = capability(compileRelease(input));
+    const { body } = (
+      inputSchema as { properties: { body: Record<string, unknown> } }
+    ).properties;
+    expect(body).not.toHaveProperty("$ref");
+    expect(body).toMatchObject({ description, type: "object" });
+    for (const validator of [
+      new AjvJsonSchemaValidator(),
+      new CfWorkerJsonSchemaValidator({ draft: "2020-12" }),
+    ]) {
+      const validate = validator.getValidator(structuredClone(inputSchema));
+      const call = (value: unknown) =>
+        validate({ body: value, path: { projectId: "project-1" } }).valid;
+      expect(call({ id: "project-1", name: "Project" })).toBe(true);
+      expect(call({ extra: true, id: "project-1", name: "Project" })).toBe(
+        false
+      );
+    }
+  });
+
+  it("leaves a body reference with its own constraints as written", () => {
+    const { inputSchema } = capability(
+      compileRelease(
+        makeCompileInput({
+          method: "post",
+          operation: {
+            requestBody: {
+              content: {
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/Project",
+                    additionalProperties: true,
+                  },
+                },
+              },
+              required: true,
+            },
+          },
+        })
+      )
+    );
+    const { body } = (
+      inputSchema as { properties: { body: Record<string, unknown> } }
+    ).properties;
+    expect(body).toEqual({
+      $ref: "#/$defs/Project",
+      additionalProperties: true,
+    });
+    const validate = new AjvJsonSchemaValidator().getValidator(
+      structuredClone(inputSchema)
+    );
+    expect(
+      validate({
+        body: { extra: true, id: "project-1", name: "Project" },
+        path: { projectId: "project-1" },
+      }).valid
+    ).toBe(false);
+  });
+
   it("keeps async request definitions at the final input root despite component name collisions", () => {
     const input = makeCompileInput({
       method: "post",
