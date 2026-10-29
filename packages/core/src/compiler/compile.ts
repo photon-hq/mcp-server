@@ -18,6 +18,7 @@ import {
   compileCapability,
   listPathOperations,
   operationPermissions,
+  operationTitle,
 } from "./schema.js";
 
 export interface CompileReleaseInput {
@@ -51,6 +52,39 @@ function deepFreeze<T>(value: T): T {
   return value;
 }
 
+const apiReferenceBase = "https://photon.codes/docs/beta/api-reference";
+
+// The docs site publishes each operation under its first tag and summary,
+// lowercased, with spaces as hyphens and apostrophes dropped.
+function apiReferenceUrl(
+  operation: Readonly<Record<string, unknown>>
+): string | undefined {
+  const { externalDocs, summary, tags } = operation;
+  if (
+    externalDocs !== null &&
+    typeof externalDocs === "object" &&
+    "url" in externalDocs &&
+    typeof externalDocs.url === "string"
+  ) {
+    return externalDocs.url;
+  }
+  const [tag] = Array.isArray(tags) ? tags : [];
+  if (typeof tag !== "string" || typeof summary !== "string") {
+    return;
+  }
+  const slug = (text: string) =>
+    encodeURIComponent(
+      text
+        .trim()
+        .toLowerCase()
+        .replaceAll(/['’]/gu, "")
+        .replaceAll(/\s+/gu, "-")
+    );
+  return slug(tag) && slug(summary)
+    ? `${apiReferenceBase}/${slug(tag)}/${slug(summary)}`
+    : undefined;
+}
+
 function toolDescription(
   operation: Readonly<Record<string, unknown>>,
   operationId: string
@@ -61,21 +95,14 @@ function toolDescription(
     typeof operation.description === "string"
       ? operation.description.trim()
       : "";
-  if (summary && description && summary !== description) {
-    return `${summary}\n\n${description}`;
-  }
-  return summary || description || operationId;
-}
-
-// Clients show the title in place of the tool name; the summary is the
-// operation's short human-readable name.
-function toolTitle(
-  operation: Readonly<Record<string, unknown>>,
-  operationId: string
-): string {
-  const summary =
-    typeof operation.summary === "string" ? operation.summary.trim() : "";
-  return summary || operationId;
+  const text =
+    summary && description && summary !== description
+      ? `${summary}\n\n${description}`
+      : summary || description || operationId;
+  const reference = apiReferenceUrl(operation);
+  return reference === undefined
+    ? text
+    : `${text}\n\nAPI reference: ${reference}`;
 }
 
 function validateInput(input: CompileReleaseInput): void {
@@ -245,7 +272,7 @@ export function compileRelease(value: unknown): CompiledRelease {
   const tools = compiled.map(({ capability, operation }) => ({
     description: toolDescription(operation, capability.operationId),
     name: capability.operationId,
-    title: toolTitle(operation, capability.operationId),
+    title: operationTitle(operation, capability.operationId),
   }));
 
   const snapshot: SemanticReleaseSnapshot = {
