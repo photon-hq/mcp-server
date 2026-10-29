@@ -622,7 +622,8 @@ function primitiveTypes(values: readonly unknown[]): string[] | undefined {
  * validate: objects accept unknown properties, primitive enums accept any value
  * of their type, and oneOf becomes anyOf because open branches can overlap.
  * Missing required properties, changed types and const literals still fail.
- * `not` subschemas are kept as written, since opening them would reject more.
+ * `if` and `not` subschemas are predicates and are kept as written: opening
+ * them would change which values they match, not just accept more.
  */
 export function openSchema(value: unknown): JsonObject {
   const open = (schema: unknown): unknown => {
@@ -632,7 +633,7 @@ export function openSchema(value: unknown): JsonObject {
     const source = object(schema, "invalid_schema");
     const { oneOf, ...opened }: JsonObject = Object.fromEntries(
       Object.entries(source).map(([key, item]) => {
-        if (key === "not") {
+        if (key === "if" || key === "not") {
           return [key, jsonClone(item)];
         }
         if (

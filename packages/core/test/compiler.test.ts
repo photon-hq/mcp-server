@@ -240,6 +240,11 @@ describe("compileRelease", () => {
       },
       Resource: {
         additionalProperties: false,
+        if: {
+          additionalProperties: true,
+          properties: { state: { enum: ["retired"] } },
+          required: ["state"],
+        },
         properties: {
           failure: { not: {} },
           id: { type: "string" },
@@ -252,6 +257,8 @@ describe("compileRelease", () => {
           },
         },
         required: ["id", "kind", "state"],
+        // biome-ignore lint/suspicious/noThenProperty: JSON Schema keyword.
+        then: { required: ["owner"] },
         type: "object",
       },
     });
@@ -286,6 +293,16 @@ describe("compileRelease", () => {
       expect(read({ ...resource, added: true, state: "provisioning" })).toEqual(
         [true, true]
       );
+      // The `if` predicate keeps its enum, so only retired resources need an owner.
+      const { owner: _owner, ...withoutOwner } = resource;
+      expect(read({ ...withoutOwner, state: "provisioning" })).toEqual([
+        true,
+        true,
+      ]);
+      expect(read({ ...withoutOwner, state: "retired" })).toEqual([
+        false,
+        false,
+      ]);
       expect(read({ ...resource, failure: "x" })).toEqual([false, false]);
       expect(read({ ...resource, kind: "other" })).toEqual([false, false]);
       expect(read({ ...resource, state: 1 })).toEqual([false, false]);
