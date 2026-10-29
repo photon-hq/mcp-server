@@ -617,15 +617,42 @@ function primitiveTypes(values: readonly unknown[]): string[] | undefined {
   return [...types].sort(compareUtf8);
 }
 
+function predicateReferences(schema: unknown, inPredicate = false): boolean {
+  if (!isObject(schema)) {
+    return false;
+  }
+  let found = false;
+  for (const [key, item] of Object.entries(schema)) {
+    if (key === "$ref") {
+      found ||= inPredicate;
+    } else {
+      mapSchemaChildren(key, item, (child) => {
+        found ||= predicateReferences(
+          child,
+          inPredicate || key === "if" || key === "not"
+        );
+      });
+    }
+  }
+  return found;
+}
+
 /**
  * Relaxes a closed response schema so that additive upstream changes still
  * validate: objects accept unknown properties, primitive enums accept any value
  * of their type, and oneOf becomes anyOf because open branches can overlap.
  * Missing required properties, changed types and const literals still fail.
  * `if` and `not` subschemas are predicates and are kept as written: opening
- * them would change which values they match, not just accept more.
+ * them would change which values they match, not just accept more. A schema
+ * whose predicate references a definition stays closed, because opening that
+ * shared definition would change the predicate too.
  */
 export function openSchema(value: unknown): JsonObject {
+  if (predicateReferences(value)) {
+    const closed = object(jsonClone(value), "invalid_schema");
+    assertClosedSchema(closed);
+    return closed;
+  }
   const open = (schema: unknown): unknown => {
     if (schema === true || schema === false) {
       return schema;

@@ -322,6 +322,47 @@ describe("compileRelease", () => {
       'Lifecycle state.\\n\\nKnown values: [\\"unallocated\\",\\"active\\",\\"retired\\"]. Others may be added.'
     );
   });
+
+  it("keeps a response closed when a predicate references a definition", () => {
+    const input = makeCompileInput({
+      operation: {
+        responses: {
+          "200": {
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/Resource" },
+              },
+            },
+          },
+        },
+      },
+    });
+    Object.assign(input.aggregate.components.schemas, {
+      Code: { enum: ["a"], type: "string" },
+      Resource: {
+        additionalProperties: false,
+        properties: {
+          code: { $ref: "#/components/schemas/Code" },
+          previous: { not: { $ref: "#/components/schemas/Code" } },
+        },
+        type: "object",
+      },
+    });
+    const [representation] = capability(
+      compileRelease(input)
+    ).successRepresentations;
+    if (!(representation && "schema" in representation)) {
+      throw new Error("missing success representation");
+    }
+    // Opening the shared Code definition would make `not` reject every string.
+    const read = new AjvJsonSchemaValidator().getValidator(
+      structuredClone(representation.schema)
+    );
+    expect(read({ previous: "b" }).valid).toBe(true);
+    expect(read({ previous: "a" }).valid).toBe(false);
+    expect(read({ code: "b" }).valid).toBe(false);
+    expect(read({ added: true }).valid).toBe(false);
+  });
   it("rejects the reserved release operation ID at compile admission", () => {
     expect(() =>
       compileRelease(
