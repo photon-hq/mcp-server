@@ -1,6 +1,6 @@
 {
   "name": "@photon-ai/mcp",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Run Photon's MCP tools locally over stdio with your own Photon API key.",
   "keywords": [
     "mcp",
