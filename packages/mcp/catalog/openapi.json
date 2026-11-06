@@ -10652,6 +10652,9 @@
           },
           {
             "$ref": "#/components/schemas/CampaignRegistrationUnavailableProblem"
+          },
+          {
+            "$ref": "#/components/schemas/PromotionCodeRejectedProblem"
           }
         ]
       },
@@ -10782,6 +10785,12 @@
           "privacyPolicyUrl": {
             "format": "uri",
             "maxLength": 2048,
+            "type": "string"
+          },
+          "promotionCode": {
+            "description": "A promotion code for the monthly campaign fee. It is checked now, and one billing refuses answers PROMOTION_CODE_REJECTED with nothing created. An accepted code applies from carrier approval, even if it expires meanwhile. The registration fee takes no code, and a resubmission keeps this one.",
+            "maxLength": 255,
+            "minLength": 1,
             "type": "string"
           },
           "sampleMessages": {
@@ -21292,6 +21301,17 @@
       "GetOrganizationBillingOverviewResponse": {
         "additionalProperties": false,
         "properties": {
+          "currentPeriod": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OrganizationBillingPeriod"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Charges so far this billing period, for an organization that pays by invoice; null for one that pays by card, or while its projects are still being moved to its billing day."
+          },
           "entitlementsVersion": {
             "description": "Bumps on every entitlement change for the organization.",
             "maximum": 9007199254740991,
@@ -21311,6 +21331,7 @@
           }
         },
         "required": [
+          "currentPeriod",
           "entitlementsVersion",
           "subscription"
         ],
@@ -34533,6 +34554,61 @@
         ],
         "type": "object"
       },
+      "OrganizationBillingPeriod": {
+        "additionalProperties": false,
+        "properties": {
+          "currency": {
+            "description": "ISO 4217 currency code.",
+            "type": "string"
+          },
+          "estimatedTotalCents": {
+            "description": "What the period's invoice comes to if usage stops now and the units held are kept to the period's end: with tax, after discounts and credit.",
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "periodEnd": {
+            "description": "Last moment of the billing period, ISO 8601. Its invoice is drafted on the billing day after.",
+            "example": "2026-11-09T23:59:59.000Z",
+            "format": "date-time",
+            "type": "string"
+          },
+          "periodStart": {
+            "description": "Start of the billing period, ISO 8601.",
+            "example": "2026-10-10T00:00:00.000Z",
+            "format": "date-time",
+            "type": "string"
+          },
+          "usageCents": {
+            "description": "Metered usage so far this period, across the organization and every project, before tax.",
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "usageLimitCents": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The contract's soft usage limit, compared with usageCents. Nothing is blocked at it; null when the contract sets none."
+          }
+        },
+        "required": [
+          "currency",
+          "estimatedTotalCents",
+          "periodEnd",
+          "periodStart",
+          "usageCents",
+          "usageLimitCents"
+        ],
+        "type": "object"
+      },
       "OrganizationClosingProblem": {
         "additionalProperties": {
           "$ref": "#/components/schemas/JsonValue"
@@ -38055,6 +38131,9 @@
         "example": {
           "code": "PROMOTION_CODE_REJECTED",
           "reason": "promotion_code_expired",
+          "remediation": {
+            "action": "Try again without the promotion code, or with another one."
+          },
           "status": 409,
           "title": "Promotion Code Rejected",
           "type": "https://photon.codes/docs/problems/promotion-code-rejected"
@@ -38073,10 +38152,11 @@
             "type": "string"
           },
           "reason": {
-            "$ref": "#/components/schemas/PromotionCodeRejection"
+            "minLength": 1,
+            "type": "string"
           },
           "remediation": {
-            "not": {}
+            "$ref": "#/components/schemas/ProblemRemediation"
           },
           "requestId": {
             "minLength": 1,
@@ -38098,42 +38178,12 @@
         "required": [
           "reason",
           "code",
+          "remediation",
           "status",
           "title",
           "type"
         ],
         "type": "object"
-      },
-      "PromotionCodeRejection": {
-        "enum": [
-          "promotion_code_already_applied",
-          "promotion_code_already_redeemed",
-          "promotion_code_change_not_eligible",
-          "promotion_code_exhausted",
-          "promotion_code_expired",
-          "promotion_code_inactive",
-          "promotion_code_limit_reached",
-          "promotion_code_new_customer_only",
-          "promotion_code_not_for_organization",
-          "promotion_code_not_found",
-          "promotion_code_plan_not_eligible",
-          "promotion_code_purchase_not_eligible"
-        ],
-        "type": "string",
-        "x-enumDescriptions": {
-          "promotion_code_already_applied": "The subscription already has this promotion code's coupon.",
-          "promotion_code_already_redeemed": "The organization has already redeemed this coupon, which allows one redemption.",
-          "promotion_code_change_not_eligible": "The change redeems no promotion code: only a new subscription, an upgrade or a fixed-charge purchase does.",
-          "promotion_code_exhausted": "Every redemption of the promotion code is taken.",
-          "promotion_code_expired": "The promotion code has expired.",
-          "promotion_code_inactive": "The promotion code, or its coupon, was deactivated.",
-          "promotion_code_limit_reached": "The subscription holds as many coupons as it can.",
-          "promotion_code_new_customer_only": "The promotion code is only for a new customer: an organization none of whose projects has held a paid plan, even one a coupon made free.",
-          "promotion_code_not_for_organization": "No longer sent: a code reserved to another organization is promotion_code_not_found.",
-          "promotion_code_not_found": "No promotion code matches, or the code is reserved to another organization.",
-          "promotion_code_plan_not_eligible": "The promotion code's coupon does not discount the target plan.",
-          "promotion_code_purchase_not_eligible": "A fixed-charge purchase takes only a fixed amount off the fixed charge it buys; this promotion code's coupon is a percentage, or discounts other fees."
-        }
       },
       "ProvisionImessageDedicatedLineBadRequestProblem": {
         "oneOf": [
@@ -38142,6 +38192,16 @@
           },
           {
             "$ref": "#/components/schemas/IdempotencyKeyInvalidProblem"
+          }
+        ]
+      },
+      "ProvisionImessageDedicatedLineConflictProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/PromotionCodeRejectedProblem"
+          },
+          {
+            "$ref": "#/components/schemas/ProjectClosingProblem"
           }
         ]
       },
@@ -38191,6 +38251,17 @@
           }
         ]
       },
+      "ProvisionImessageDedicatedLineRequest": {
+        "properties": {
+          "promotionCode": {
+            "description": "A promotion code to apply to this line's charge. Billing takes a fixed amount off the charge. The code is checked and claimed when the request is accepted, even if the line has to wait for inventory: a code that can't be used answers 409 PROMOTION_CODE_REJECTED and starts nothing, and one accepted still applies if it later expires. A purchase that ends without a line gives the code back. Part of the request's identity: repeating the Idempotency-Key with a different code, or none, is refused.",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
       "ProvisionImessageDedicatedLineServiceUnavailableProblem": {
         "oneOf": [
           {
@@ -38221,6 +38292,16 @@
           },
           {
             "$ref": "#/components/schemas/IdempotencyKeyInvalidProblem"
+          }
+        ]
+      },
+      "ProvisionWhatsappDedicatedLineConflictProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/PromotionCodeRejectedProblem"
+          },
+          {
+            "$ref": "#/components/schemas/ProjectClosingProblem"
           }
         ]
       },
@@ -38269,6 +38350,17 @@
             "$ref": "#/components/schemas/EnterprisePlanRequiredProblem"
           }
         ]
+      },
+      "ProvisionWhatsappDedicatedLineRequest": {
+        "properties": {
+          "promotionCode": {
+            "description": "A promotion code to apply to this line's charge. Billing takes a fixed amount off the charge. The code is checked and claimed when the request is accepted, even if the line has to wait for inventory: a code that can't be used answers 409 PROMOTION_CODE_REJECTED and starts nothing, and one accepted still applies if it later expires. A purchase that ends without a line gives the code back. Part of the request's identity: repeating the Idempotency-Key with a different code, or none, is refused.",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "type": "object"
       },
       "ProvisionWhatsappDedicatedLineServiceUnavailableProblem": {
         "oneOf": [
@@ -38348,6 +38440,12 @@
           },
           "countryCode": {
             "const": "US",
+            "type": "string"
+          },
+          "promotionCode": {
+            "description": "A promotion code to redeem with this number's charge. Billing takes a fixed amount off the charge. The charge follows delivery, so a code Billing refuses hands the number back, and the release operation carries the refusal. Part of the request's identity: repeating the Idempotency-Key with a different code, or none, is refused.",
+            "maxLength": 255,
+            "minLength": 1,
             "type": "string"
           }
         },
@@ -79325,6 +79423,7 @@
     },
     "/v1/organizations": {
       "get": {
+        "description": "Lists the active organizations the authenticated account belongs to, oldest first, in one unpaginated response; ownedOrganizationIds marks the ones it owns. Call it with account credentials acting as the account itself; OAuth grants and Service Identities are refused.",
         "operationId": "listOrganizations",
         "parameters": [],
         "responses": {
@@ -79691,6 +79790,7 @@
         ]
       },
       "post": {
+        "description": "Creates an organization with the supplied name and makes the calling account its Owner; SSO and just-in-time provisioning start disabled. Billing is set up after the response, so the 201 body has no billingInitialization; read it from getOrganization or listOrganizations to follow the setup. Call it with account credentials acting as the account itself and supply the required Idempotency-Key header; an account that is closing gets 409.",
         "operationId": "createOrganization",
         "parameters": [
           {
@@ -80804,6 +80904,7 @@
     },
     "/v1/organizations/invitations/accept": {
       "post": {
+        "description": "Accepts an invitation by its token and adds the signed-in account to the organization with the invited role. An existing member keeps their role, except a Viewer who joined through SSO just-in-time provisioning and whose role has never been changed, who takes the invited role; a removed member can rejoin only with an invitation created after the removal, else 409. The account's verified email must match the invited address, the invitation must be pending and unexpired, and its inviter must still be an Owner or Admin; in an organization that requires SSO it returns 403, because the invitee joins by signing in through that SSO instead. Call it with account credentials acting as the account itself and supply the required Idempotency-Key header.",
         "operationId": "acceptOrganizationInvitation",
         "parameters": [
           {
@@ -81390,6 +81491,7 @@
     },
     "/v1/organizations/invitations/preview": {
       "post": {
+        "description": "Returns what an invitation offers to the signed-in account that holds its token: the organization, role, expiry, member count and inviter with masked email addresses, whether the account's verified email matches the invitation, and whether SSO is required to accept it. Call it with account credentials acting as the account itself; it changes nothing. An unknown token returns 404, and an expired or revoked invitation, or one accepted by another account, returns 409.",
         "operationId": "previewOrganizationInvitation",
         "parameters": [],
         "requestBody": {
@@ -81963,6 +82065,7 @@
     },
     "/v1/organizations/{organizationId}": {
       "delete": {
+        "description": "Deletes the organization: it leaves normal access when the call returns 204, and Photon then releases its app installations, registrations and billing subscriptions in the background. It cannot be undone and needs no active projects, nothing owed, and the expectedVersion from checkOrganizationDeletion; a blocked or stale request returns 409. Only the Owner can call it, with account credentials (in an organization that requires SSO, a session signed in through SSO) and the required Idempotency-Key header.",
         "operationId": "closeOrganization",
         "parameters": [
           {
@@ -82548,6 +82651,7 @@
         ]
       },
       "get": {
+        "description": "Returns the organization's name, avatar URL, version and billing setup progress. Any member can read it with account credentials, and a Service Identity granted organization:read or an OAuth grant with the organization:read scope can read the organization it is bound to. Send version as expectedVersion when renaming the organization or changing its avatar.",
         "operationId": "getOrganization",
         "parameters": [
           {
@@ -83087,6 +83191,7 @@
         ]
       },
       "patch": {
+        "description": "Renames the organization and returns it with its new version. Owners and Admins can call it with account credentials. Send the current version as expectedVersion, because a stale version returns 409, and supply the required Idempotency-Key header.",
         "operationId": "updateOrganization",
         "parameters": [
           {
@@ -88539,6 +88644,7 @@
     },
     "/v1/organizations/{organizationId}/avatar": {
       "delete": {
+        "description": "Removes the organization's custom avatar, so avatarUrl becomes null, and returns the organization with its new version. Owners and Admins can call it with account credentials. Send the current version as expectedVersion, because a stale version returns 409, and supply the required Idempotency-Key header.",
         "operationId": "removeOrganizationAvatar",
         "parameters": [
           {
@@ -89133,6 +89239,7 @@
     },
     "/v1/organizations/{organizationId}/avatar/commit": {
       "post": {
+        "description": "Sets the organization's avatar to an image uploaded with createOrganizationAvatarUpload, after checking its size, type and contents, and discards the previous avatar; an invalid or expired upload is rejected. Owners and Admins can call it with account credentials. Send the current version as expectedVersion, because a stale version returns 409, and supply the required Idempotency-Key header.",
         "operationId": "commitOrganizationAvatar",
         "parameters": [
           {
@@ -96856,6 +96963,7 @@
     },
     "/v1/organizations/{organizationId}/deletion-check": {
       "get": {
+        "description": "Reports whether the organization can be deleted now (canDelete), the blockers to clear first, such as active projects or unpaid invoices, and the version to send to closeOrganization. The answer is advisory, because deletion checks again. Only the Owner can call it, with account credentials; in an organization that requires SSO, sign in through SSO, because Account Service Keys are refused.",
         "operationId": "checkOrganizationDeletion",
         "parameters": [
           {
@@ -102885,6 +102993,7 @@
     },
     "/v1/organizations/{organizationId}/invitations": {
       "get": {
+        "description": "Lists the organization's pending, unexpired invitations, newest first, in one unpaginated response; accepted, revoked and expired invitations are left out, and invitation links are never returned. Owners and Admins can call it with account credentials.",
         "operationId": "listOrganizationInvitations",
         "parameters": [
           {
@@ -103455,6 +103564,7 @@
         ]
       },
       "post": {
+        "description": "Invites an email address to the organization as a Member or Viewer and emails it a link that stays valid for 7 days; the Admin and Owner roles can't be invited. Owners and Admins can call it with account credentials and the required Idempotency-Key header. Inviting an address that has a pending invitation for the same role resends it and a different role returns 409, while sending too often (twice within a minute, more than 30 an hour or 100 pending per organization) returns 429.",
         "operationId": "createOrganizationInvitation",
         "parameters": [
           {
@@ -104049,6 +104159,7 @@
     },
     "/v1/organizations/{organizationId}/invitations/{invitationId}/resend": {
       "post": {
+        "description": "Emails a pending invitation again with the same link and restarts its 7-day expiry. Owners and Admins can call it with account credentials and the required Idempotency-Key header. An expired, revoked or accepted invitation returns 409, and a resend within 60 seconds of the last send, or past the organization's 30 sends an hour, returns 429.",
         "operationId": "resendOrganizationInvitation",
         "parameters": [
           {
@@ -104641,6 +104752,7 @@
     },
     "/v1/organizations/{organizationId}/invitations/{invitationId}/revoke": {
       "post": {
+        "description": "Revokes an invitation so its link can no longer be previewed or accepted; no email is sent, and an accepted invitation can't be revoked (409). Owners and Admins can call it with account credentials and the required Idempotency-Key header. Revoking an invitation that is already revoked or expired succeeds.",
         "operationId": "revokeOrganizationInvitation",
         "parameters": [
           {
@@ -105233,6 +105345,7 @@
     },
     "/v1/organizations/{organizationId}/leave": {
       "post": {
+        "description": "Removes the authenticated account's own membership. Nothing is revoked: the account's sessions, OAuth grants and Account Service Keys stop being accepted for the organization and its projects shortly after the call, and project API keys and Service Identity credentials it created keep working until they are revoked. Any member except the Owner can call it, with account credentials or an OAuth grant for this organization with the organization:read scope; the Owner gets 409 and must transfer ownership or delete the organization first. Send the caller's own membership version as expectedVersion, because a stale version returns 409, and supply the required Idempotency-Key header.",
         "operationId": "leaveOrganization",
         "parameters": [
           {
@@ -105790,6 +105903,7 @@
     },
     "/v1/organizations/{organizationId}/members": {
       "get": {
+        "description": "Lists the organization's active members, ordered by account ID, with each member's role, membership version and account profile (name, email and picture); a member whose account is missing or deleted has a null profile. Any member can call it with account credentials, or with an OAuth grant for this organization that has the organization:read scope. The list is not paginated.",
         "operationId": "listOrganizationMembers",
         "parameters": [
           {
@@ -106325,6 +106439,7 @@
     },
     "/v1/organizations/{organizationId}/members/{memberAccountId}": {
       "delete": {
+        "description": "Removes an active member from the organization. Nothing is revoked: their sessions, OAuth grants and Account Service Keys stop being accepted for the organization and its projects shortly after the call, and project API keys and Service Identity credentials they created or hold keep working until an Owner or Admin revokes them. Owners and Admins can call it with account credentials, but only the Owner can remove an Admin, and neither the Owner nor the caller can be removed here (409; leave with leaveOrganization). Send the member's current membership version as expectedVersion, because a stale version returns 409, and supply the required Idempotency-Key header.",
         "operationId": "removeOrganizationMember",
         "parameters": [
           {
@@ -106874,7 +106989,7 @@
             "accountServiceKey": []
           }
         ],
-        "summary": "Remove an organization member's access to all projects",
+        "summary": "Remove a member from the organization",
         "tags": [
           "Organization Members"
         ],
@@ -106886,6 +107001,7 @@
         ]
       },
       "patch": {
+        "description": "Changes an active member's role to admin, member or viewer. Owners and Admins can call it with account credentials, but only the Owner can make someone an Admin or change an Admin's role, and nobody can change the Owner's role or their own here (409). Send the member's current membership version as expectedVersion, because a stale version returns 409, and supply the required Idempotency-Key header.",
         "operationId": "updateOrganizationMemberRole",
         "parameters": [
           {
@@ -107449,6 +107565,7 @@
     },
     "/v1/organizations/{organizationId}/oauth/clients": {
       "get": {
+        "description": "Lists the third-party OAuth applications the organization owns, with their metadata but never their secrets, in one unpaginated response. Any member can call it with account credentials.",
         "operationId": "listOrganizationOauthClients",
         "parameters": [
           {
@@ -109241,6 +109358,7 @@
         ]
       },
       "get": {
+        "description": "Returns one third-party OAuth application the organization owns, without its secret. Any member can call it with account credentials. The ETag response header is the value updateOrganizationOauthClient needs in If-Match.",
         "operationId": "getOrganizationOauthClient",
         "parameters": [
           {
@@ -111012,6 +111130,7 @@
         ]
       },
       "get": {
+        "description": "Returns metadata about an OAuth application's secret: the current secret and, after a rotation, the previous one while it still works, with each one's hint, creation and last-use times; the previous one's validUntil is when it stops working, or null when it lasts until the next rotation or revocation. The secret value is never returned. Only Owners and Admins can call it, with account credentials.",
         "operationId": "getOrganizationOauthClientSecret",
         "parameters": [
           {
@@ -115347,6 +115466,7 @@
     },
     "/v1/organizations/{organizationId}/service-identities": {
       "get": {
+        "description": "Lists every Service Identity in the organization, oldest first, including disabled ones and those managed by app installations, in one unpaginated response. Any member can call it with account credentials. It returns identity metadata only, never credentials.",
         "operationId": "listServiceIdentities",
         "parameters": [
           {
@@ -115878,6 +115998,7 @@
         ]
       },
       "post": {
+        "description": "Creates an active Service Identity, a machine identity owned by the organization, with a name and a non-empty set of permissions from listServiceIdentityPermissions; it starts with no credentials. Owners and Admins can call it with account credentials and the required Idempotency-Key header.",
         "operationId": "createServiceIdentity",
         "parameters": [
           {
@@ -116967,6 +117088,7 @@
     },
     "/v1/organizations/{organizationId}/service-identities/{serviceIdentityId}": {
       "get": {
+        "description": "Returns one Service Identity with its permissions, status and version. Any member can call it with account credentials. Send version as expectedVersion to updateServiceIdentity, or as expectedIdentityVersion when creating a credential.",
         "operationId": "getServiceIdentity",
         "parameters": [
           {
@@ -117506,6 +117628,7 @@
         ]
       },
       "patch": {
+        "description": "Changes a Service Identity's name, its permissions (the list replaces the current one) or its status. Disabling an identity stops its API keys and M2M tokens from authorizing requests without revoking them, and an identity managed by an app installation can't be changed (409). Owners and Admins can call it with account credentials; send the current version as expectedVersion, because a stale version returns 409, and supply the required Idempotency-Key header.",
         "operationId": "updateServiceIdentity",
         "parameters": [
           {
@@ -118069,6 +118192,7 @@
     },
     "/v1/organizations/{organizationId}/service-identities/{serviceIdentityId}/credentials": {
       "get": {
+        "description": "Lists metadata for every API key and client secret of a Service Identity, oldest first, including pending and revoked ones, in one unpaginated response; it never returns secret values. Only Owners and Admins can call it, with account credentials.",
         "operationId": "listServiceIdentityCredentials",
         "parameters": [
           {
@@ -118649,6 +118773,7 @@
     },
     "/v1/organizations/{organizationId}/service-identities/{serviceIdentityId}/credentials/api-keys": {
       "post": {
+        "description": "Creates an API key for an active Service Identity that no app installation manages; the key acts with the identity's current permissions. Only a response with status created returns the key's value, so store it securely; retry with the same Idempotency-Key, which must be a UUID: a retry returns the key's status without the value, and status recovery_required means the value was not delivered and can't be retrieved. Owners and Admins can call it with account credentials, and expectedIdentityVersion must match the identity's current version, else 409; an identity managed by an app installation also returns 409.",
         "operationId": "createServiceIdentityApiKey",
         "parameters": [
           {
@@ -119251,6 +119376,7 @@
     },
     "/v1/organizations/{organizationId}/service-identities/{serviceIdentityId}/credentials/client-secrets": {
       "post": {
+        "description": "Creates a client secret for the machine-to-machine (M2M) application of an active Service Identity that no app installation manages, setting the application up first if needed, and returns the secret with its clientId once; exchange them for M2M access tokens, and never send the secret to other operations. Retry with the same Idempotency-Key, which must be a UUID: a retry returns the status without the secret, and a response with stage application (status recovery_required or cleanup_required) means the application could not be set up and no secret exists. Owners and Admins can call it with account credentials, and expectedIdentityVersion must match the identity's current version, else 409; an identity managed by an app installation also returns 409.",
         "operationId": "createServiceIdentityClientSecret",
         "parameters": [
           {
@@ -119853,6 +119979,7 @@
     },
     "/v1/organizations/{organizationId}/service-identities/{serviceIdentityId}/credentials/{credentialId}/revoke": {
       "post": {
+        "description": "Revokes an API key or client secret of a Service Identity; this can't be undone. An API key stops working shortly after the call, while a client secret gets revocationRequestedAt and stays active until Photon confirms its deletion, and M2M access tokens already issued with it keep working until they expire; repeating the call returns the current state. Owners and Admins can call it with account credentials; send the credential's current version as expectedVersion, because a stale version returns 409, and the required Idempotency-Key header.",
         "operationId": "revokeServiceIdentityCredential",
         "parameters": [
           {
@@ -121005,6 +121132,7 @@
     },
     "/v1/organizations/{organizationId}/sso/subscription": {
       "get": {
+        "description": "Returns the organization's SSO subscription: its state, the current monthly price and billing period, whether a payment method must be added first, and whether SSO can be set up (canConfigure). Only Owners and Admins can call it, with account credentials. Send its amount, currency and currentPeriodEnd as the quote when subscribing.",
         "operationId": "getSsoSubscription",
         "parameters": [
           {
@@ -121497,6 +121625,7 @@
         ]
       },
       "post": {
+        "description": "Starts the organization's SSO subscription, billed monthly in advance and prorated. Send the current quote from getSsoSubscription as expectedAmount, expectedCurrency and expectedCurrentPeriodEnd, because a changed price returns 409; the 202 means the request was accepted, and the charge and its outcome then show in the subscription's state. Only Owners and Admins can call it, with account credentials and the required Idempotency-Key header.",
         "operationId": "subscribeSso",
         "parameters": [
           {
@@ -122013,6 +122142,7 @@
     },
     "/v1/organizations/{organizationId}/sso/subscription/cancel": {
       "post": {
+        "description": "Cancels the organization's SSO subscription at once, but only after SSO has been turned off: while SSO is still required it returns 409. The unused days become organization credit, and SSO setup closes. Only Owners and Admins can call it, with account credentials and the required Idempotency-Key header.",
         "operationId": "cancelSsoSubscription",
         "parameters": [
           {
@@ -122519,6 +122649,7 @@
     },
     "/v1/organizations/{organizationId}/transfer-ownership": {
       "post": {
+        "description": "Makes another active member the Owner and turns the current Owner into a Member. Only the Owner can call it, with account credentials and the required Idempotency-Key header. Send the organization's current version, not a membership version, as expectedVersion; a stale version or naming yourself returns 409.",
         "operationId": "transferOrganizationOwnership",
         "parameters": [
           {
@@ -126556,7 +126687,7 @@
                 }
               }
             },
-            "description": "IDEMPOTENCY_CONFLICT: Idempotency Conflict; INVALID_LIFECYCLE_STATE: Invalid Lifecycle State; ORGANIZATION_CLOSING: Organization is closing; INVALID_CAMPAIGN_STATE: Invalid Campaign State; CAMPAIGN_REGISTRATION_UNAVAILABLE: Campaign Registration Unavailable",
+            "description": "IDEMPOTENCY_CONFLICT: Idempotency Conflict; INVALID_LIFECYCLE_STATE: Invalid Lifecycle State; ORGANIZATION_CLOSING: Organization is closing; INVALID_CAMPAIGN_STATE: Invalid Campaign State; CAMPAIGN_REGISTRATION_UNAVAILABLE: Campaign Registration Unavailable; PROMOTION_CODE_REJECTED: Promotion Code Rejected",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -133011,7 +133142,7 @@
     },
     "/v1/projects/{id}/attachments": {
       "get": {
-        "description": "Lists the Project's Attachment metadata, with optional time filters.",
+        "description": "Lists the Project's Attachment metadata, with optional time filters. An Attachment can be absent until its upload finishes, which advances its updatedAt; follow changes with updatedSince.",
         "operationId": "listAttachments",
         "parameters": [
           {
@@ -134182,7 +134313,7 @@
     },
     "/v1/projects/{id}/attachments/{attachmentId}": {
       "get": {
-        "description": "Returns an Attachment's metadata. Use the content endpoint to download its bytes.",
+        "description": "Returns an Attachment's metadata. Use the content endpoint to download its bytes. If its metadata is unavailable after ten seconds, returns ATTACHMENT_NOT_READY with Retry-After: 5.",
         "operationId": "getAttachment",
         "parameters": [
           {
@@ -134388,6 +134519,48 @@
               },
               "Retry-After": {
                 "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "409": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttachmentNotReadyProblem"
+                }
+              }
+            },
+            "description": "ATTACHMENT_NOT_READY: Attachment Not Ready",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "description": "Seconds to wait before retrying the request.",
+                "schema": {
+                  "$ref": "#/components/schemas/AttachmentNotReadyRetryAfter"
+                }
               },
               "Sunset": {
                 "$ref": "#/components/headers/Sunset"
@@ -134925,7 +135098,7 @@
                 "$ref": "#/components/headers/RateLimit-Policy"
               },
               "Retry-After": {
-                "description": "Seconds to wait before retrying the download.",
+                "description": "Seconds to wait before retrying the request.",
                 "schema": {
                   "$ref": "#/components/schemas/AttachmentNotReadyRetryAfter"
                 }
@@ -144252,7 +144425,7 @@
     },
     "/v1/projects/{id}/platforms/imessage/dedicated": {
       "post": {
-        "description": "Claims one dedicated iMessage line for the project and enables iMessage on it. Always answers 202 with an operation: dedicated lines are allocated from available capacity, and unavailable capacity causes a wait rather than a failure — this can legitimately stay `running` for hours, which is exactly why the response is a handle to poll rather than a number. The project's messaging subscription must grant the dedicated iMessage lines entitlement (`imessage_dedicated_lines.can_purchase`), and that is checked before capacity is reserved. The line's own charge starts when a line is claimed; the subscription that grants the entitlement bills on its own terms, which cancelling a request does not change. Waiting requests are served first come, first served. One that is still waiting is cancelled with a `reason` if the project is deleted (`project_deleted`) or its plan stops selling dedicated lines (`entitlement_lost`); while the payer is restricted for overdue payment it keeps waiting. If you no longer want to wait, POST to the operation's cancel endpoint, which charges nothing for the line. The Idempotency-Key is required and permanent: repeating it returns the same operation forever. A further line always needs a NEW key, including while others are still waiting. Requires the platforms:write permission bound to the project resource in the path. If the operation fails, its `error` is the problem of one of these codes: `CHARGE_REFUSED`, `ENTERPRISE_PLAN_REQUIRED`.",
+        "description": "Claims one dedicated iMessage line for the project and enables iMessage on it. Always answers 202 with an operation: dedicated lines are allocated from available capacity, and unavailable capacity causes a wait rather than a failure — this can legitimately stay `running` for hours, which is exactly why the response is a handle to poll rather than a number. The project's messaging subscription must grant the dedicated iMessage lines entitlement (`imessage_dedicated_lines.can_purchase`), and that is checked before capacity is reserved. The line's own charge starts when a line is claimed; the subscription that grants the entitlement bills on its own terms, which cancelling a request does not change. Waiting requests are served first come, first served. One that is still waiting is cancelled with a `reason` if the project is deleted (`project_deleted`) or its plan stops selling dedicated lines (`entitlement_lost`); while the payer is restricted for overdue payment it keeps waiting. If you no longer want to wait, POST to the operation's cancel endpoint, which charges nothing for the line. The Idempotency-Key is required and permanent: repeating it returns the same operation forever. A further line always needs a NEW key, including while others are still waiting. An optional promotionCode is checked and claimed here, before the request waits for a line: a code that can't be used answers 409 PROMOTION_CODE_REJECTED and starts nothing. Requires the platforms:write permission bound to the project resource in the path. If the operation fails, its `error` is the problem of one of these codes: `CHARGE_REFUSED`, `ENTERPRISE_PLAN_REQUIRED`.",
         "operationId": "provisionImessageDedicatedLine",
         "parameters": [
           {
@@ -144276,6 +144449,16 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProvisionImessageDedicatedLineRequest"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "202": {
             "content": {
@@ -144526,11 +144709,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectClosingProblem"
+                  "$ref": "#/components/schemas/ProvisionImessageDedicatedLineConflictProblem"
                 }
               }
             },
-            "description": "PROJECT_CLOSING: Project Is Closing",
+            "description": "PROMOTION_CODE_REJECTED: Promotion Code Rejected; PROJECT_CLOSING: Project Is Closing",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -151893,7 +152076,7 @@
     },
     "/v1/projects/{id}/platforms/sms/numbers": {
       "post": {
-        "description": "Buys one US local number from the provider and records it as a resource with SMS enabled. Requires countryCode (US) and accepts an optional three-digit geographic areaCode. The server selects an exact matching number. While inventory is empty the operation keeps searching, and the caller can cancel it until ordering begins; a search still empty one minute after the operation was created fails it with `NUMBER_INVENTORY_UNAVAILABLE`. Always answers 202 with an operation: the work runs behind the response, and the Location points at the operation to poll. New area-specific requests must appear in current provider coverage; discover it with GET /sms/numbers/area-codes?countryCode=US. Coverage and subscription checks run before operation creation. Billing follows delivery. Replays return the original operation without checking current coverage. The Idempotency-Key is required and permanent: repeating it returns the same operation forever, never a second number. A further number always needs a NEW key, including while others are still running. Requires the platforms:write permission bound to the project resource in the path. If the operation fails, its `error` is the problem of one of these codes: `ENTITLEMENT_REQUIRED`, `NUMBER_INVENTORY_UNAVAILABLE`, `NUMBER_ORDER_FAILED`, `NUMBER_ORDER_RECONCILIATION_REQUIRED`, `NUMBER_SEARCH_FAILED`.",
+        "description": "Buys one US local number from the provider and records it as a resource with SMS enabled. Requires countryCode (US) and accepts an optional three-digit geographic areaCode. The server selects an exact matching number. While inventory is empty the operation keeps searching, and the caller can cancel it until ordering begins; a search still empty one minute after the operation was created fails it with `NUMBER_INVENTORY_UNAVAILABLE`. Always answers 202 with an operation: the work runs behind the response, and the Location points at the operation to poll. New area-specific requests must appear in current provider coverage; discover it with GET /sms/numbers/area-codes?countryCode=US. Coverage and subscription checks run before operation creation. Billing follows delivery. Replays return the original operation without checking current coverage. The Idempotency-Key is required and permanent: repeating it returns the same operation forever, never a second number. A further number always needs a NEW key, including while others are still running. An optional promotionCode is redeemed with the number's charge, which follows delivery: a code billing refuses hands the number back, and its release operation carries the refusal (`reason` `charge_refused`, with `detail.chargeRefusal` `{ code: \"promotion_code_rejected\", detail: <why> }`). Requires the platforms:write permission bound to the project resource in the path. If the operation fails, its `error` is the problem of one of these codes: `ENTITLEMENT_REQUIRED`, `NUMBER_INVENTORY_UNAVAILABLE`, `NUMBER_ORDER_FAILED`, `NUMBER_ORDER_RECONCILIATION_REQUIRED`, `NUMBER_SEARCH_FAILED`.",
         "operationId": "purchaseSmsNumber",
         "parameters": [
           {
@@ -171277,7 +171460,7 @@
     },
     "/v1/projects/{id}/platforms/whatsapp/dedicated": {
       "post": {
-        "description": "Provisions one dedicated WhatsApp line with WhatsApp and shared Voice enabled. It attaches to an eligible iMessage line the project already owns when possible so both products keep the same number; otherwise it claims healthy, available WhatsApp-capable dedicated-line inventory. Always answers 202, because waiting when no inventory is available is not a failure. The product opens its own charge period after the abilities are enabled; Voice has no separate charge. Waiting requests are served first come, first served, and are cancelled with a `reason` exactly as for a dedicated iMessage line. Cancel the returned operation to stop waiting. The Idempotency-Key is required and permanent. If the operation fails, its `error` is the problem of one of these codes: `CHARGE_REFUSED`, `ENTERPRISE_PLAN_REQUIRED`.",
+        "description": "Provisions one dedicated WhatsApp line with WhatsApp and shared Voice enabled. It attaches to an eligible iMessage line the project already owns when possible so both products keep the same number; otherwise it claims healthy, available WhatsApp-capable dedicated-line inventory. Always answers 202, because waiting when no inventory is available is not a failure. The product opens its own charge period after the abilities are enabled; Voice has no separate charge. Waiting requests are served first come, first served, and are cancelled with a `reason` exactly as for a dedicated iMessage line. Cancel the returned operation to stop waiting. An optional promotionCode is checked and claimed here, before the request waits for a line: a code that can't be used answers 409 PROMOTION_CODE_REJECTED and starts nothing. The Idempotency-Key is required and permanent. If the operation fails, its `error` is the problem of one of these codes: `CHARGE_REFUSED`, `ENTERPRISE_PLAN_REQUIRED`.",
         "operationId": "provisionWhatsappDedicatedLine",
         "parameters": [
           {
@@ -171301,6 +171484,16 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProvisionWhatsappDedicatedLineRequest"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "202": {
             "content": {
@@ -171551,11 +171744,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectClosingProblem"
+                  "$ref": "#/components/schemas/ProvisionWhatsappDedicatedLineConflictProblem"
                 }
               }
             },
-            "description": "PROJECT_CLOSING: Project Is Closing",
+            "description": "PROMOTION_CODE_REJECTED: Promotion Code Rejected; PROJECT_CLOSING: Project Is Closing",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
