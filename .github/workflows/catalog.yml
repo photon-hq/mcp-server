@@ -3,8 +3,10 @@ name: Refresh catalog
 # Keeps the local server's tools in step with the production API. Daily, it
 # refreshes the committed catalog source from api.photon.codes; when the
 # source changes it verifies the build, bumps @photon-ai/mcp's patch version
-# and opens a pull request that lists added and removed tools. Publish the
-# merged version with an mcp-v<version> release.
+# and opens a pull request that lists added and removed tools. The catalog
+# comes from APIs production already serves, so once the pull request's checks
+# pass this job merges it and publishes the version with an mcp-v<version>
+# release. A failing check leaves the pull request open for a person.
 on:
   schedule:
     - cron: "23 8 * * *"
@@ -22,7 +24,7 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -51,12 +53,22 @@ jobs:
           pnpm verify
           pnpm --filter @photon-ai/mcp smoke
       - name: Bump the patch version and describe the change
+        id: bump
         if: steps.diff.outputs.changed == 'true'
         run: |
           IFS=. read -r major minor patch < <(jq -r .version packages/mcp/package.json)
           version="$major.$minor.$((patch + 1))"
           (cd packages/mcp && npm pkg set "version=$version")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
           after=packages/mcp/.release/production
+          added="$(comm -13 <(sort "$RUNNER_TEMP/before/tools.txt") <(sort "$after/tools.txt") | paste -sd, - | sed 's/,/, /g')"
+          removed="$(comm -23 <(sort "$RUNNER_TEMP/before/tools.txt") <(sort "$after/tools.txt") | paste -sd, - | sed 's/,/, /g')"
+          {
+            echo "- Tools refreshed from the production API: $(wc -l < "$RUNNER_TEMP/before/tools.txt" | tr -d ' ') → $(wc -l < "$after/tools.txt" | tr -d ' ') tools."
+            if [[ -n "$added" ]]; then echo "- Added: $added."; fi
+            if [[ -n "$removed" ]]; then echo "- Removed: $removed."; fi
+            if [[ -z "$added$removed" ]]; then echo "- Same tools; schemas or descriptions changed."; fi
+          } > "$RUNNER_TEMP/notes.md"
           {
             echo "Refreshes the local server's tools from the production OpenAPI and bumps \`@photon-ai/mcp\` to $version."
             echo
@@ -72,7 +84,7 @@ jobs:
             diff -U0 "$RUNNER_TEMP/before/excluded.json" "$after/excluded.json" | grep -E '^[+-][^+-]' || echo "  (unchanged)"
             echo '```'
             echo
-            echo "CI ran \`pnpm verify\` and the stdio smoke test on this catalog. After merging, publish with a \`mcp-v$version\` release."
+            echo "CI ran \`pnpm verify\` and the stdio smoke test on this catalog. Once this pull request's checks pass, the workflow merges it and publishes \`mcp-v$version\`; a failing check leaves it open."
           } > "$RUNNER_TEMP/body.md"
       - id: app-token
         if: steps.diff.outputs.changed == 'true'
@@ -82,15 +94,65 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           permission-contents: write
           permission-pull-requests: write
-      - if: steps.diff.outputs.changed == 'true'
+          permission-checks: read
+          permission-statuses: read
+      - id: pr
+        if: steps.diff.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ steps.app-token.outputs.token }}
           branch: chore/refresh-catalog
           delete-branch: true
-          commit-message: Refresh the local catalog from the production API
-          title: Refresh the local catalog from the production API
+          commit-message: "chore(mcp): refresh the local catalog from the production API"
+          title: "chore(mcp): refresh the local catalog from the production API"
           body-path: ${{ runner.temp }}/body.md
           add-paths: |
             packages/mcp/catalog
             packages/mcp/package.json
+      # Wait for these checks to report on the pull request's head and pass; a
+      # check that has not registered yet must not look like a pass.
+      - name: Merge once the checks pass
+        id: merge
+        if: steps.pr.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          PR: ${{ steps.pr.outputs.pull-request-number }}
+          REQUIRED: '["Verify (Node 22)", "Verify (Node 24)", "conventional-title", "linear-link"]'
+        run: |
+          for _ in $(seq 1 120); do
+            state="$(gh pr view "$PR" --json state --jq .state)"
+            [[ "$state" == MERGED ]] && break
+            [[ "$state" == OPEN ]] || { echo "::error::Pull request #$PR is $state"; exit 1; }
+            checks="$(gh pr checks "$PR" --json name,bucket 2>/dev/null)" || true
+            [[ -n "$checks" ]] || checks='[]'
+            if jq -e 'any(.[]; .bucket == "fail" or .bucket == "cancel")' <<<"$checks" >/dev/null; then
+              echo "::error::A check failed on pull request #$PR; it stays open for review"
+              exit 1
+            fi
+            if jq -e --argjson required "$REQUIRED" \
+              '($required - map(select(.bucket == "pass") | .name) | length == 0) and all(.[]; .bucket == "pass" or .bucket == "skipping")' \
+              <<<"$checks" >/dev/null; then
+              gh pr merge "$PR" --squash --subject "chore(mcp): refresh the local catalog from the production API (#$PR)" --body ""
+              break
+            fi
+            sleep 20
+          done
+          sha="$(gh pr view "$PR" --json state,mergeCommit --jq 'select(.state == "MERGED") | .mergeCommit.oid')"
+          [[ -n "$sha" ]] || { echo "::error::Pull request #$PR did not merge within 40 minutes"; exit 1; }
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+      # A release published with the App token starts release.yml, which
+      # verifies, attests and publishes to npm. GITHUB_TOKEN would not.
+      - name: Release the merged version
+        if: steps.merge.outputs.sha != ''
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          SHA: ${{ steps.merge.outputs.sha }}
+          VERSION: ${{ steps.bump.outputs.version }}
+        run: |
+          merged="$(gh api "repos/$GITHUB_REPOSITORY/contents/packages/mcp/package.json?ref=$SHA" --jq .content | base64 -d | jq -r .version)"
+          [[ "$merged" == "$VERSION" ]] || { echo "::error::main has @photon-ai/mcp $merged, not $VERSION"; exit 1; }
+          if gh release view "mcp-v$VERSION" >/dev/null 2>&1; then
+            echo "mcp-v$VERSION already exists"
+            exit 0
+          fi
+          gh release create "mcp-v$VERSION" --target "$SHA" --title "@photon-ai/mcp $VERSION" --notes-file "$RUNNER_TEMP/notes.md"
