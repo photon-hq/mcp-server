@@ -86,8 +86,9 @@ jobs:
             echo
             echo "CI ran \`pnpm verify\` and the stdio smoke test on this catalog. Once this pull request's checks pass, the workflow merges it and publishes \`mcp-v$version\`; a failing check leaves it open."
           } > "$RUNNER_TEMP/body.md"
+      # Every run needs the token: the release step also recovers a merge an
+      # earlier run could not release.
       - id: app-token
-        if: steps.diff.outputs.changed == 'true'
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
           app-id: ${{ secrets.APP_ID }}
@@ -120,9 +121,11 @@ jobs:
           REQUIRED: '["Verify (Node 22)", "Verify (Node 24)", "conventional-title", "linear-link"]'
         run: |
           for _ in $(seq 1 120); do
-            state="$(gh pr view "$PR" --json state --jq .state)"
+            IFS=$'\t' read -r state head < <(gh pr view "$PR" --json state,headRefOid --jq '[.state, .headRefOid] | @tsv')
             [[ "$state" == MERGED ]] && break
             [[ "$state" == OPEN ]] || { echo "::error::Pull request #$PR is $state"; exit 1; }
+            # Read after the head: if another push lands in between, the merge
+            # below names the older head and GitHub refuses it.
             checks="$(gh pr checks "$PR" --json name,bucket 2>/dev/null)" || true
             [[ -n "$checks" ]] || checks='[]'
             if jq -e 'any(.[]; .bucket == "fail" or .bucket == "cancel")' <<<"$checks" >/dev/null; then
@@ -132,27 +135,38 @@ jobs:
             if jq -e --argjson required "$REQUIRED" \
               '($required - map(select(.bucket == "pass") | .name) | length == 0) and all(.[]; .bucket == "pass" or .bucket == "skipping")' \
               <<<"$checks" >/dev/null; then
-              gh pr merge "$PR" --squash --subject "chore(mcp): refresh the local catalog from the production API (#$PR)" --body ""
+              gh pr merge "$PR" --squash --match-head-commit "$head" \
+                --subject "chore(mcp): refresh the local catalog from the production API (#$PR)" --body ""
               break
             fi
             sleep 20
           done
-          sha="$(gh pr view "$PR" --json state,mergeCommit --jq 'select(.state == "MERGED") | .mergeCommit.oid')"
-          [[ -n "$sha" ]] || { echo "::error::Pull request #$PR did not merge within 40 minutes"; exit 1; }
-          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          [[ "$(gh pr view "$PR" --json state --jq .state)" == MERGED ]] || { echo "::error::Pull request #$PR did not merge within 40 minutes"; exit 1; }
+      # Releases main's @photon-ai/mcp version when a catalog refresh set it and
+      # it has no release yet: the merge above, or one an earlier run merged but
+      # could not release. A version a person bumps is released by a person.
       # A release published with the App token starts release.yml, which
       # verifies, attests and publishes to npm. GITHUB_TOKEN would not.
-      - name: Release the merged version
-        if: steps.merge.outputs.sha != ''
+      - name: Release the merged catalog version
+        if: ${{ !cancelled() && steps.app-token.outcome == 'success' }}
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          SHA: ${{ steps.merge.outputs.sha }}
           VERSION: ${{ steps.bump.outputs.version }}
         run: |
-          merged="$(gh api "repos/$GITHUB_REPOSITORY/contents/packages/mcp/package.json?ref=$SHA" --jq .content | base64 -d | jq -r .version)"
-          [[ "$merged" == "$VERSION" ]] || { echo "::error::main has @photon-ai/mcp $merged, not $VERSION"; exit 1; }
-          if gh release view "mcp-v$VERSION" >/dev/null 2>&1; then
-            echo "mcp-v$VERSION already exists"
+          IFS=$'\t' read -r sha subject < <(gh api "repos/$GITHUB_REPOSITORY/commits?sha=main&path=packages/mcp/package.json&per_page=1" \
+            --jq '.[0] | [.sha, (.commit.message | split("\n")[0])] | @tsv')
+          if [[ "$subject" != "chore(mcp): refresh the local catalog from the production API"* ]]; then
+            echo "A person last changed @photon-ai/mcp's version on main; nothing to release"
             exit 0
           fi
-          gh release create "mcp-v$VERSION" --target "$SHA" --title "@photon-ai/mcp $VERSION" --notes-file "$RUNNER_TEMP/notes.md"
+          version="$(gh api "repos/$GITHUB_REPOSITORY/contents/packages/mcp/package.json?ref=$sha" --jq .content | base64 -d | jq -r .version)"
+          if gh release view "mcp-v$version" >/dev/null 2>&1; then
+            echo "mcp-v$version already exists"
+            exit 0
+          fi
+          notes="$RUNNER_TEMP/notes.md"
+          if [[ "$version" != "$VERSION" || ! -s "$notes" ]]; then
+            pr="$(grep -oE '\(#[0-9]+\)$' <<<"$subject" || true)"
+            echo "- Tools refreshed from the production API${pr:+ $pr}." > "$notes"
+          fi
+          gh release create "mcp-v$version" --target "$sha" --title "@photon-ai/mcp $version" --notes-file "$notes"
