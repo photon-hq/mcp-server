@@ -120,11 +120,12 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           PR: ${{ steps.pr.outputs.pull-request-number }}
           VERSION: ${{ steps.bump.outputs.version }}
+          # The commit this run pushed, which carries VERSION.
+          HEAD_SHA: ${{ steps.pr.outputs.pull-request-head-sha }}
         run: |
-          head="$(gh pr view "$PR" --json headRefOid --jq .headRefOid)"
           sleep 60
           gh pr checks "$PR" --watch --fail-fast --interval 20
-          gh pr merge "$PR" --squash --match-head-commit "$head" \
+          gh pr merge "$PR" --squash --match-head-commit "$HEAD_SHA" \
             --subject "chore(mcp): refresh the local catalog from the production API (#$PR)" --body ""
           sha="$(gh pr view "$PR" --json mergeCommit --jq .mergeCommit.oid)"
           gh release create "mcp-v$VERSION" --target "$sha" --title "@photon-ai/mcp $VERSION" --notes-file "$RUNNER_TEMP/notes.md"
