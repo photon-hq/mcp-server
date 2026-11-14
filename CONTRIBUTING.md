@@ -26,7 +26,9 @@ pnpm build
 ```
 
 A daily workflow does this and opens a pull request with the tool changes and
-a patch version bump.
+a patch version bump. Once the pull request's checks pass, the workflow merges
+it and publishes the version with an `mcp-v<version>` release; a failing check
+leaves the pull request open.
 
 Run the built server:
 
