@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   type ActivatedRuntimeRelease,
   activateRuntimeRelease,
+  bindVerifiedCapability,
   RuntimeReleaseError,
 } from "../src/runtime/runtime-release.js";
 import {
@@ -45,6 +46,22 @@ describe("runtime release loading", () => {
     )?.execution;
     expect(execution?.validateIdempotencyKey?.("a".repeat(32))).toBe(true);
     expect(execution?.validateIdempotencyKey?.("a".repeat(256))).toBe(false);
+  });
+
+  it("binds a serialized verified capability with its original validators", async () => {
+    const release = await activateFixture();
+    const entry = release.registrationPlan.find(
+      (item) => item.name === "writeAlpha"
+    );
+    if (!entry) {
+      throw new Error("writeAlpha fixture missing");
+    }
+    const capability = JSON.parse(JSON.stringify(entry.execution.capability));
+    const bound = bindVerifiedCapability(capability, release.validator);
+    expect(Object.isFrozen(bound.capability)).toBe(true);
+    expect(bound.validateIdempotencyKey?.("a".repeat(32))).toBe(true);
+    expect(bound.validateIdempotencyKey?.("a".repeat(256))).toBe(false);
+    expect(bound.validateOutput(null)).toBe(false);
   });
 
   it.each([
