@@ -36,27 +36,18 @@ function object(value: unknown): Readonly<Record<string, unknown>> {
     : {};
 }
 
-const errorCodes = new WeakMap<Result, string>();
-
-// Error results carry no structuredContent: MCP clients validate any
-// structuredContent against the tool's outputSchema, even on an isError result,
-// and reject the whole result when it does not match. The sanitized error
-// fields go in the text content instead.
+// Inside the runtime an error keeps its sanitized fields in structuredContent,
+// where telemetry reads the code. executeCapability drops it before the result
+// reaches a client; the text content carries the same fields for the agent.
 function errorContent(
   summary: string,
   details: Readonly<{ code: string } & Record<string, unknown>>
 ): CallToolResult {
-  const result: CallToolResult = {
+  return {
     content: [{ text: `${summary} ${JSON.stringify(details)}`, type: "text" }],
     isError: true,
+    structuredContent: { ...details },
   };
-  errorCodes.set(result, details.code);
-  return result;
-}
-
-/** The error code of a result built here, for telemetry; never sent. */
-export function errorCode(result: Result): string | undefined {
-  return errorCodes.get(result);
 }
 
 export function errorResult(code: string): CallToolResult {
