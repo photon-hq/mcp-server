@@ -39,7 +39,8 @@ PHOTON_API_KEY=pho_ask_... node packages/mcp/dist/cli.js
 ## Releasing
 
 Each package is versioned and released on its own. Bump `version` in the
-package's `package.json` through a pull request, then publish a GitHub
+package's `package.json` (and `packages/mcp/server.json` when releasing
+`@photon-ai/mcp`) through a pull request, then publish a GitHub
 release on `main` tagged with the package and version:
 
 | Package | Tag |
@@ -50,9 +51,11 @@ release on `main` tagged with the package and version:
 The release workflow verifies the tag against `package.json`, runs
 `pnpm verify`, packs and attests the tarball, installs it and lists its tools,
 then publishes it from the `npm` environment with trusted publishing and
-provenance. Release `@photon-ai/mcp-core` before an `@photon-ai/mcp` version
-that needs it; the workflow refuses an `@photon-ai/mcp` release whose core
-version is not on npm.
+provenance. For `@photon-ai/mcp`, the workflow also publishes
+`packages/mcp/server.json` (`io.github.photon-hq/mcp`) to the Official MCP
+Registry via GitHub OIDC once the npm package is live. Release
+`@photon-ai/mcp-core` before an `@photon-ai/mcp` version that needs it; the
+workflow refuses an `@photon-ai/mcp` release whose core version is not on npm.
 
 ## How tools are built
 
