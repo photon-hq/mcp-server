@@ -154,6 +154,18 @@ function request(value: unknown) {
   };
 }
 
+// Error details travel only in the text content, after the summary sentence.
+function errorDetails(result: object): Record<string, unknown> {
+  expect(result).toMatchObject({ isError: true });
+  expect(result).not.toHaveProperty("structuredContent");
+  const [block] = (result as { content: [{ text: string; type: "text" }] })
+    .content;
+  return JSON.parse(block.text.slice(block.text.indexOf("{"))) as Record<
+    string,
+    unknown
+  >;
+}
+
 async function continuationFixture(
   overrides: Partial<RuntimeDependencies> = {}
 ) {
@@ -783,8 +795,8 @@ describe("capability execution lifecycle and responses", () => {
       );
       expect(result.isError === true, name).toBe(shouldError);
       if (shouldError) {
-        expect(result).toMatchObject({
-          structuredContent: { code: "upstream_contract_violation" },
+        expect(errorDetails(result)).toMatchObject({
+          code: "upstream_contract_violation",
         });
       }
       expect(JSON.stringify({ observed, result })).not.toContain("body-secret");
@@ -818,9 +830,44 @@ describe("capability execution lifecycle and responses", () => {
     const { dependency } = dependencies(new Response(null, { status: 204 }));
     const result = await executeCapability(request("project-1"), dependency);
 
-    expect(result).toMatchObject({
-      isError: true,
-      structuredContent: { code: "upstream_contract_violation" },
+    expect(errorDetails(result)).toMatchObject({
+      code: "upstream_contract_violation",
+    });
+  });
+
+  it("still reports an error code to telemetry it no longer sends as structured content", async () => {
+    const events: unknown[] = [];
+    const logs: unknown[] = [];
+    const { dependency } = dependencies(
+      new Response(null, { status: 204 }),
+      undefined,
+      {
+        event: (name, attributes, value) =>
+          events.push({ attributes, name, value }),
+        log: (name, attributes) => logs.push({ attributes, name }),
+      }
+    );
+
+    const result = await executeCapability(request("project-1"), dependency);
+
+    expect(errorDetails(result)).toEqual({
+      code: "upstream_contract_violation",
+      responseType: "missing",
+      stage: "success_status",
+      upstreamStatus: 204,
+    });
+    expect(events).toContainEqual({
+      attributes: { "error.type": "upstream_contract_violation" },
+      name: "photon.mcp.contract.violations",
+      value: 1,
+    });
+    expect(logs).toContainEqual({
+      attributes: {
+        "error.type": "upstream_contract_violation",
+        "mcp.result": "error",
+        "mcp.tool.name": "getItem",
+      },
+      name: "photon.mcp.tool.event",
     });
   });
 
@@ -844,13 +891,10 @@ describe("capability execution lifecycle and responses", () => {
 
     const result = await executeCapability(request("project-1"), dependency);
 
-    expect(result).toMatchObject({
-      isError: true,
-      structuredContent: { code: "not_found", status: 404, title: "Not found" },
-    });
+    expect(result).not.toHaveProperty("structuredContent");
     const [text] = result.content as [{ text: string; type: "text" }];
     expect(text.text).toBe(
-      `The upstream service rejected the request. ${JSON.stringify(result.structuredContent)}`
+      'The upstream service rejected the request. {"code":"not_found","status":404,"title":"Not found","type":"https://errors.example/not-found","requestId":"request-1"}'
     );
     expect(JSON.stringify(result)).not.toContain("credential=private");
   });
@@ -910,7 +954,7 @@ describe("capability execution lifecycle and responses", () => {
     );
     const result = await executeCapability(request("project-1"), dependency);
 
-    expect((result.structuredContent as Record<string, unknown>)[field]).toBe(
+    expect(errorDetails(result)[field]).toBe(
       field === "code" ? "upstream_problem" : undefined
     );
     expect(JSON.stringify(result)).not.toContain("private");
@@ -934,9 +978,9 @@ describe("capability execution lifecycle and responses", () => {
       )
     );
 
-    const projected = (
+    const projected = errorDetails(
       await executeCapability(request("project-1"), dependency)
-    ).structuredContent as Record<string, unknown>;
+    );
 
     expect(projected.type).toBe("https://errors.example/problem");
     expect(String(projected.title)).toHaveLength(160);
@@ -969,9 +1013,9 @@ describe("capability execution lifecycle and responses", () => {
       })
     );
 
-    const projected = (
+    const projected = errorDetails(
       await executeCapability(request("project-1"), dependency)
-    ).structuredContent as Record<string, unknown>;
+    );
 
     expect(projected.type).toBe(retained ? type : undefined);
   });
@@ -988,12 +1032,12 @@ describe("capability execution lifecycle and responses", () => {
       )
     );
     const result = await executeCapability(request("project-1"), dependency);
-    expect(result.structuredContent).toMatchObject({
+    expect(errorDetails(result)).toMatchObject({
       code: "UNAVAILABLE",
       status: 400,
     });
     expect(JSON.stringify(result)).not.toContain(detail);
-    expect(result.structuredContent).not.toHaveProperty("detail");
+    expect(errorDetails(result)).not.toHaveProperty("detail");
   });
 
   it("preserves the upstream operations page and its continuation cursor", async () => {
@@ -1032,8 +1076,9 @@ describe("capability execution lifecycle and responses", () => {
   });
 
   it.each([
-    ["mismatched status", { status: 401 }, {}, undefined],
-    ["out-of-range status", { status: 700 }, {}, undefined],
+    ["mismatched status", { status: 401 }, {}, 400],
+    ["out-of-range status", { status: 700 }, {}, 500],
+    ["missing status", { status: undefined }, {}, 400],
     ["bounded retry", {}, { "retry-after": "60" }, 60],
     ["oversized retry", {}, { "retry-after": "61" }, undefined],
   ])("projects %s without trusting unbounded Problem facts", async (_name, update, headers, expected) => {
@@ -1053,7 +1098,7 @@ describe("capability execution lifecycle and responses", () => {
     );
 
     const result = await executeCapability(request("project-1"), dependency);
-    const projected = result.structuredContent as Record<string, unknown>;
+    const projected = errorDetails(result);
     if (_name.includes("status")) {
       expect(projected.status).toBe(expected);
     } else {
@@ -1075,10 +1120,7 @@ describe("capability execution lifecycle and responses", () => {
 
     const result = await executeCapability(request("project-1"), dependency);
 
-    expect(result).toMatchObject({
-      isError: true,
-      structuredContent: { code: "internal_tool_error" },
-    });
+    expect(errorDetails(result)).toMatchObject({ code: "internal_tool_error" });
     expect(JSON.stringify(result)).not.toContain("private upstream failure");
     expect(observed).toEqual(
       expect.arrayContaining([
@@ -1144,9 +1186,8 @@ describe("capability execution lifecycle and responses", () => {
       state: "running",
     });
 
-    expect(result).toMatchObject({
-      isError: true,
-      structuredContent: { code: "upstream_contract_violation" },
+    expect(errorDetails(result)).toMatchObject({
+      code: "upstream_contract_violation",
     });
     expect(
       requests.map((item) => item.headers.get("x-photon-mcp-operation"))
@@ -1172,9 +1213,8 @@ describe("capability execution lifecycle and responses", () => {
       state: "running",
     });
 
-    expect(result).toMatchObject({
-      isError: true,
-      structuredContent: { code: "upstream_contract_violation" },
+    expect(errorDetails(result)).toMatchObject({
+      code: "upstream_contract_violation",
     });
     expect(
       requests.map((item) => item.headers.get("x-photon-mcp-operation"))
@@ -1217,9 +1257,8 @@ describe("capability execution lifecycle and responses", () => {
       { source: asyncCapability }
     );
 
-    expect(result).toMatchObject({
-      isError: true,
-      structuredContent: { code: "upstream_contract_violation" },
+    expect(errorDetails(result)).toMatchObject({
+      code: "upstream_contract_violation",
     });
     expect(
       requests.map((item) => item.headers.get("x-photon-mcp-operation"))
@@ -1539,9 +1578,8 @@ describe("capability execution lifecycle and responses", () => {
       dependency
     );
 
-    expect(result).toMatchObject({
-      isError: true,
-      structuredContent: { code: "invalid_request_state" },
+    expect(errorDetails(result)).toMatchObject({
+      code: "invalid_request_state",
     });
     expect(requests).toHaveLength(before);
   });
@@ -1567,9 +1605,8 @@ describe("capability execution lifecycle and responses", () => {
       dependency
     );
 
-    expect(result).toMatchObject({
-      isError: true,
-      structuredContent: { code: "invalid_request_state" },
+    expect(errorDetails(result)).toMatchObject({
+      code: "invalid_request_state",
     });
     expect(requests).toHaveLength(before);
     expect(observed).toEqual(
@@ -1817,9 +1854,8 @@ describe("capability execution protocol facts", () => {
       }),
       dependency
     );
-    expect(result).toMatchObject({
-      isError: true,
-      structuredContent: { code: "invalid_request_state" },
+    expect(errorDetails(result)).toMatchObject({
+      code: "invalid_request_state",
     });
     expect(requests).toHaveLength(0);
   });
@@ -1842,9 +1878,8 @@ describe("capability execution protocol facts", () => {
       }),
       dependency
     );
-    expect(result).toMatchObject({
-      isError: true,
-      structuredContent: { code: "invalid_request_state" },
+    expect(errorDetails(result)).toMatchObject({
+      code: "invalid_request_state",
     });
     expect(requests).toHaveLength(0);
   });
