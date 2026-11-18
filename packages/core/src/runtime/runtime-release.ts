@@ -541,6 +541,26 @@ function activateExecution(
   });
 }
 
+/** Bind a capability embedded by a compiler after full release verification.
+ * Pass a fresh deserialized capability so the validator can annotate its schemas.
+ */
+export function bindVerifiedCapability(
+  capability: Capability,
+  validator: CfWorkerJsonSchemaValidator
+): ActivatedExecution {
+  const execution = activateExecution(
+    capability,
+    {
+      input: capability.inputSchema,
+      output: capability.outputSchema,
+      responses: capability.successRepresentations,
+    },
+    validator
+  );
+  deepFreeze(capability);
+  return execution;
+}
+
 export async function activateRuntimeRelease(
   value: unknown,
   expectedChecksum: string
