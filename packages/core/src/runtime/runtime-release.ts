@@ -50,7 +50,7 @@ type RuntimeResponseWitness = Readonly<
     }
 >;
 
-type ActivatedExecution = Readonly<{
+export type ActivatedExecution = Readonly<{
   readonly capability: Capability;
   readonly inputSchema: StandardSchemaWithJSON;
   readonly outputSchema: StandardSchemaWithJSON;

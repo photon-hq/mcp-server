@@ -61,6 +61,9 @@ describe("runtime release loading", () => {
     expect(Object.isFrozen(bound.capability)).toBe(true);
     expect(bound.validateIdempotencyKey?.("a".repeat(32))).toBe(true);
     expect(bound.validateIdempotencyKey?.("a".repeat(256))).toBe(false);
+    expect(bound.validateOutput({ data: { ok: true }, status: 200 })).toBe(
+      true
+    );
     expect(bound.validateOutput(null)).toBe(false);
   });
 
