@@ -59,6 +59,8 @@ jobs:
           IFS=. read -r major minor patch < <(jq -r .version packages/mcp/package.json)
           version="$major.$minor.$((patch + 1))"
           (cd packages/mcp && npm pkg set "version=$version")
+          jq --arg v "$version" '.version = $v | .packages[0].version = $v' packages/mcp/server.json > "$RUNNER_TEMP/server.json"
+          mv "$RUNNER_TEMP/server.json" packages/mcp/server.json
           echo "version=$version" >> "$GITHUB_OUTPUT"
           after=packages/mcp/.release/production
           added="$(comm -13 <(sort "$RUNNER_TEMP/before/tools.txt") <(sort "$after/tools.txt") | paste -sd, - | sed 's/,/, /g')"
@@ -109,6 +111,7 @@ jobs:
           add-paths: |
             packages/mcp/catalog
             packages/mcp/package.json
+            packages/mcp/server.json
       # A failing check, or none reported within a minute, leaves the pull
       # request open for a person. --match-head-commit refuses a head the checks
       # did not run on. A release published with the App token starts

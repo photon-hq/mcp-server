@@ -1,0 +1,37 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.photon-hq/mcp",
+  "title": "Photon",
+  "description": "Messaging infrastructure for AI agents across iMessage, WhatsApp, Telegram and SMS.",
+  "version": "0.1.11",
+  "websiteUrl": "https://photon.codes/docs/beta/ai-tools/mcp",
+  "repository": {
+    "url": "https://github.com/photon-hq/mcp-server",
+    "source": "github",
+    "subfolder": "packages/mcp"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.photon.codes/mcp"
+    }
+  ],
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@photon-ai/mcp",
+      "version": "0.1.11",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "PHOTON_API_KEY",
+          "description": "Your Photon Account Service Key",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
