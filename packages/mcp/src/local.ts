@@ -1,7 +1,9 @@
 import type { McpServer } from "@modelcontextprotocol/server";
+import { parseApiVersion } from "@photon-ai/mcp-core/headers";
 import { createRequestStateCodec } from "@photon-ai/mcp-core/runtime/request-state";
 import type { ActivatedRuntimeRelease } from "@photon-ai/mcp-core/runtime/runtime-release";
 import { createServerFactory } from "@photon-ai/mcp-core/runtime/server";
+import apiVersion from "./api-version.json" with { type: "json" };
 import type { LocalConfig } from "./config.js";
 
 export interface LocalServerInput {
@@ -62,6 +64,7 @@ export async function createLocalServerFactory(
   return createServerFactory(input.release, {
     auth: { accountId: subject, subject },
     policy: {
+      apiVersion: parseApiVersion(apiVersion.date),
       fetchUpstream: authenticatedFetch(input),
       now: () => Date.now(),
       randomBytes,

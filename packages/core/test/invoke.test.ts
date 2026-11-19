@@ -1,6 +1,7 @@
 import { AjvJsonSchemaValidator } from "@modelcontextprotocol/server/validators/ajv";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { compileRelease } from "../src/compiler/compile.js";
+import { parseApiVersion } from "../src/headers.js";
 import {
   type InvocationDependencies,
   type InvocationRequest,
@@ -49,6 +50,7 @@ function dependencies(
 ) {
   const requests: Request[] = [];
   const dependency: InvocationDependencies = {
+    apiVersion: parseApiVersion("2026-07-01"),
     fetchUpstream:
       fetcher ??
       ((upstreamRequest) => {
@@ -600,6 +602,53 @@ describe("registry invocation", () => {
       )
     ).rejects.toMatchObject({ code: "forbidden_header" });
     expect(requests).toHaveLength(0);
+  });
+
+  it.each([
+    "Photon-Version",
+    "photon-version",
+  ])("rejects tool input setting %s before fetch", async (header) => {
+    const { dependency, requests } = dependencies();
+    await expect(
+      invokeRegistryTarget(
+        {
+          ...invocationRequest("project-1"),
+          input: {
+            headers: { [header]: "2020-01-01" },
+            path: { projectId: "project-1" },
+          },
+        },
+        dependency
+      )
+    ).rejects.toMatchObject({ code: "forbidden_header" });
+    expect(requests).toHaveLength(0);
+  });
+
+  it("sends exactly the policy API version on every attempt", async () => {
+    const seen: (string | null)[] = [];
+    const { dependency } = dependencies(undefined, (upstreamRequest) => {
+      seen.push(upstreamRequest.headers.get("photon-version"));
+      return Promise.resolve(
+        new Response(null, { headers: { "retry-after": "0" }, status: 503 })
+      );
+    });
+    await invokeRegistryTarget(invocationRequest("project-1"), {
+      ...dependency,
+      apiVersion: parseApiVersion("2026-09-30"),
+    });
+    expect(seen).toEqual(["2026-09-30", "2026-09-30", "2026-09-30"]);
+  });
+
+  it.each([
+    "",
+    "2026-7-1",
+    "20260701",
+    "2026-02-30",
+    "2026-13-01",
+    "2026-07-01T00:00:00Z",
+    " 2026-07-01",
+  ])("rejects the invalid API version %j at construction", (value) => {
+    expect(() => parseApiVersion(value)).toThrow("invalid_api_version");
   });
 
   it("does not retry an unclassified upstream exception", async () => {

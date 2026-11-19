@@ -1,4 +1,9 @@
-import { reservedHeaderName } from "../headers.js";
+import {
+  type ApiVersion,
+  apiVersionHeaderName,
+  hostSuppliedHeaderName,
+  reservedHeaderName,
+} from "../headers.js";
 import type { Capability } from "../release.js";
 import type { ExecutionPrincipal } from "./principal.js";
 import type { Telemetry } from "./telemetry.js";
@@ -38,6 +43,7 @@ export interface InvocationRequest {
 }
 
 export interface InvocationDependencies {
+  readonly apiVersion: ApiVersion;
   readonly event?: Telemetry["event"];
   readonly fetchUpstream: (request: Request) => Promise<Response>;
   readonly log?: Telemetry["log"];
@@ -165,16 +171,20 @@ function targetUrl(
   return url;
 }
 
-function requestHeaders(request: InvocationRequest): Headers {
+function requestHeaders(
+  request: InvocationRequest,
+  apiVersion: ApiVersion
+): Headers {
   const headers = new Headers();
   for (const [name, value] of Object.entries(
     object(object(request.input).headers)
   )) {
-    if (reservedHeaderName.test(name)) {
+    if (reservedHeaderName.test(name) || hostSuppliedHeaderName.test(name)) {
       throw new InvocationError("forbidden_header");
     }
     headers.set(name, simple(value, false));
   }
+  headers.set(apiVersionHeaderName, apiVersion);
   if (request.idempotencyKey) {
     headers.set("idempotency-key", request.idempotencyKey);
   }
@@ -310,7 +320,7 @@ export async function invokeRegistryTarget(
     request.input,
     dependencies.upstreamUrl
   );
-  const headers = requestHeaders(request);
+  const headers = requestHeaders(request, dependencies.apiVersion);
   const body = requestBody(request.capability, request.input, headers);
   const attempts = canRetry(request) ? 3 : 1;
   for (let attempt = 0; attempt < attempts; attempt += 1) {

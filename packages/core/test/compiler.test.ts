@@ -1519,6 +1519,29 @@ describe("compileRelease", () => {
     expect(JSON.stringify(capability(result).inputSchema)).not.toContain(name);
   });
 
+  it.each([
+    ["optional", false],
+    ["required", true],
+  ])("leaves the %s host-supplied Photon-Version header out of the tool", (_label, required) => {
+    const result = compileRelease(
+      makeCompileInput({
+        operation: {
+          parameters: [
+            {
+              in: "header",
+              name: "Photon-Version",
+              required,
+              schema: { enum: ["2026-07-01"], type: "string" },
+            },
+          ],
+        },
+      })
+    );
+    expect(
+      JSON.stringify(capability(result).inputSchema).toLowerCase()
+    ).not.toContain("photon-version");
+  });
+
   it("ignores non-JSON request alternatives when JSON is available", () => {
     const result = compileRelease(
       makeCompileInput({

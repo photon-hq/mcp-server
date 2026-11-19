@@ -18,6 +18,11 @@ reviewable bundle to `packages/mcp/.release/production/`, including
 `tools.txt` and the operations it excluded. The same catalog always produces
 the same release.
 
+The server pins one API date, kept in `packages/mcp/src/api-version.json`. The
+refresh fetches the catalog for that date, and the server sends it as
+`Photon-Version` on every request; the compiler leaves that header out of tool
+schemas, so a model cannot choose it. Change the date there, then refresh.
+
 Update the catalog from `https://api.photon.codes`:
 
 ```sh

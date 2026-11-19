@@ -1,5 +1,6 @@
 import { AjvJsonSchemaValidator } from "@modelcontextprotocol/server/validators/ajv";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { parseApiVersion } from "../src/headers.js";
 import type { Capability } from "../src/release.js";
 import {
   type CapabilityExecutionRequest,
@@ -126,6 +127,7 @@ function dependencies(
 ) {
   const requests: Request[] = [];
   const dependency: RuntimeDependencies = {
+    apiVersion: parseApiVersion("2026-07-01"),
     fetchUpstream:
       fetcher ??
       ((upstreamRequest) => {
@@ -172,6 +174,7 @@ async function continuationFixture(
   const requests: Request[] = [];
   const states = new Map<string, Record<string, unknown>>();
   const dependency: RuntimeDependencies = {
+    apiVersion: parseApiVersion("2026-07-01"),
     fetchUpstream: (upstreamRequest) => {
       requests.push(upstreamRequest);
       return Promise.resolve(
@@ -1747,6 +1750,7 @@ function policyDependencies(
   const minted: Record<string, unknown>[] = [];
   const states = new Map<string, Readonly<Record<string, unknown>>>();
   const dependency: RuntimeDependencies = {
+    apiVersion: parseApiVersion("2026-07-01"),
     fetchUpstream: (upstreamRequest) => {
       requests.push(upstreamRequest);
       return Promise.resolve(

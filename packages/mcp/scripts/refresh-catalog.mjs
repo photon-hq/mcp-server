@@ -1,12 +1,17 @@
 // Replaces the committed catalog source with the production API's current
 // OpenAPI document and the scopes OAuth clients can be granted.
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 
 const origin = "https://api.photon.codes";
 const catalog = new URL("../catalog/", import.meta.url);
+// The one API date the server pins; the catalog is fetched for the same date.
+const { date } = JSON.parse(
+  await readFile(new URL("../src/api-version.json", import.meta.url), "utf8")
+);
 
 async function fetchJson(path) {
   const response = await fetch(`${origin}${path}`, {
+    headers: { "photon-version": date },
     redirect: "error",
     signal: AbortSignal.timeout(60_000),
   });
@@ -17,7 +22,7 @@ async function fetchJson(path) {
 }
 
 const [openapi, grantable] = await Promise.all([
-  fetchJson("/openapi.json"),
+  fetchJson(`/openapi.json?version=${date}`),
   fetchJson("/v1/auth/oauth/scopes"),
 ]);
 const { scopes } = grantable;
