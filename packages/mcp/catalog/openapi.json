@@ -7394,6 +7394,9 @@
       "ConnectTelegramBotConflictProblem": {
         "oneOf": [
           {
+            "$ref": "#/components/schemas/TelegramBotAlreadyConnectedProblem"
+          },
+          {
             "$ref": "#/components/schemas/TelegramProjectDeletedProblem"
           },
           {
@@ -35705,6 +35708,9 @@
             "$ref": "#/components/schemas/SmsCampaignRevokedProblem"
           },
           {
+            "$ref": "#/components/schemas/TelegramBotAlreadyConnectedProblem"
+          },
+          {
             "$ref": "#/components/schemas/TelegramConfigurationFailedProblem"
           },
           {
@@ -51400,6 +51406,55 @@
             "$ref": "#/components/schemas/IdempotencyKeyReusedProblem"
           }
         ]
+      },
+      "TelegramBotAlreadyConnectedProblem": {
+        "additionalProperties": {
+          "$ref": "#/components/schemas/JsonValue"
+        },
+        "properties": {
+          "code": {
+            "const": "TELEGRAM_BOT_ALREADY_CONNECTED",
+            "type": "string"
+          },
+          "detail": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "instance": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "remediation": {
+            "$ref": "#/components/schemas/ProblemRemediation"
+          },
+          "requestId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "resourceId": {
+            "type": "string"
+          },
+          "status": {
+            "const": 409,
+            "type": "number"
+          },
+          "title": {
+            "const": "Telegram Bot Already Connected",
+            "type": "string"
+          },
+          "type": {
+            "const": "https://photon.codes/docs/problems/telegram-bot-already-connected",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "remediation",
+          "status",
+          "title",
+          "type"
+        ],
+        "type": "object"
       },
       "TelegramConfigurationFailedProblem": {
         "additionalProperties": {
@@ -165682,7 +165737,7 @@
     },
     "/v1/projects/{id}/platforms/telegram/bots": {
       "post": {
-        "description": "Starts a free managed Telegram bot connection. Each project may have one unfinished Telegram provision, including user interaction and failure cleanup. A different Idempotency-Key while one is active returns 409 TELEGRAM_PROVISION_IN_PROGRESS with its operationId and operationUrl; resume it, cancel it while cancellation is available, or wait for it to finish. Rejected keys remain reusable. Open detail.setupUrl to create a new bot, whose name and username are chosen in Telegram, or to connect an existing managed bot, then poll Location. The link remains usable while the operation is active and never expires. Replaying the same Idempotency-Key returns the original operation, even after completion or while a newer setup is active. POST, GET and list share the same operation details. The API includes detail.setupUrl only for callers with platforms:write for the project; read-only callers receive the other details unchanged. If the operation fails, its `error` is the problem of one of these codes: `TELEGRAM_CONFIGURATION_FAILED`.",
+        "description": "Starts a free managed Telegram bot connection. Each project may own one current bot and have one unfinished Telegram provision, including user interaction and failure cleanup. A matching Idempotency-Key replays its original operation before either conflict check, even after completion or while a newer setup is active. For a different key, an unfinished provision takes precedence over an existing bot and returns 409 TELEGRAM_PROVISION_IN_PROGRESS with its operationId and operationUrl; resume it, cancel it while cancellation is available, or wait for it to finish. Only when no provision is active does an existing non-retired bot return 409 TELEGRAM_BOT_ALREADY_CONNECTED with its resourceId; disconnect it before connecting another, even if messaging is disabled or disconnect is unfinished. Rejected keys remain reusable. Open detail.setupUrl to create a new bot, whose name and username are chosen in Telegram, or to connect an existing managed bot, then poll Location. The link remains usable while the operation is active and never expires. POST, GET and list share the same operation details. The API includes detail.setupUrl only for callers with platforms:write for the project; read-only callers receive the other details unchanged. If the operation fails, its `error` is the problem of one of these codes: `TELEGRAM_BOT_ALREADY_CONNECTED`, `TELEGRAM_CONFIGURATION_FAILED`.",
         "operationId": "connectTelegramBot",
         "parameters": [
           {
@@ -165949,7 +166004,7 @@
                 }
               }
             },
-            "description": "TELEGRAM_PROJECT_DELETED: Telegram Project Deleted; PROJECT_CLOSING: Project Is Closing; TELEGRAM_PROVISION_IN_PROGRESS: Telegram Provision In Progress",
+            "description": "TELEGRAM_BOT_ALREADY_CONNECTED: Telegram Bot Already Connected; TELEGRAM_PROJECT_DELETED: Telegram Project Deleted; PROJECT_CLOSING: Project Is Closing; TELEGRAM_PROVISION_IN_PROGRESS: Telegram Provision In Progress",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
