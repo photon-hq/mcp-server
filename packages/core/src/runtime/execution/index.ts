@@ -175,6 +175,18 @@ function toolOutcomeName(
   return outcome.isError === true ? "error" : "complete";
 }
 
+// MCP clients validate any structuredContent against the tool's outputSchema,
+// even on an isError result, and reject the whole result when it does not
+// match. Every tool result leaves through executeCapability, so no error takes
+// structuredContent along; its text content carries the same sanitized fields.
+function clientResult(outcome: Result): Result {
+  if (outcome.isError !== true || !("structuredContent" in outcome)) {
+    return outcome;
+  }
+  const { structuredContent: _structuredContent, ...result } = outcome;
+  return result as Result;
+}
+
 export async function executeCapability(
   request: CapabilityExecutionRequest,
   dependencies: RuntimeDependencies
@@ -207,13 +219,13 @@ export async function executeCapability(
     throw error;
   }
   const { outcome } = execution;
-  const structured = object(outcome.structuredContent);
   const outcomeName = toolOutcomeName(outcome, execution.disposition);
   dependencies.record({
     durationMs: Math.max(0, dependencies.now() - startedAt),
     name: request.execution.capability.operationId,
     result: outcomeName,
   });
+  const structured = object(outcome.structuredContent);
   const errorType =
     outcome.isError === true && typeof structured.code === "string"
       ? structured.code
@@ -223,7 +235,7 @@ export async function executeCapability(
     "mcp.result": outcomeName,
     "mcp.tool.name": request.execution.capability.operationId,
   });
-  if (structured.code === "upstream_contract_violation") {
+  if (errorType === "upstream_contract_violation") {
     emit(
       dependencies,
       "photon.mcp.contract.violations",
@@ -235,5 +247,5 @@ export async function executeCapability(
       "mcp.result": "rejected",
     });
   }
-  return outcome;
+  return clientResult(outcome);
 }

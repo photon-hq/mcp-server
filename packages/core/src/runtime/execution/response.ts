@@ -36,18 +36,17 @@ function object(value: unknown): Readonly<Record<string, unknown>> {
     : {};
 }
 
-// Clients that read only text content still see the sanitized error fields, as
-// the MCP spec recommends for structured results.
+// Inside the runtime an error keeps its sanitized fields in structuredContent,
+// where telemetry reads the code. executeCapability drops it before the result
+// reaches a client; the text content carries the same fields for the agent.
 function errorContent(
   summary: string,
-  structuredContent: Readonly<Record<string, unknown>>
+  details: Readonly<{ code: string } & Record<string, unknown>>
 ): CallToolResult {
   return {
-    content: [
-      { text: `${summary} ${JSON.stringify(structuredContent)}`, type: "text" },
-    ],
+    content: [{ text: `${summary} ${JSON.stringify(details)}`, type: "text" }],
     isError: true,
-    structuredContent: { ...structuredContent },
+    structuredContent: { ...details },
   };
 }
 
@@ -353,30 +352,18 @@ async function mapSuccessResponse(
   }
 }
 
-function safeProblemStatus(
-  value: unknown,
-  responseStatus: number
-): number | undefined {
-  return value === responseStatus &&
-    Number.isInteger(value) &&
-    responseStatus >= 400 &&
-    responseStatus <= 599
-    ? responseStatus
-    : undefined;
-}
-
 async function mapProblemResponse(response: Response): Promise<CallToolResult> {
   try {
     const problem = object(await response.json());
     const code = safeProblemId(problem.code, 96);
     const retryAfter = safeRetryAfter(response);
     const requestId = safeProblemId(problem.requestId, 128);
-    const status = safeProblemStatus(problem.status, response.status);
     const title = safeProblemText(problem.title, 160);
     const type = safeProblemType(problem.type);
+    // The HTTP status, not the body's claim, so an agent always learns it.
     return errorContent("The upstream service rejected the request.", {
       code: code ?? "upstream_problem",
-      ...(status === undefined ? {} : { status }),
+      status: response.status,
       ...(title === undefined ? {} : { title }),
       ...(type === undefined ? {} : { type }),
       ...(requestId === undefined ? {} : { requestId }),

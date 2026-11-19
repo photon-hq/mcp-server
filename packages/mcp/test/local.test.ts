@@ -2,6 +2,8 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import {
   CLIENT_CAPABILITIES_META_KEY,
   CLIENT_INFO_META_KEY,
@@ -100,6 +102,48 @@ async function call(
   return result;
 }
 
+// The SDK client hosts such as OpenClaw embed. It validates any
+// structuredContent against the tool's outputSchema, even on an isError result,
+// and rejects the whole result when it does not match.
+async function sdkClient(factory: () => McpServer): Promise<Client> {
+  const [clientTransport, serverTransport] =
+    InMemoryTransport.createLinkedPair();
+  await factory().connect(serverTransport);
+  const client = new Client({ name: "sdk-client-test", version: "1" });
+  await client.connect(clientTransport);
+  // callTool validates output only for tools the client has listed.
+  await client.listTools();
+  return client;
+}
+
+async function callWithSdkClient(response: Response) {
+  const factory = await createLocalServerFactory({
+    config: {
+      apiKey: "pho_ask_key_secret",
+      apiUrl: "https://api.photon.codes",
+    },
+    fetch: () => Promise.resolve(response),
+    release: await fixtureRelease(),
+    version: "0.0.0-test",
+  });
+  const client = await sdkClient(factory);
+  try {
+    return await client.callTool({
+      arguments: { path: { id: "project-1" } },
+      name: "getProject",
+    });
+  } finally {
+    await client.close();
+  }
+}
+
+function problem(status: number, body: Record<string, unknown>): Response {
+  return Response.json(body, {
+    headers: { "content-type": "application/problem+json" },
+    status,
+  });
+}
+
 describe("createLocalServerFactory", () => {
   it("calls the configured API origin with the user's key", async () => {
     const requests: Request[] = [];
@@ -171,5 +215,65 @@ describe("createLocalServerFactory", () => {
     expect(JSON.stringify(called.result)).not.toContain(
       "private denial detail"
     );
+  });
+});
+
+describe("tool errors seen by the MCP TypeScript SDK client", () => {
+  it.each([
+    [
+      "a validation Problem",
+      problem(422, {
+        code: "validation_failed",
+        detail: "private validation detail",
+        status: 422,
+        title: "Request validation failed",
+      }),
+      {
+        code: "validation_failed",
+        status: 422,
+        title: "Request validation failed",
+      },
+    ],
+    [
+      "a policy denial that omits its status",
+      problem(403, { code: "policy_denied", title: "Denied by policy" }),
+      { code: "policy_denied", status: 403, title: "Denied by policy" },
+    ],
+    [
+      "a response that is not a Problem",
+      new Response("<html>private gateway page</html>", {
+        headers: { "content-type": "text/html" },
+        status: 502,
+      }),
+      {
+        code: "upstream_contract_violation",
+        responseType: "text/html",
+        stage: "error_response",
+        upstreamStatus: 502,
+      },
+    ],
+  ])("delivers %s to the agent as text", async (_name, response, details) => {
+    const result = await callWithSdkClient(response);
+
+    expect(result.isError).toBe(true);
+    expect(result.structuredContent).toBeUndefined();
+    const [block] = result.content as [{ text: string; type: string }];
+    expect(block.type).toBe("text");
+    expect(JSON.parse(block.text.slice(block.text.indexOf("{")))).toEqual(
+      details
+    );
+    expect(block.text).not.toContain("private");
+  });
+
+  it("still validates structured content on success", async () => {
+    const result = await callWithSdkClient(
+      Response.json({ id: "project-1", name: "Demo" }, { status: 200 })
+    );
+
+    expect(result.isError).toBeUndefined();
+    expect(result.structuredContent).toEqual({
+      data: { id: "project-1", name: "Demo" },
+      status: 200,
+    });
   });
 });
