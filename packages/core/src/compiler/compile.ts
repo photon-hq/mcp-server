@@ -1,5 +1,7 @@
+import { normalizePinnedHeaders } from "../pinned-headers.js";
 import { type Capability, compareUtf8 } from "../release.js";
 import { closeSchema } from "../schema.js";
+import { consumePinnedHeaders } from "./pinned-headers.js";
 import {
   admittedOperations,
   indexOperations,
@@ -24,7 +26,10 @@ import {
 export interface CompileReleaseInput {
   readonly aggregate: Readonly<Record<string, unknown>>;
   readonly aggregateEtag: string;
-  readonly compilerPolicy: Readonly<{ operationPollLimit: number }>;
+  readonly compilerPolicy: Readonly<{
+    operationPollLimit: number;
+    pinnedHeaders: Readonly<Record<string, string>>;
+  }>;
   readonly environment: "production" | "staging";
   readonly previousRelease?: SemanticReleaseSnapshot;
 }
@@ -139,8 +144,9 @@ export function parseCompileReleaseInput(value: unknown): CompileReleaseInput {
     compilerPolicy === null ||
     Array.isArray(compilerPolicy) ||
     typeof compilerPolicy !== "object" ||
-    Object.keys(compilerPolicy).length !== 1 ||
+    Object.keys(compilerPolicy).length !== 2 ||
     !("operationPollLimit" in compilerPolicy) ||
+    !("pinnedHeaders" in compilerPolicy) ||
     !Number.isInteger(compilerPolicy.operationPollLimit) ||
     (compilerPolicy.operationPollLimit as number) < 1
   ) {
@@ -151,6 +157,7 @@ export function parseCompileReleaseInput(value: unknown): CompileReleaseInput {
     aggregateEtag: input.aggregateEtag as string,
     compilerPolicy: {
       operationPollLimit: compilerPolicy.operationPollLimit as number,
+      pinnedHeaders: normalizePinnedHeaders(compilerPolicy.pinnedHeaders),
     },
     environment: input.environment as "production" | "staging",
     ...(input.previousRelease === undefined
@@ -167,7 +174,10 @@ export function compileRelease(value: unknown): CompiledRelease {
   const input = parseCompileReleaseInput(value);
   const aggregate = assertOpenApi31(input.aggregate);
   const operationIds = new Set<string>();
-  const operations = listPathOperations(aggregate);
+  const { pinnedHeaders } = input.compilerPolicy;
+  const operations = listPathOperations(aggregate).map((pathOperation) =>
+    consumePinnedHeaders(pathOperation, aggregate.components, pinnedHeaders)
+  );
   const operationsById = indexOperations(operations, "compiler");
   const authPermissions = [
     ...new Set(
@@ -282,6 +292,7 @@ export function compileRelease(value: unknown): CompiledRelease {
     compilerVersion: "0.1.0",
     environment: input.environment,
     openapi: cloneOpenApi(aggregate),
+    pinnedHeaders,
     privateCapabilities,
     protocolVersion: "2026-07-28",
     registry: advertisedRegistry,

@@ -45,6 +45,7 @@ function releaseDocument(compiled: CompiledRelease) {
     authPermissions: compiled.authPermissions,
     compilerVersion: compiled.compilerVersion,
     environment: compiled.environment,
+    pinnedHeaders: compiled.pinnedHeaders,
     previousReleaseIdentity: compiled.previousReleaseIdentity,
     protocolVersion: compiled.protocolVersion,
     releaseIdentity: semanticReleaseIdentity(compiled),

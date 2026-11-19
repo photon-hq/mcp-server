@@ -14,12 +14,15 @@ server at `https://mcp.photon.codes/mcp`.
   them: argument and response validation, retries with idempotency keys, and
   polling of asynchronous operations with encrypted continuations.
 
-The host supplies the principal, the upstream origin and `fetch`, the API date
-(`policy.apiVersion`, made with `parseApiVersion` from `headers`; the runtime
-sends it as `Photon-Version` on every request), the request-state keys and
-telemetry, so the core holds no credentials and makes no
+The host supplies the principal, the upstream origin and `fetch`, the
+request-state keys and telemetry, so the core holds no credentials and makes no
 assumptions about where it runs. `@modelcontextprotocol/server` is a peer
 dependency.
+
+The compile input requires `compilerPolicy.pinnedHeaders` (use `{}` for no
+pins). The compiler checks these non-secret values against the OpenAPI
+contract and keeps the headers out of tool input; the release sends them on
+every request, including retries and polls.
 
 The `photon-mcp-compile` command compiles and verifies bundles from the command
 line:

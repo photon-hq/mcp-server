@@ -331,7 +331,14 @@ describe("release bundle", () => {
     const first = join(root, "first");
     const second = join(root, "second");
     try {
-      const compiled = compileRelease(makeCompileInput());
+      const input = makeCompileInput();
+      const compiled = compileRelease({
+        ...input,
+        compilerPolicy: {
+          ...input.compilerPolicy,
+          pinnedHeaders: { "x-contract": "v1" },
+        },
+      });
       const firstIdentity = await writeBundle(compiled, first);
       const secondIdentity = await writeBundle(compiled, second);
       const firstTree = await readTree(first);
@@ -360,6 +367,7 @@ describe("release bundle", () => {
         aggregateEtag: '"aggregate-1"',
         compilerVersion: "0.1.0",
         environment: "staging",
+        pinnedHeaders: { "x-contract": "v1" },
         previousReleaseIdentity: null,
         protocolVersion: "2026-07-28",
       });

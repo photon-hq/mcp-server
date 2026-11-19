@@ -4,9 +4,8 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 
 const origin = "https://api.photon.codes";
 const catalog = new URL("../catalog/", import.meta.url);
-// The one API date the server pins; the catalog is fetched for the same date.
 const { date } = JSON.parse(
-  await readFile(new URL("../src/api-version.json", import.meta.url), "utf8")
+  await readFile(new URL("api-version.json", catalog), "utf8")
 );
 
 async function fetchJson(path) {
@@ -22,7 +21,7 @@ async function fetchJson(path) {
 }
 
 const [openapi, grantable] = await Promise.all([
-  fetchJson(`/openapi.json?version=${date}`),
+  fetchJson(`/openapi.json?version=${encodeURIComponent(date)}`),
   fetchJson("/v1/auth/oauth/scopes"),
 ]);
 const { scopes } = grantable;

@@ -73,7 +73,7 @@ export function makeCompileInput(options: CompileFixtureOptions = {}) {
       },
     },
     aggregateEtag: '"aggregate-1"',
-    compilerPolicy: { operationPollLimit: 3 },
+    compilerPolicy: { operationPollLimit: 3, pinnedHeaders: {} },
     environment: "staging" as const,
   };
 }
@@ -83,6 +83,7 @@ export function makeReleaseFixture(): ReleaseDocuments {
     admissionModel: "producer_metadata_only",
     aggregateEtag: '"release-1"',
     authPermissions: ["widgets:read"],
+    pinnedHeaders: {},
     privateCapabilities: [],
     protocolVersion: "2026-07-28",
     registry: [

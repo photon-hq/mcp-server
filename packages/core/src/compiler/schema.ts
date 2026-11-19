@@ -1,4 +1,4 @@
-import { hostSuppliedHeaderName, reservedHeaderName } from "../headers.js";
+import { toolMayNotSetHeader } from "../headers.js";
 import type { Capability, SuccessRepresentation } from "../release.js";
 import {
   compareUtf8,
@@ -176,11 +176,7 @@ function parameterSchema(
   if (location === "path" && parameter.required !== true) {
     fail("path_parameter_not_required");
   }
-  if (location === "header" && hostSuppliedHeaderName.test(parameter.name)) {
-    // The runtime always sets it, so it is left out even when required.
-    return;
-  }
-  if (location === "header" && reservedHeaderName.test(parameter.name)) {
+  if (location === "header" && toolMayNotSetHeader(parameter.name)) {
     // The runtime would reject it, so an optional one is left out of the tool.
     if (parameter.required === true) {
       fail("forbidden_header_parameter");

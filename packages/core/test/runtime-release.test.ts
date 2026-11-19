@@ -49,7 +49,9 @@ describe("runtime release loading", () => {
   });
 
   it("binds a serialized verified capability with its original validators", async () => {
-    const release = await activateFixture();
+    const release = await activateFixture({
+      pinnedHeaders: { "x-contract": "v1" },
+    });
     const entry = release.registrationPlan.find(
       (item) => item.name === "writeAlpha"
     );
@@ -57,8 +59,9 @@ describe("runtime release loading", () => {
       throw new Error("writeAlpha fixture missing");
     }
     const capability = JSON.parse(JSON.stringify(entry.execution.capability));
-    const bound = bindVerifiedCapability(capability, release.validator);
+    const bound = bindVerifiedCapability(capability, release);
     expect(Object.isFrozen(bound.capability)).toBe(true);
+    expect(bound.pinnedHeaders).toEqual({ "x-contract": "v1" });
     expect(bound.validateIdempotencyKey?.("a".repeat(32))).toBe(true);
     expect(bound.validateIdempotencyKey?.("a".repeat(256))).toBe(false);
     expect(bound.validateOutput({ data: { ok: true }, status: 200 })).toBe(

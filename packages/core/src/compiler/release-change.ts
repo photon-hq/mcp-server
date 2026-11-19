@@ -92,7 +92,7 @@ export type SemanticChange =
     }>
   | Readonly<{
       decision: "review";
-      kind: "authPermissions_changed";
+      kind: "authPermissions_changed" | "pinnedHeaders_changed";
       operationId: "release";
     }>;
 
@@ -112,6 +112,7 @@ const contracts = {
   operationPollLimit_changed: ["review", []],
   path_changed: ["review", []],
   permissions_changed: ["review", []],
+  pinnedHeaders_changed: ["review", []],
   request_media_type_changed: [
     "review",
     ["previousMediaType", "candidateMediaType"],
@@ -458,7 +459,7 @@ function parseChange(value: unknown): SemanticChange {
   }
   if (
     (change.operationId === "release") !==
-    (kind === "authPermissions_changed")
+    (kind === "authPermissions_changed" || kind === "pinnedHeaders_changed")
   ) {
     throw new Error("invalid_change");
   }
@@ -908,6 +909,9 @@ export function diffRelease(
 
   if (!same(previous.authPermissions, candidate.authPermissions)) {
     addChange(changes, "authPermissions_changed", "release", "review");
+  }
+  if (!same(previous.pinnedHeaders, candidate.pinnedHeaders)) {
+    addChange(changes, "pinnedHeaders_changed", "release", "review");
   }
   for (const [operationId, before] of beforeFacts) {
     const after = afterFacts.get(operationId);

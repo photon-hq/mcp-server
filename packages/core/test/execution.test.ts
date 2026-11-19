@@ -1,6 +1,5 @@
 import { AjvJsonSchemaValidator } from "@modelcontextprotocol/server/validators/ajv";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { parseApiVersion } from "../src/headers.js";
 import type { Capability } from "../src/release.js";
 import {
   type CapabilityExecutionRequest,
@@ -109,6 +108,7 @@ function executionFor(
       capability.inputSchema as unknown as CapabilityExecutionRequest["execution"]["inputSchema"],
     outputSchema:
       capability.outputSchema as unknown as CapabilityExecutionRequest["execution"]["outputSchema"],
+    pinnedHeaders: {},
     successRepresentations,
     ...(key === undefined
       ? {}
@@ -127,7 +127,6 @@ function dependencies(
 ) {
   const requests: Request[] = [];
   const dependency: RuntimeDependencies = {
-    apiVersion: parseApiVersion("2026-07-01"),
     fetchUpstream:
       fetcher ??
       ((upstreamRequest) => {
@@ -174,7 +173,6 @@ async function continuationFixture(
   const requests: Request[] = [];
   const states = new Map<string, Record<string, unknown>>();
   const dependency: RuntimeDependencies = {
-    apiVersion: parseApiVersion("2026-07-01"),
     fetchUpstream: (upstreamRequest) => {
       requests.push(upstreamRequest);
       return Promise.resolve(
@@ -1750,7 +1748,6 @@ function policyDependencies(
   const minted: Record<string, unknown>[] = [];
   const states = new Map<string, Readonly<Record<string, unknown>>>();
   const dependency: RuntimeDependencies = {
-    apiVersion: parseApiVersion("2026-07-01"),
     fetchUpstream: (upstreamRequest) => {
       requests.push(upstreamRequest);
       return Promise.resolve(
@@ -1802,6 +1799,48 @@ function policyRequest(
 }
 
 describe("mutation policy", () => {
+  it("sends the pinned header on every attempt and poll", async () => {
+    const requests: Request[] = [];
+    const operation = { operationId: "operation-1", projectId: "project-1" };
+    const { dependency } = policyDependencies(false, {
+      fetchUpstream: (upstream) => {
+        requests.push(upstream);
+        if (requests.length < 3) {
+          return Promise.resolve(
+            new Response(null, { headers: { "retry-after": "0" }, status: 503 })
+          );
+        }
+        return Promise.resolve(
+          upstream.method === "POST"
+            ? Response.json({ ...operation, state: "running" }, { status: 202 })
+            : Response.json({ ...operation, state: "succeeded" })
+        );
+      },
+    });
+    const call = {
+      ...request("project-1"),
+      execution: {
+        ...executionFor(idempotentAsyncCapability),
+        pinnedHeaders: { "x-contract": "v1" },
+      },
+      operationGetter: executionFor(operationGetter),
+    };
+    expect(await executeCapability(call, dependency)).toMatchObject({
+      structuredContent: {
+        data: { ...operation, state: "succeeded" },
+        status: 200,
+      },
+    });
+    expect(
+      requests.map(({ headers, method }) => [method, headers.get("x-contract")])
+    ).toEqual([
+      ["POST", "v1"],
+      ["POST", "v1"],
+      ["POST", "v1"],
+      ["GET", "v1"],
+    ]);
+  });
+
   it.each([
     [
       "tampered state",

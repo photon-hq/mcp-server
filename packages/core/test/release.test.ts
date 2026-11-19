@@ -68,6 +68,7 @@ describe("parseRelease", () => {
   const invalidCases = [
     ["wrong schema", { ...valid, schemaVersion: 2 }],
     ["wrong admission", { ...valid, admissionModel: "blacklist" }],
+    ["noncanonical pin", { ...valid, pinnedHeaders: { "X-Contract": "v1" } }],
     [
       "lowercase method",
       { ...valid, registry: [{ ...capability, method: "get" }] },

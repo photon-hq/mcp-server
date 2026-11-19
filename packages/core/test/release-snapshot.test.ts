@@ -45,6 +45,43 @@ describe("release snapshot", () => {
     );
   });
 
+  it("changes the release identity and requires review when only the pin changes", () => {
+    const input = makeCompileInput();
+    const previous = semanticSnapshot(
+      compileRelease({
+        ...input,
+        compilerPolicy: {
+          ...input.compilerPolicy,
+          pinnedHeaders: { "X-Contract": "v1" },
+        },
+      })
+    );
+    const candidate = compileRelease({
+      ...input,
+      compilerPolicy: {
+        ...input.compilerPolicy,
+        pinnedHeaders: { "x-contract": "v2" },
+      },
+      previousRelease: previous,
+    });
+    expect(candidate.previousReleaseIdentity).toBe(
+      semanticReleaseIdentity(previous)
+    );
+    expect(semanticReleaseIdentity(candidate)).not.toBe(
+      candidate.previousReleaseIdentity
+    );
+    expect(candidate.changeReport).toMatchObject({
+      changes: [
+        {
+          decision: "review",
+          kind: "pinnedHeaders_changed",
+          operationId: "release",
+        },
+      ],
+      decision: "review",
+    });
+  });
+
   it.each([
     ["audit", "audit"],
     ["exclusions", "exclusions"],

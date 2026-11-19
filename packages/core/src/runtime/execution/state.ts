@@ -289,6 +289,7 @@ async function pollOperation(
                   projectId: state.projectId,
                 },
               },
+              pinnedHeaders: request.execution.pinnedHeaders,
             },
             dependencies
           )
@@ -476,6 +477,7 @@ export async function invokeAndContinue(
       capability: request.execution.capability,
       deadline,
       ...(key === undefined ? {} : { idempotencyKey: key }),
+      pinnedHeaders: request.execution.pinnedHeaders,
     },
     dependencies
   );

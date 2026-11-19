@@ -15,7 +15,6 @@ import { compileRelease } from "@photon-ai/mcp-core/compiler/compile";
 import { writeRuntimeModule } from "@photon-ai/mcp-core/compiler/release-artifacts/index";
 import { activateRuntimeRelease } from "@photon-ai/mcp-core/runtime/runtime-release";
 import { describe, expect, it } from "vitest";
-import apiVersion from "../src/api-version.json" with { type: "json" };
 import { createLocalServerFactory } from "../src/local.js";
 
 const project = {
@@ -51,7 +50,10 @@ async function fixtureRelease() {
       },
     },
     aggregateEtag: "local-fixture",
-    compilerPolicy: { operationPollLimit: 3 },
+    compilerPolicy: {
+      operationPollLimit: 3,
+      pinnedHeaders: { "photon-version": "fixture-contract" },
+    },
     environment: "production",
   });
   const directory = await mkdtemp(join(tmpdir(), "photon-mcp-local-"));
@@ -187,7 +189,7 @@ describe("createLocalServerFactory", () => {
       "Bearer pho_ask_key_secret"
     );
     expect(request?.headers.get("user-agent")).toBe("photon-mcp/0.0.0-test");
-    expect(request?.headers.get("photon-version")).toBe(apiVersion.date);
+    expect(request?.headers.get("photon-version")).toBe("fixture-contract");
   });
 
   it("returns an upstream denial as a tool error without the body", async () => {

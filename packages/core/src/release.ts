@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { parseStoredPinnedHeaders } from "./pinned-headers.js";
 import { assertClosedSchema } from "./schema.js";
 
 const concreteJsonMediaType = /^application\/[!#$%&'*+.^_`|~0-9a-z-]+\+json$/u;
@@ -46,6 +47,7 @@ export interface ReleaseDocuments {
   readonly admissionModel: "producer_metadata_only";
   readonly aggregateEtag: string;
   readonly authPermissions: readonly string[];
+  readonly pinnedHeaders: Readonly<Record<string, string>>;
   readonly privateCapabilities: readonly Capability[];
   readonly protocolVersion: "2026-07-28";
   readonly registry: readonly Capability[];
@@ -323,6 +325,7 @@ const releaseSchema = z
     admissionModel: z.literal("producer_metadata_only"),
     aggregateEtag: z.string(),
     authPermissions: z.array(z.string()),
+    pinnedHeaders: z.unknown(),
     privateCapabilities: z.array(capabilitySchema).default([]),
     protocolVersion: z.literal("2026-07-28"),
     registry: z.array(capabilitySchema),
@@ -441,6 +444,7 @@ export function parseRelease(value: unknown): ReleaseDocuments {
 
   return {
     ...release,
+    pinnedHeaders: parseStoredPinnedHeaders(release.pinnedHeaders),
     privateCapabilities: release.privateCapabilities.map(normalizeCapability),
     registry: release.registry.map(normalizeCapability),
   };

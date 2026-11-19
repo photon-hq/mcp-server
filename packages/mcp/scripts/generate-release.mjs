@@ -12,6 +12,9 @@ import { restrictToOauthScopes } from "../dist/admission.js";
 const catalog = new URL("../catalog/", import.meta.url);
 const output = new URL("../.release/production/", import.meta.url);
 
+const { date } = JSON.parse(
+  await readFile(new URL("api-version.json", catalog), "utf8")
+);
 const bytes = await readFile(new URL("openapi.json", catalog));
 const scopes = JSON.parse(
   await readFile(new URL("oauth-scopes.json", catalog), "utf8")
@@ -23,7 +26,10 @@ const { aggregate, excluded } = restrictToOauthScopes(
 const compiled = compileRelease({
   aggregate,
   aggregateEtag: `"${createHash("sha256").update(bytes).digest("hex")}"`,
-  compilerPolicy: { operationPollLimit: 3 },
+  compilerPolicy: {
+    operationPollLimit: 3,
+    pinnedHeaders: { "photon-version": date },
+  },
   environment: "production",
 });
 

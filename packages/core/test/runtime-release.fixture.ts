@@ -34,6 +34,7 @@ interface RuntimeReleaseFixtureValue {
     authPermissions: string[];
     compilerVersion: string;
     environment: string;
+    pinnedHeaders: Record<string, string>;
     previousReleaseIdentity: null;
     protocolVersion: string;
     releaseIdentity: string;
@@ -59,6 +60,7 @@ interface RuntimeReleaseFixtureValue {
 
 export interface RuntimeReleaseFixtureOptions {
   readonly mutate?: (value: RuntimeReleaseFixtureValue) => void;
+  readonly pinnedHeaders?: Record<string, string>;
   readonly withOperationGetter?: boolean;
   readonly withTitles?: boolean;
 }
@@ -274,6 +276,7 @@ export async function makeRuntimeRelease(
     authPermissions: ["platforms:write", "project:read"],
     compilerVersion: "0.1.0",
     environment: "staging",
+    pinnedHeaders: options.pinnedHeaders ?? {},
     privateCapabilities,
     protocolVersion: "2026-07-28",
     registry,
@@ -310,6 +313,7 @@ export async function makeRuntimeRelease(
       authPermissions: releaseFacts.authPermissions,
       compilerVersion: releaseFacts.compilerVersion,
       environment: releaseFacts.environment,
+      pinnedHeaders: releaseFacts.pinnedHeaders,
       previousReleaseIdentity: null,
       protocolVersion: releaseFacts.protocolVersion,
       releaseIdentity,

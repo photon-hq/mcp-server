@@ -18,6 +18,7 @@ interface RuntimeReleaseIdentity {
   readonly authPermissions: readonly string[];
   readonly compilerVersion: "0.1.0";
   readonly environment: "production" | "staging";
+  readonly pinnedHeaders: unknown;
   readonly previousReleaseIdentity: string | null;
   readonly protocolVersion: "2026-07-28";
   readonly releaseIdentity: string;
@@ -54,6 +55,7 @@ export type ActivatedExecution = Readonly<{
   readonly capability: Capability;
   readonly inputSchema: StandardSchemaWithJSON;
   readonly outputSchema: StandardSchemaWithJSON;
+  readonly pinnedHeaders: ReleaseDocuments["pinnedHeaders"];
   readonly successRepresentations: readonly Readonly<
     | { readonly status: 204 }
     | {
@@ -69,6 +71,7 @@ export type ActivatedExecution = Readonly<{
 export interface ActivatedRuntimeRelease {
   readonly authPermissions: readonly string[];
   readonly environment: RuntimeReleaseIdentity["environment"];
+  readonly pinnedHeaders: ReleaseDocuments["pinnedHeaders"];
   readonly registrationPlan: readonly Readonly<{
     readonly execution: ActivatedExecution;
     readonly name: string;
@@ -110,6 +113,7 @@ const releaseIdentityKeys = new Set([
   "authPermissions",
   "compilerVersion",
   "environment",
+  "pinnedHeaders",
   "previousReleaseIdentity",
   "protocolVersion",
   "releaseIdentity",
@@ -308,6 +312,7 @@ function parseCapabilities(
       admissionModel: identity.admissionModel,
       aggregateEtag: identity.aggregateEtag,
       authPermissions,
+      pinnedHeaders: identity.pinnedHeaders,
       privateCapabilities,
       protocolVersion: identity.protocolVersion,
       registry,
@@ -496,7 +501,8 @@ function activateSchema(
 function activateExecution(
   capability: Capability,
   schema: RuntimeSchema,
-  validator: CfWorkerJsonSchemaValidator
+  validator: CfWorkerJsonSchemaValidator,
+  pinnedHeaders: ReleaseDocuments["pinnedHeaders"]
 ): ActivatedExecution {
   const input = activateSchema(validator, schema.input);
   const output = activateSchema(validator, schema.output);
@@ -536,6 +542,7 @@ function activateExecution(
         }),
     inputSchema: input.schema,
     outputSchema: output.schema,
+    pinnedHeaders,
     successRepresentations,
     validateOutput: output.validate,
   });
@@ -546,7 +553,7 @@ function activateExecution(
  */
 export function bindVerifiedCapability(
   capability: Capability,
-  validator: CfWorkerJsonSchemaValidator
+  release: Pick<ActivatedRuntimeRelease, "validator" | "pinnedHeaders">
 ): ActivatedExecution {
   const execution = activateExecution(
     capability,
@@ -555,7 +562,8 @@ export function bindVerifiedCapability(
       output: capability.outputSchema,
       responses: capability.successRepresentations,
     },
-    validator
+    release.validator,
+    release.pinnedHeaders
   );
   deepFreeze(capability);
   return execution;
@@ -590,7 +598,7 @@ export async function activateRuntimeRelease(
   }
   deepFreeze(identity);
   deepFreeze(release.authPermissions);
-  const { registry } = release;
+  const { pinnedHeaders, registry } = release;
   const tools = parseTools(runtime.tools);
   const schemas = parseSchemas(runtime.schemas);
   assertCrossReferences(registry, release.privateCapabilities, tools, schemas);
@@ -601,6 +609,7 @@ export async function activateRuntimeRelease(
     authPermissions: release.authPermissions,
     compilerVersion: identity.compilerVersion,
     environment: identity.environment,
+    pinnedHeaders,
     privateCapabilities: release.privateCapabilities,
     protocolVersion: identity.protocolVersion,
     registry,
@@ -620,7 +629,7 @@ export async function activateRuntimeRelease(
     }
     executions.set(
       capability.operationId,
-      activateExecution(capability, schema, validator)
+      activateExecution(capability, schema, validator, pinnedHeaders)
     );
   }
   const registrationPlan = Object.freeze(
@@ -658,6 +667,7 @@ export async function activateRuntimeRelease(
   return Object.freeze({
     authPermissions: release.authPermissions,
     environment: identity.environment,
+    pinnedHeaders,
     registrationPlan,
     releaseIdentity: identity.releaseIdentity,
     validator,
