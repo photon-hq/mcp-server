@@ -1,5 +1,8 @@
-import { type Capability, compareUtf8 } from "../release.js";
+import { normalizePinnedHeaders } from "../pinned-headers.js";
+import type { Capability } from "../release.js";
 import { closeSchema } from "../schema.js";
+import { compareUtf8 } from "../utf8.js";
+import { declaredHeaderNames } from "./parameters.js";
 import {
   admittedOperations,
   indexOperations,
@@ -24,7 +27,10 @@ import {
 export interface CompileReleaseInput {
   readonly aggregate: Readonly<Record<string, unknown>>;
   readonly aggregateEtag: string;
-  readonly compilerPolicy: Readonly<{ operationPollLimit: number }>;
+  readonly compilerPolicy: Readonly<{
+    operationPollLimit: number;
+    pinnedHeaders: Readonly<Record<string, string>>;
+  }>;
   readonly environment: "production" | "staging";
   readonly previousRelease?: SemanticReleaseSnapshot;
 }
@@ -139,8 +145,9 @@ export function parseCompileReleaseInput(value: unknown): CompileReleaseInput {
     compilerPolicy === null ||
     Array.isArray(compilerPolicy) ||
     typeof compilerPolicy !== "object" ||
-    Object.keys(compilerPolicy).length !== 1 ||
+    Object.keys(compilerPolicy).length !== 2 ||
     !("operationPollLimit" in compilerPolicy) ||
+    !("pinnedHeaders" in compilerPolicy) ||
     !Number.isInteger(compilerPolicy.operationPollLimit) ||
     (compilerPolicy.operationPollLimit as number) < 1
   ) {
@@ -151,6 +158,7 @@ export function parseCompileReleaseInput(value: unknown): CompileReleaseInput {
     aggregateEtag: input.aggregateEtag as string,
     compilerPolicy: {
       operationPollLimit: compilerPolicy.operationPollLimit as number,
+      pinnedHeaders: normalizePinnedHeaders(compilerPolicy.pinnedHeaders),
     },
     environment: input.environment as "production" | "staging",
     ...(input.previousRelease === undefined
@@ -167,6 +175,7 @@ export function compileRelease(value: unknown): CompiledRelease {
   const input = parseCompileReleaseInput(value);
   const aggregate = assertOpenApi31(input.aggregate);
   const operationIds = new Set<string>();
+  const { pinnedHeaders } = input.compilerPolicy;
   const operations = listPathOperations(aggregate);
   const operationsById = indexOperations(operations, "compiler");
   const authPermissions = [
@@ -186,13 +195,17 @@ export function compileRelease(value: unknown): CompiledRelease {
       const capability = compileCapability(
         pathOperation,
         aggregate.components,
-        extension,
-        operationGetter === undefined
-          ? undefined
-          : {
-              operationGetter,
-              operationPollLimit: input.compilerPolicy.operationPollLimit,
-            }
+        {
+          asyncOperation:
+            operationGetter === undefined
+              ? undefined
+              : {
+                  operationGetter,
+                  operationPollLimit: input.compilerPolicy.operationPollLimit,
+                },
+          extension,
+          pinnedHeaders,
+        }
       );
       if (operationIds.has(capability.operationId)) {
         throw new Error("duplicate_operation_id");
@@ -208,6 +221,7 @@ export function compileRelease(value: unknown): CompiledRelease {
     registry.map((capability) => [capability.operationId, capability])
   );
   const privateById = new Map<string, Capability>();
+  const compiledOperations = analyzed.map(({ pathOperation }) => pathOperation);
   for (const capability of registry) {
     if (
       !capability.operationGetter ||
@@ -219,17 +233,25 @@ export function compileRelease(value: unknown): CompiledRelease {
     if (!getter) {
       throw new Error("invalid_operation_getter");
     }
-    const candidate = compileCapability(
-      getter,
-      aggregate.components,
-      undefined,
-      undefined
-    );
+    compiledOperations.push(getter);
+    const candidate = compileCapability(getter, aggregate.components, {
+      pinnedHeaders,
+    });
     const existing = privateById.get(candidate.operationId);
     if (existing && canonicalJson(existing) !== canonicalJson(candidate)) {
       throw new Error("conflicting_operation_getter");
     }
     privateById.set(candidate.operationId, existing ?? candidate);
+  }
+  // A pin no compiled operation declares is never checked, and is most likely
+  // a misspelled name.
+  const declaredHeaders = new Set(
+    compiledOperations.flatMap(declaredHeaderNames)
+  );
+  for (const name of Object.keys(pinnedHeaders)) {
+    if (!declaredHeaders.has(name)) {
+      throw new Error(`pinned_header_not_declared: ${name}`);
+    }
   }
   const privateCapabilities = [...privateById.values()].sort((left, right) =>
     compareUtf8(left.operationId, right.operationId)
@@ -282,6 +304,7 @@ export function compileRelease(value: unknown): CompiledRelease {
     compilerVersion: "0.1.0",
     environment: input.environment,
     openapi: cloneOpenApi(aggregate),
+    pinnedHeaders,
     privateCapabilities,
     protocolVersion: "2026-07-28",
     registry: advertisedRegistry,

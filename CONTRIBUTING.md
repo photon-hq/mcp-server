@@ -18,6 +18,10 @@ reviewable bundle to `packages/mcp/.release/production/`, including
 `tools.txt` and the operations it excluded. The same catalog always produces
 the same release.
 
+The catalog refresh and release build both read the Photon API version from
+`packages/mcp/catalog/api-version.json`. Change the version there, then
+refresh the catalog so it accepts the release's new `Photon-Version` pin.
+
 Update the catalog from `https://api.photon.codes`:
 
 ```sh

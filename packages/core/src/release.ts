@@ -1,5 +1,7 @@
 import { z } from "zod";
+import { parseStoredPinnedHeaders } from "./pinned-headers.js";
 import { assertClosedSchema } from "./schema.js";
+import { compareUtf8 } from "./utf8.js";
 
 const concreteJsonMediaType = /^application\/[!#$%&'*+.^_`|~0-9a-z-]+\+json$/u;
 const asciiMediaType =
@@ -46,6 +48,7 @@ export interface ReleaseDocuments {
   readonly admissionModel: "producer_metadata_only";
   readonly aggregateEtag: string;
   readonly authPermissions: readonly string[];
+  readonly pinnedHeaders: Readonly<Record<string, string>>;
   readonly privateCapabilities: readonly Capability[];
   readonly protocolVersion: "2026-07-28";
   readonly registry: readonly Capability[];
@@ -289,22 +292,6 @@ export function normalizeSuccessMediaType(value: string): string | undefined {
   return normalized === "application/problem+json" ? undefined : normalized;
 }
 
-const encoder = new TextEncoder();
-
-/** @internal */
-export function compareUtf8(left: string, right: string): number {
-  const leftBytes = encoder.encode(left);
-  const rightBytes = encoder.encode(right);
-  const length = Math.min(leftBytes.length, rightBytes.length);
-  for (let index = 0; index < length; index += 1) {
-    const difference = (leftBytes[index] ?? 0) - (rightBytes[index] ?? 0);
-    if (difference !== 0) {
-      return difference;
-    }
-  }
-  return leftBytes.length - rightBytes.length;
-}
-
 function compareRepresentation(
   left: SuccessRepresentation,
   right: SuccessRepresentation
@@ -323,6 +310,7 @@ const releaseSchema = z
     admissionModel: z.literal("producer_metadata_only"),
     aggregateEtag: z.string(),
     authPermissions: z.array(z.string()),
+    pinnedHeaders: z.unknown(),
     privateCapabilities: z.array(capabilitySchema).default([]),
     protocolVersion: z.literal("2026-07-28"),
     registry: z.array(capabilitySchema),
@@ -441,6 +429,7 @@ export function parseRelease(value: unknown): ReleaseDocuments {
 
   return {
     ...release,
+    pinnedHeaders: parseStoredPinnedHeaders(release.pinnedHeaders),
     privateCapabilities: release.privateCapabilities.map(normalizeCapability),
     registry: release.registry.map(normalizeCapability),
   };

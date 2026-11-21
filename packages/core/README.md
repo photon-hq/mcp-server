@@ -19,6 +19,12 @@ request-state keys and telemetry, so the core holds no credentials and makes no
 assumptions about where it runs. `@modelcontextprotocol/server` is a peer
 dependency.
 
+The compile input requires `compilerPolicy.pinnedHeaders` (use `{}` for no
+pins). Each pin names a header parameter that at least one compiled operation
+declares, and its non-secret value must satisfy every such declaration. The
+compiler keeps pinned headers out of tool input; the release sends them on
+every request, including retries and polls.
+
 The `photon-mcp-compile` command compiles and verifies bundles from the command
 line:
 

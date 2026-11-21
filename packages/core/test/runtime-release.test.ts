@@ -49,7 +49,9 @@ describe("runtime release loading", () => {
   });
 
   it("binds a serialized verified capability with its original validators", async () => {
-    const release = await activateFixture();
+    const release = await activateFixture({
+      pinnedHeaders: { "x-contract": "v1" },
+    });
     const entry = release.registrationPlan.find(
       (item) => item.name === "writeAlpha"
     );
@@ -57,14 +59,35 @@ describe("runtime release loading", () => {
       throw new Error("writeAlpha fixture missing");
     }
     const capability = JSON.parse(JSON.stringify(entry.execution.capability));
-    const bound = bindVerifiedCapability(capability, release.validator);
+    const pinnedHeaders = { ...release.pinnedHeaders };
+    const bound = bindVerifiedCapability(capability, {
+      pinnedHeaders,
+      validator: release.validator,
+    });
+    pinnedHeaders["x-contract"] = "v2";
     expect(Object.isFrozen(bound.capability)).toBe(true);
+    expect(Object.isFrozen(bound.pinnedHeaders)).toBe(true);
+    expect(bound.pinnedHeaders).toEqual({ "x-contract": "v1" });
     expect(bound.validateIdempotencyKey?.("a".repeat(32))).toBe(true);
     expect(bound.validateIdempotencyKey?.("a".repeat(256))).toBe(false);
     expect(bound.validateOutput({ data: { ok: true }, status: 200 })).toBe(
       true
     );
     expect(bound.validateOutput(null)).toBe(false);
+  });
+
+  it("rejects mixed-case keys in a bound release's pin map", async () => {
+    const { registrationPlan, validator } = await activateFixture();
+    const entry = registrationPlan.find((item) => item.name === "writeAlpha");
+    if (!entry) {
+      throw new Error("writeAlpha fixture missing");
+    }
+    expect(() =>
+      bindVerifiedCapability(structuredClone(entry.execution.capability), {
+        pinnedHeaders: { "X-Contract": "v1" },
+        validator,
+      })
+    ).toThrow('invalid_pinned_header: "X-Contract"');
   });
 
   it.each([

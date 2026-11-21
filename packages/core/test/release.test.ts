@@ -53,9 +53,17 @@ function sparseArray(): unknown[] {
 
 describe("parseRelease", () => {
   it("returns a complete release document", () => {
-    const release = makeReleaseFixture();
+    const release = {
+      ...makeReleaseFixture(),
+      pinnedHeaders: Object.fromEntries([
+        ["x-z", "v1"],
+        ["x-a", "v2"],
+      ]),
+    };
 
-    expect(parseRelease(release)).toEqual(release);
+    const parsed = parseRelease(release);
+    expect(parsed).toEqual(release);
+    expect(Object.keys(parsed.pinnedHeaders)).toEqual(["x-a", "x-z"]);
   });
 
   const valid = makeReleaseFixture();
@@ -68,6 +76,7 @@ describe("parseRelease", () => {
   const invalidCases = [
     ["wrong schema", { ...valid, schemaVersion: 2 }],
     ["wrong admission", { ...valid, admissionModel: "blacklist" }],
+    ["noncanonical pin", { ...valid, pinnedHeaders: { "X-Contract": "v1" } }],
     [
       "lowercase method",
       { ...valid, registry: [{ ...capability, method: "get" }] },

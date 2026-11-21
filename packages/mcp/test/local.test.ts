@@ -40,6 +40,12 @@ async function fixtureRelease() {
                 required: true,
                 schema: { type: "string" },
               },
+              {
+                in: "header",
+                name: "Photon-Version",
+                required: true,
+                schema: { const: "fixture-contract" },
+              },
             ],
             responses: {
               "200": { content: { "application/json": { schema: project } } },
@@ -50,7 +56,10 @@ async function fixtureRelease() {
       },
     },
     aggregateEtag: "local-fixture",
-    compilerPolicy: { operationPollLimit: 3 },
+    compilerPolicy: {
+      operationPollLimit: 3,
+      pinnedHeaders: { "photon-version": "fixture-contract" },
+    },
     environment: "production",
   });
   const directory = await mkdtemp(join(tmpdir(), "photon-mcp-local-"));
@@ -186,6 +195,7 @@ describe("createLocalServerFactory", () => {
       "Bearer pho_ask_key_secret"
     );
     expect(request?.headers.get("user-agent")).toBe("photon-mcp/0.0.0-test");
+    expect(request?.headers.get("photon-version")).toBe("fixture-contract");
   });
 
   it("returns an upstream denial as a tool error without the body", async () => {

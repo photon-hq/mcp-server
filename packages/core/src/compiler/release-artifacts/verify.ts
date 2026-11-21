@@ -1,8 +1,5 @@
-import {
-  compareUtf8,
-  parseRelease,
-  type ReleaseDocuments,
-} from "../../release.js";
+import { parseRelease, type ReleaseDocuments } from "../../release.js";
+import { compareUtf8 } from "../../utf8.js";
 import { type ChangeReport, parseChangeReport } from "../release-change.js";
 import {
   assertSemanticReleaseRelations,
@@ -91,6 +88,7 @@ const releaseDocumentKeys = new Set([
   "authPermissions",
   "compilerVersion",
   "environment",
+  "pinnedHeaders",
   "previousReleaseIdentity",
   "protocolVersion",
   "releaseIdentity",
@@ -106,6 +104,7 @@ function parseBundleRelease(
       admissionModel: releaseSource.admissionModel,
       aggregateEtag: releaseSource.aggregateEtag,
       authPermissions: releaseSource.authPermissions,
+      pinnedHeaders: releaseSource.pinnedHeaders,
       privateCapabilities,
       protocolVersion: releaseSource.protocolVersion,
       registry,

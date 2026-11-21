@@ -8,6 +8,7 @@ import {
   writeRuntimeModule,
 } from "@photon-ai/mcp-core/compiler/release-artifacts/index";
 import { restrictToOauthScopes } from "../dist/admission.js";
+import { readApiVersion } from "./api-version.mjs";
 
 const catalog = new URL("../catalog/", import.meta.url);
 const output = new URL("../.release/production/", import.meta.url);
@@ -23,7 +24,10 @@ const { aggregate, excluded } = restrictToOauthScopes(
 const compiled = compileRelease({
   aggregate,
   aggregateEtag: `"${createHash("sha256").update(bytes).digest("hex")}"`,
-  compilerPolicy: { operationPollLimit: 3 },
+  compilerPolicy: {
+    operationPollLimit: 3,
+    pinnedHeaders: { "photon-version": await readApiVersion() },
+  },
   environment: "production",
 });
 

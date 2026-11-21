@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { AjvJsonSchemaValidator } from "@modelcontextprotocol/server/validators/ajv";
-import { type Capability, compareUtf8 } from "../../release.js";
+import type { Capability } from "../../release.js";
+import { compareUtf8 } from "../../utf8.js";
 import type { CompiledRelease } from "../compile.js";
 import type { ChangeReport } from "../release-change.js";
 import { canonicalJson, semanticReleaseIdentity } from "../release-snapshot.js";
@@ -45,6 +46,7 @@ function releaseDocument(compiled: CompiledRelease) {
     authPermissions: compiled.authPermissions,
     compilerVersion: compiled.compilerVersion,
     environment: compiled.environment,
+    pinnedHeaders: compiled.pinnedHeaders,
     previousReleaseIdentity: compiled.previousReleaseIdentity,
     protocolVersion: compiled.protocolVersion,
     releaseIdentity: semanticReleaseIdentity(compiled),

@@ -1,6 +1,6 @@
 {
   "name": "@photon-ai/mcp-core",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "description": "Compile an OpenAPI document into MCP tools and execute them over HTTP.",
   "keywords": [
     "mcp",

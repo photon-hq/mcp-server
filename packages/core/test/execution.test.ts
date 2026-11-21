@@ -108,6 +108,7 @@ function executionFor(
       capability.inputSchema as unknown as CapabilityExecutionRequest["execution"]["inputSchema"],
     outputSchema:
       capability.outputSchema as unknown as CapabilityExecutionRequest["execution"]["outputSchema"],
+    pinnedHeaders: {},
     successRepresentations,
     ...(key === undefined
       ? {}
@@ -1798,6 +1799,54 @@ function policyRequest(
 }
 
 describe("mutation policy", () => {
+  it("sends the pinned header on every attempt and poll", async () => {
+    const requests: Request[] = [];
+    const operation = { operationId: "operation-1", projectId: "project-1" };
+    const { dependency } = policyDependencies(false, {
+      fetchUpstream: (upstream) => {
+        requests.push(upstream);
+        if (requests.length < 3) {
+          return Promise.resolve(
+            new Response(null, {
+              headers: { "retry-after": "0" },
+              status: 503,
+            })
+          );
+        }
+        return Promise.resolve(
+          upstream.method === "POST"
+            ? Response.json({ ...operation, state: "running" }, { status: 202 })
+            : Response.json({ ...operation, state: "succeeded" })
+        );
+      },
+    });
+    const call = {
+      ...request("project-1"),
+      execution: {
+        ...executionFor(idempotentAsyncCapability),
+        pinnedHeaders: { "x-contract": "v1" },
+      },
+      operationGetter: {
+        ...executionFor(operationGetter),
+        pinnedHeaders: { "x-contract": "v2" },
+      },
+    };
+    expect(await executeCapability(call, dependency)).toMatchObject({
+      structuredContent: {
+        data: { ...operation, state: "succeeded" },
+        status: 200,
+      },
+    });
+    expect(
+      requests.map(({ headers, method }) => [method, headers.get("x-contract")])
+    ).toEqual([
+      ["POST", "v1"],
+      ["POST", "v1"],
+      ["POST", "v1"],
+      ["GET", "v2"],
+    ]);
+  });
+
   it.each([
     [
       "tampered state",

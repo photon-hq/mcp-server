@@ -28,8 +28,8 @@ import {
 } from "../src/compiler/release-artifacts/index.js";
 import { prepareBundleVerification } from "../src/compiler/release-artifacts/verify.js";
 import { canonicalJson } from "../src/compiler/release-snapshot.js";
-import { compareUtf8 } from "../src/release.js";
 import { activateRuntimeRelease } from "../src/runtime/runtime-release.js";
+import { compareUtf8 } from "../src/utf8.js";
 import { makeCompileInput } from "./fixtures.js";
 import { schemaValidationCases } from "./schema-validation.fixture.js";
 
@@ -331,7 +331,20 @@ describe("release bundle", () => {
     const first = join(root, "first");
     const second = join(root, "second");
     try {
-      const compiled = compileRelease(makeCompileInput());
+      const input = makeCompileInput({
+        operation: {
+          parameters: [
+            { in: "header", name: "X-Contract", schema: { type: "string" } },
+          ],
+        },
+      });
+      const compiled = compileRelease({
+        ...input,
+        compilerPolicy: {
+          ...input.compilerPolicy,
+          pinnedHeaders: { "x-contract": "v1" },
+        },
+      });
       const firstIdentity = await writeBundle(compiled, first);
       const secondIdentity = await writeBundle(compiled, second);
       const firstTree = await readTree(first);
@@ -360,6 +373,7 @@ describe("release bundle", () => {
         aggregateEtag: '"aggregate-1"',
         compilerVersion: "0.1.0",
         environment: "staging",
+        pinnedHeaders: { "x-contract": "v1" },
         previousReleaseIdentity: null,
         protocolVersion: "2026-07-28",
       });

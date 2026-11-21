@@ -72,6 +72,7 @@ function invocationRequest(
     capability,
     deadline: 31_000,
     input: { path: { projectId: value } },
+    pinnedHeaders: {},
     signal: new AbortController().signal,
     ...overrides,
   };
@@ -556,16 +557,20 @@ describe("registry invocation", () => {
     expect(capability.operationId).toBe(originalOperationId);
   });
 
-  it("rejects a caller-supplied trust-boundary header before fetch", async () => {
+  it.each([
+    "authorization",
+    "X-cOnTrAcT",
+  ])("rejects the transport-owned header %s before fetch", async (header) => {
     const { dependency, requests } = dependencies();
     await expect(
       invokeRegistryTarget(
         {
           ...invocationRequest("project-1"),
           input: {
-            headers: { authorization: "attacker" },
+            headers: { [header]: "caller-value" },
             path: { projectId: "project-1" },
           },
+          pinnedHeaders: { "x-contract": "release-value" },
         },
         dependency
       )

@@ -1,5 +1,6 @@
 import { reservedHeaderName } from "../headers.js";
-import type { Capability } from "../release.js";
+import { pinnedHeaderValue } from "../pinned-headers.js";
+import type { Capability, ReleaseDocuments } from "../release.js";
 import type { ExecutionPrincipal } from "./principal.js";
 import type { Telemetry } from "./telemetry.js";
 
@@ -34,6 +35,7 @@ export interface InvocationRequest {
   readonly deadline: number;
   readonly idempotencyKey?: string;
   readonly input: unknown;
+  readonly pinnedHeaders: ReleaseDocuments["pinnedHeaders"];
   readonly signal: AbortSignal;
 }
 
@@ -170,10 +172,16 @@ function requestHeaders(request: InvocationRequest): Headers {
   for (const [name, value] of Object.entries(
     object(object(request.input).headers)
   )) {
-    if (reservedHeaderName.test(name)) {
+    if (
+      reservedHeaderName.test(name) ||
+      pinnedHeaderValue(request.pinnedHeaders, name) !== undefined
+    ) {
       throw new InvocationError("forbidden_header");
     }
     headers.set(name, simple(value, false));
+  }
+  for (const [name, value] of Object.entries(request.pinnedHeaders)) {
+    headers.set(name, value);
   }
   if (request.idempotencyKey) {
     headers.set("idempotency-key", request.idempotencyKey);

@@ -1,3 +1,5 @@
+import { compareUtf8 } from "./utf8.js";
+
 type JsonObject = Record<string, unknown>;
 
 const sourceLifecycleKeyword = ["depre", "cated"].join("");
@@ -134,7 +136,6 @@ const objectSchemaKeywords = new Set([
   "required",
 ]);
 const safeDefinitionCharacter = /^[A-Za-z0-9_]$/u;
-const encoder = new TextEncoder();
 
 function isObject(value: unknown): value is JsonObject {
   if (value === null || Array.isArray(value) || typeof value !== "object") {
@@ -170,19 +171,6 @@ function jsonClone(value: unknown): unknown {
     );
   }
   return fail("invalid_openapi_value");
-}
-
-function compareUtf8(left: string, right: string): number {
-  const leftBytes = encoder.encode(left);
-  const rightBytes = encoder.encode(right);
-  const length = Math.min(leftBytes.length, rightBytes.length);
-  for (let index = 0; index < length; index += 1) {
-    const difference = (leftBytes[index] ?? 0) - (rightBytes[index] ?? 0);
-    if (difference !== 0) {
-      return difference;
-    }
-  }
-  return leftBytes.length - rightBytes.length;
 }
 
 function safeDefinitionName(value: string): string {

@@ -414,9 +414,15 @@ describe("compileRelease", () => {
     expect(semanticReleaseIdentity(compiled)).toMatch(releaseIdentityPattern);
   });
 
-  it("rejects unknown compiler policy fields", () => {
+  it.each([
+    [
+      "an unknown field",
+      { operationPollLimit: 3, pinnedHeaders: {}, unknown: true },
+    ],
+    ["no pinnedHeaders", { operationPollLimit: 3 }],
+  ])("rejects a compiler policy with %s", (_case, compilerPolicy) => {
     const input = makeCompileInput() as unknown as Record<string, unknown>;
-    input.compilerPolicy = { operationPollLimit: 3, unknown: true };
+    input.compilerPolicy = compilerPolicy;
 
     expect(() => compileRelease(input)).toThrowError("invalid_compiler_policy");
   });
@@ -1508,6 +1514,7 @@ describe("compileRelease", () => {
     "X-Photon-Version",
     "Proxy-Authorization",
     "X-Api-Key",
+    "Transfer-Encoding",
   ])("leaves the optional reserved header %s out of the tool", (name) => {
     const result = compileRelease(
       makeCompileInput({
@@ -2153,6 +2160,13 @@ describe("compileRelease", () => {
 
   it("adds continuation and polling facts for an Operation response Link", () => {
     const input = makeCompileInput({ method: "post" });
+    input.compilerPolicy.pinnedHeaders = { "x-contract": "v1" };
+    const pinnedHeader = {
+      in: "header",
+      name: "X-Contract",
+      required: true,
+      schema: { const: "v1" },
+    };
     const paths = input.aggregate.paths as Record<
       string,
       Record<string, unknown>
@@ -2191,6 +2205,7 @@ describe("compileRelease", () => {
     paths["/projects/{projectId}/operations/{operationId}"] = {
       get: {
         operationId: "readOperation",
+        parameters: [pinnedHeader],
         responses: {
           "200": {
             content: {
@@ -2207,7 +2222,8 @@ describe("compileRelease", () => {
       },
     };
 
-    const item = capability(compileRelease(input), "startOperation") as {
+    const compiled = compileRelease(input);
+    const item = capability(compiled, "startOperation") as {
       readonly inputSchema: Readonly<Record<string, unknown>>;
       readonly operationGetter?: string;
       readonly operationPollLimit?: number;
@@ -2224,15 +2240,16 @@ describe("compileRelease", () => {
       required: ["continuation"],
       type: "object",
     });
+    expect(compiled.registry.map((entry) => entry.operationId)).toEqual([
+      "startOperation",
+    ]);
     expect(
-      compileRelease(input).registry.map((entry) => entry.operationId)
-    ).toEqual(["startOperation"]);
-    expect(
-      compileRelease(input).privateCapabilities.map(
-        (entry) => entry.operationId
-      )
+      compiled.privateCapabilities.map((entry) => entry.operationId)
     ).toEqual(["readOperation"]);
-    expect(compileRelease(input).tools.map((entry) => entry.name)).toEqual([
+    expect(compiled.privateCapabilities[0]?.inputSchema).not.toHaveProperty(
+      "properties.headers"
+    );
+    expect(compiled.tools.map((entry) => entry.name)).toEqual([
       "startOperation",
     ]);
     paths["/projects/{projectId}/second"] = {
@@ -2248,6 +2265,11 @@ describe("compileRelease", () => {
 
     const getter = paths["/projects/{projectId}/operations/{operationId}"]
       .get as Record<string, unknown>;
+    pinnedHeader.schema.const = "v2";
+    expect(() => compileRelease(input)).toThrow(
+      'pinned_header_rejected_by_operation: readOperation: X-Contract="v1"'
+    );
+    pinnedHeader.schema.const = "v1";
     getter["x-photon-mcp"] = { enabled: true };
     const withPublicGetter = compileRelease(input);
     expect(withPublicGetter.registry.map((entry) => entry.operationId)).toEqual(
