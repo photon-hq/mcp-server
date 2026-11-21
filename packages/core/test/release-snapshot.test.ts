@@ -46,7 +46,13 @@ describe("release snapshot", () => {
   });
 
   it("changes the release identity and requires review when only the pin changes", () => {
-    const input = makeCompileInput();
+    const input = makeCompileInput({
+      operation: {
+        parameters: [
+          { in: "header", name: "X-Contract", schema: { type: "string" } },
+        ],
+      },
+    });
     const previous = semanticSnapshot(
       compileRelease({
         ...input,

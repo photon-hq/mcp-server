@@ -1807,7 +1807,10 @@ describe("mutation policy", () => {
         requests.push(upstream);
         if (requests.length < 3) {
           return Promise.resolve(
-            new Response(null, { headers: { "retry-after": "0" }, status: 503 })
+            new Response(null, {
+              headers: { "retry-after": "0" },
+              status: 503,
+            })
           );
         }
         return Promise.resolve(
@@ -1823,7 +1826,10 @@ describe("mutation policy", () => {
         ...executionFor(idempotentAsyncCapability),
         pinnedHeaders: { "x-contract": "v1" },
       },
-      operationGetter: executionFor(operationGetter),
+      operationGetter: {
+        ...executionFor(operationGetter),
+        pinnedHeaders: { "x-contract": "v2" },
+      },
     };
     expect(await executeCapability(call, dependency)).toMatchObject({
       structuredContent: {
@@ -1837,7 +1843,7 @@ describe("mutation policy", () => {
       ["POST", "v1"],
       ["POST", "v1"],
       ["POST", "v1"],
-      ["GET", "v1"],
+      ["GET", "v2"],
     ]);
   });
 

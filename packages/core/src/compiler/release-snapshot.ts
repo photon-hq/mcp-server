@@ -1,10 +1,10 @@
 import { createHash } from "node:crypto";
 import {
   type Capability,
-  compareUtf8,
   parseRelease,
   type ReleaseDocuments,
 } from "../release.js";
+import { compareUtf8 } from "../utf8.js";
 import {
   admittedOperations,
   indexOperations,

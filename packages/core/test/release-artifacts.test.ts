@@ -28,8 +28,8 @@ import {
 } from "../src/compiler/release-artifacts/index.js";
 import { prepareBundleVerification } from "../src/compiler/release-artifacts/verify.js";
 import { canonicalJson } from "../src/compiler/release-snapshot.js";
-import { compareUtf8 } from "../src/release.js";
 import { activateRuntimeRelease } from "../src/runtime/runtime-release.js";
+import { compareUtf8 } from "../src/utf8.js";
 import { makeCompileInput } from "./fixtures.js";
 import { schemaValidationCases } from "./schema-validation.fixture.js";
 
@@ -331,7 +331,13 @@ describe("release bundle", () => {
     const first = join(root, "first");
     const second = join(root, "second");
     try {
-      const input = makeCompileInput();
+      const input = makeCompileInput({
+        operation: {
+          parameters: [
+            { in: "header", name: "X-Contract", schema: { type: "string" } },
+          ],
+        },
+      });
       const compiled = compileRelease({
         ...input,
         compilerPolicy: {

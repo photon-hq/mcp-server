@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { parseStoredPinnedHeaders } from "./pinned-headers.js";
 import { assertClosedSchema } from "./schema.js";
+import { compareUtf8 } from "./utf8.js";
 
 const concreteJsonMediaType = /^application\/[!#$%&'*+.^_`|~0-9a-z-]+\+json$/u;
 const asciiMediaType =
@@ -289,22 +290,6 @@ export function normalizeJsonMediaType(value: string): string | undefined {
 export function normalizeSuccessMediaType(value: string): string | undefined {
   const normalized = normalizeJsonMediaType(value);
   return normalized === "application/problem+json" ? undefined : normalized;
-}
-
-const encoder = new TextEncoder();
-
-/** @internal */
-export function compareUtf8(left: string, right: string): number {
-  const leftBytes = encoder.encode(left);
-  const rightBytes = encoder.encode(right);
-  const length = Math.min(leftBytes.length, rightBytes.length);
-  for (let index = 0; index < length; index += 1) {
-    const difference = (leftBytes[index] ?? 0) - (rightBytes[index] ?? 0);
-    if (difference !== 0) {
-      return difference;
-    }
-  }
-  return leftBytes.length - rightBytes.length;
 }
 
 function compareRepresentation(

@@ -1,9 +1,9 @@
 import {
   type Capability,
-  compareUtf8,
   normalizeJsonMediaType,
   normalizeSuccessMediaType,
 } from "../release.js";
+import { compareUtf8 } from "../utf8.js";
 import {
   canonicalJson,
   type SemanticReleaseSnapshot,
@@ -92,9 +92,16 @@ export type SemanticChange =
     }>
   | Readonly<{
       decision: "review";
-      kind: "authPermissions_changed" | "pinnedHeaders_changed";
+      kind: ReleaseChangeKind;
       operationId: "release";
     }>;
+
+// Changes to release-level facts carry the operationId "release".
+const releaseChangeKinds = [
+  "authPermissions_changed",
+  "pinnedHeaders_changed",
+] as const;
+type ReleaseChangeKind = (typeof releaseChangeKinds)[number];
 
 const contracts = {
   authPermissions_changed: ["review", []],
@@ -459,7 +466,7 @@ function parseChange(value: unknown): SemanticChange {
   }
   if (
     (change.operationId === "release") !==
-    (kind === "authPermissions_changed" || kind === "pinnedHeaders_changed")
+    (releaseChangeKinds as readonly ChangeKind[]).includes(kind)
   ) {
     throw new Error("invalid_change");
   }

@@ -1,8 +1,5 @@
-import {
-  compareUtf8,
-  parseRelease,
-  type ReleaseDocuments,
-} from "../../release.js";
+import { parseRelease, type ReleaseDocuments } from "../../release.js";
+import { compareUtf8 } from "../../utf8.js";
 import { type ChangeReport, parseChangeReport } from "../release-change.js";
 import {
   assertSemanticReleaseRelations,

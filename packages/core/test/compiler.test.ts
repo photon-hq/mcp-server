@@ -414,13 +414,15 @@ describe("compileRelease", () => {
     expect(semanticReleaseIdentity(compiled)).toMatch(releaseIdentityPattern);
   });
 
-  it("rejects unknown compiler policy fields", () => {
+  it.each([
+    [
+      "an unknown field",
+      { operationPollLimit: 3, pinnedHeaders: {}, unknown: true },
+    ],
+    ["no pinnedHeaders", { operationPollLimit: 3 }],
+  ])("rejects a compiler policy with %s", (_case, compilerPolicy) => {
     const input = makeCompileInput() as unknown as Record<string, unknown>;
-    input.compilerPolicy = {
-      operationPollLimit: 3,
-      pinnedHeaders: {},
-      unknown: true,
-    };
+    input.compilerPolicy = compilerPolicy;
 
     expect(() => compileRelease(input)).toThrowError("invalid_compiler_policy");
   });
@@ -1512,6 +1514,7 @@ describe("compileRelease", () => {
     "X-Photon-Version",
     "Proxy-Authorization",
     "X-Api-Key",
+    "Transfer-Encoding",
   ])("leaves the optional reserved header %s out of the tool", (name) => {
     const result = compileRelease(
       makeCompileInput({
@@ -1521,98 +1524,6 @@ describe("compileRelease", () => {
       })
     );
     expect(JSON.stringify(capability(result).inputSchema)).not.toContain(name);
-  });
-
-  it.each<{
-    name: string;
-    pins: Record<string, string>;
-    error?: string;
-    pathParameter?: boolean;
-    schema?: unknown;
-  }>([
-    { name: "optional header", pins: { "X-Contract": "v1" } },
-    {
-      name: "required path-level header",
-      pathParameter: true,
-      pins: { "x-contract": "v1" },
-    },
-    { name: "no pins", pins: {} },
-    {
-      error: 'pinned_header_rejected_by_operation: getProject: X-Contract="v2"',
-      name: "schema reference enum mismatch",
-      pins: { "x-contract": "v2" },
-    },
-    ...[{ const: "v2" }, { pattern: "^v2$" }, { type: "integer" }].map(
-      (schema) => ({
-        error:
-          'pinned_header_rejected_by_operation: getProject: X-Contract="v1"',
-        name: `${Object.keys(schema)[0]} mismatch`,
-        pins: { "x-contract": "v1" },
-        schema,
-      })
-    ),
-    ...[
-      { Authorization: "v1" },
-      { "content-type": "application/json" },
-      { "X-Bad Name": "v1" },
-      { "X-Contract": "v1", "x-contract": "v1" },
-      { "x-contract": "v1\r\nv2" },
-      { "x-contract": "v1\u0000v2" },
-      { "x-contract": "" },
-    ].map((pins) => ({
-      error: "invalid_pinned_header",
-      name: `invalid pin ${JSON.stringify(pins)}`,
-      pins,
-    })),
-  ])("validates pinned headers: $name", ({
-    pins,
-    error,
-    pathParameter,
-    schema,
-  }) => {
-    const parameter = {
-      in: "header",
-      name: "X-Contract",
-      required: pathParameter ?? false,
-      schema: schema ?? { $ref: "#/components/schemas/Contract" },
-    };
-    const input = makeCompileInput({
-      operation: { parameters: pathParameter ? [] : [parameter] },
-    });
-    const key = "/projects/{projectId}";
-    const compile = () =>
-      compileRelease({
-        ...input,
-        aggregate: {
-          ...input.aggregate,
-          components: {
-            schemas: {
-              ...input.aggregate.components.schemas,
-              Contract: { enum: ["v1"], type: "string" },
-            },
-          },
-          paths: {
-            [key]: {
-              ...input.aggregate.paths[key],
-              ...(pathParameter ? { parameters: [parameter] } : {}),
-            },
-          },
-        },
-        compilerPolicy: { ...input.compilerPolicy, pinnedHeaders: pins },
-      });
-    if (error) {
-      expect(compile).toThrow(error);
-      return;
-    }
-    const result = compile();
-    const properties = ["properties", "headers", "properties", "X-Contract"];
-    if (Object.keys(pins).length === 0) {
-      expect(result.pinnedHeaders).toEqual({});
-      expect(capability(result).inputSchema).toHaveProperty(properties);
-    } else {
-      expect(result.pinnedHeaders).toEqual({ "x-contract": "v1" });
-      expect(capability(result).inputSchema).not.toHaveProperty(properties);
-    }
   });
 
   it("ignores non-JSON request alternatives when JSON is available", () => {
@@ -2249,6 +2160,13 @@ describe("compileRelease", () => {
 
   it("adds continuation and polling facts for an Operation response Link", () => {
     const input = makeCompileInput({ method: "post" });
+    input.compilerPolicy.pinnedHeaders = { "x-contract": "v1" };
+    const pinnedHeader = {
+      in: "header",
+      name: "X-Contract",
+      required: true,
+      schema: { const: "v1" },
+    };
     const paths = input.aggregate.paths as Record<
       string,
       Record<string, unknown>
@@ -2287,6 +2205,7 @@ describe("compileRelease", () => {
     paths["/projects/{projectId}/operations/{operationId}"] = {
       get: {
         operationId: "readOperation",
+        parameters: [pinnedHeader],
         responses: {
           "200": {
             content: {
@@ -2303,7 +2222,8 @@ describe("compileRelease", () => {
       },
     };
 
-    const item = capability(compileRelease(input), "startOperation") as {
+    const compiled = compileRelease(input);
+    const item = capability(compiled, "startOperation") as {
       readonly inputSchema: Readonly<Record<string, unknown>>;
       readonly operationGetter?: string;
       readonly operationPollLimit?: number;
@@ -2320,15 +2240,16 @@ describe("compileRelease", () => {
       required: ["continuation"],
       type: "object",
     });
+    expect(compiled.registry.map((entry) => entry.operationId)).toEqual([
+      "startOperation",
+    ]);
     expect(
-      compileRelease(input).registry.map((entry) => entry.operationId)
-    ).toEqual(["startOperation"]);
-    expect(
-      compileRelease(input).privateCapabilities.map(
-        (entry) => entry.operationId
-      )
+      compiled.privateCapabilities.map((entry) => entry.operationId)
     ).toEqual(["readOperation"]);
-    expect(compileRelease(input).tools.map((entry) => entry.name)).toEqual([
+    expect(compiled.privateCapabilities[0]?.inputSchema).not.toHaveProperty(
+      "properties.headers"
+    );
+    expect(compiled.tools.map((entry) => entry.name)).toEqual([
       "startOperation",
     ]);
     paths["/projects/{projectId}/second"] = {
@@ -2344,6 +2265,11 @@ describe("compileRelease", () => {
 
     const getter = paths["/projects/{projectId}/operations/{operationId}"]
       .get as Record<string, unknown>;
+    pinnedHeader.schema.const = "v2";
+    expect(() => compileRelease(input)).toThrow(
+      'pinned_header_rejected_by_operation: readOperation: X-Contract="v1"'
+    );
+    pinnedHeader.schema.const = "v1";
     getter["x-photon-mcp"] = { enabled: true };
     const withPublicGetter = compileRelease(input);
     expect(withPublicGetter.registry.map((entry) => entry.operationId)).toEqual(

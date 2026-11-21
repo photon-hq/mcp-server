@@ -1,4 +1,5 @@
-import { toolMayNotSetHeader } from "./headers.js";
+import { reservedHeaderName } from "./headers.js";
+import { compareUtf8 } from "./utf8.js";
 
 const nonToken = /[^!#$%&'*+.^_`|~0-9A-Za-z-]/u;
 const edgeWhitespace = /^[ \t]|[ \t]$/u;
@@ -39,7 +40,7 @@ function normalizeHeaderEntries(
     if (
       !name ||
       nonToken.test(name) ||
-      toolMayNotSetHeader(name) ||
+      reservedHeaderName.test(name) ||
       headers.has(lower) ||
       !validHeaderValue(headerValue)
     ) {
@@ -47,7 +48,10 @@ function normalizeHeaderEntries(
     }
     headers.set(lower, headerValue);
   }
-  return Object.freeze(Object.fromEntries(headers));
+  const sorted = [...headers].sort(([left], [right]) =>
+    compareUtf8(left, right)
+  );
+  return Object.freeze(Object.fromEntries(sorted));
 }
 
 export function normalizePinnedHeaders(
@@ -67,4 +71,13 @@ export function parseStoredPinnedHeaders(
     }
   }
   return headers;
+}
+
+// Header names are case-insensitive and a pin map stores them lowercase.
+export function pinnedHeaderValue(
+  pinnedHeaders: Readonly<Record<string, string>>,
+  name: string
+): string | undefined {
+  const key = name.toLowerCase();
+  return Object.hasOwn(pinnedHeaders, key) ? pinnedHeaders[key] : undefined;
 }

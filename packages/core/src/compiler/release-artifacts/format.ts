@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { AjvJsonSchemaValidator } from "@modelcontextprotocol/server/validators/ajv";
-import { type Capability, compareUtf8 } from "../../release.js";
+import type { Capability } from "../../release.js";
+import { compareUtf8 } from "../../utf8.js";
 import type { CompiledRelease } from "../compile.js";
 import type { ChangeReport } from "../release-change.js";
 import { canonicalJson, semanticReleaseIdentity } from "../release-snapshot.js";

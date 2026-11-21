@@ -53,9 +53,17 @@ function sparseArray(): unknown[] {
 
 describe("parseRelease", () => {
   it("returns a complete release document", () => {
-    const release = makeReleaseFixture();
+    const release = {
+      ...makeReleaseFixture(),
+      pinnedHeaders: Object.fromEntries([
+        ["x-z", "v1"],
+        ["x-a", "v2"],
+      ]),
+    };
 
-    expect(parseRelease(release)).toEqual(release);
+    const parsed = parseRelease(release);
+    expect(parsed).toEqual(release);
+    expect(Object.keys(parsed.pinnedHeaders)).toEqual(["x-a", "x-z"]);
   });
 
   const valid = makeReleaseFixture();

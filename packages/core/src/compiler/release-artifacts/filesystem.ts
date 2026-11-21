@@ -7,7 +7,7 @@ import {
   writeFile,
 } from "node:fs/promises";
 import { dirname, join, relative, resolve, sep } from "node:path";
-import { compareUtf8 } from "../../release.js";
+import { compareUtf8 } from "../../utf8.js";
 
 export type BundlePayloadReader = (absolutePath: string) => Promise<Uint8Array>;
 

@@ -40,6 +40,12 @@ async function fixtureRelease() {
                 required: true,
                 schema: { type: "string" },
               },
+              {
+                in: "header",
+                name: "Photon-Version",
+                required: true,
+                schema: { const: "fixture-contract" },
+              },
             ],
             responses: {
               "200": { content: { "application/json": { schema: project } } },

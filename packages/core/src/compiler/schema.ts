@@ -1,12 +1,20 @@
-import { toolMayNotSetHeader } from "../headers.js";
-import type { Capability, SuccessRepresentation } from "../release.js";
+import type {
+  Capability,
+  ReleaseDocuments,
+  SuccessRepresentation,
+} from "../release.js";
 import {
-  compareUtf8,
   normalizeJsonMediaType,
   normalizeSuccessMediaType,
 } from "../release.js";
-import { closeSchema, componentSchema, openSchema } from "../schema.js";
+import { closeSchema, openSchema } from "../schema.js";
+import { compareUtf8 } from "../utf8.js";
 import type { McpOptions } from "./extension.js";
+import {
+  idempotencyContract,
+  parameterArray,
+  parameterInput,
+} from "./parameters.js";
 import { canonicalJson } from "./release-snapshot.js";
 
 type JsonObject = Record<string, unknown>;
@@ -132,10 +140,6 @@ export function pathOperationRouteFact(pathOperation: PathOperation): Readonly<{
   };
 }
 
-function parameterArray(value: unknown): readonly unknown[] {
-  return Array.isArray(value) ? value : fail("invalid_openapi_parameters");
-}
-
 function isJsonMediaType(mediaType: string): boolean {
   return normalizeJsonMediaType(mediaType) !== undefined;
 }
@@ -149,199 +153,6 @@ function stringArray(value: unknown, message: string): readonly string[] {
     fail(message);
   }
   return value as string[];
-}
-
-function parameterSchema(
-  parameterValue: unknown,
-  components: unknown
-):
-  | {
-      readonly group: "headers" | "path" | "query";
-      readonly name: string;
-      readonly required: boolean;
-      readonly schema: unknown;
-    }
-  | undefined {
-  const parameter = object(parameterValue, "invalid_openapi_parameter");
-  const location = parameter.in;
-  if (location !== "path" && location !== "query" && location !== "header") {
-    fail("unsupported_parameter_location");
-  }
-  if (typeof parameter.name !== "string" || !parameter.name) {
-    fail("invalid_openapi_parameter");
-  }
-  if (parameter.schema === undefined) {
-    fail("missing_parameter_schema");
-  }
-  if (location === "path" && parameter.required !== true) {
-    fail("path_parameter_not_required");
-  }
-  if (location === "header" && toolMayNotSetHeader(parameter.name)) {
-    // The runtime would reject it, so an optional one is left out of the tool.
-    if (parameter.required === true) {
-      fail("forbidden_header_parameter");
-    }
-    return;
-  }
-  assertParameterSerialization(parameter, location, components);
-  return {
-    group: location === "header" ? "headers" : location,
-    name: parameter.name,
-    required: parameter.required === true,
-    schema: {
-      ...(parameter.description === undefined
-        ? {}
-        : { description: parameter.description }),
-      ...object(parameter.schema, "unsupported_parameter_schema"),
-    },
-  };
-}
-
-// Serialization only depends on the referenced shape; the reference itself is
-// kept for the advertised schema.
-function parameterNode(value: unknown, components: unknown): JsonObject {
-  let { $ref, ...schema } = object(value, "unsupported_parameter_schema");
-  // Outer siblings such as description override the referenced schema.
-  const layers = [schema];
-  const seen = new Set<string>();
-  while ($ref !== undefined) {
-    if (typeof $ref !== "string" || seen.has($ref)) {
-      fail("unsupported_parameter_schema");
-    }
-    seen.add($ref);
-    ({ $ref, ...schema } = componentSchema($ref, components));
-    layers.unshift(schema);
-  }
-  return Object.assign({}, ...layers);
-}
-
-function parameterTypes(
-  schemaValue: unknown,
-  components: unknown
-): readonly ("array" | "object" | "scalar")[] {
-  const schema = parameterNode(schemaValue, components);
-  const branches = [schema.anyOf, schema.oneOf].flatMap((value) => {
-    if (value === undefined) {
-      return [];
-    }
-    if (!Array.isArray(value) || value.length === 0) {
-      fail("unsupported_parameter_schema");
-    }
-    return value.flatMap((branch) => parameterTypes(branch, components));
-  });
-  if (schema.type === undefined && branches.length > 0) {
-    return branches;
-  }
-  if (
-    schema.type === "string" ||
-    schema.type === "number" ||
-    schema.type === "integer" ||
-    schema.type === "boolean"
-  ) {
-    return [...branches, "scalar"];
-  }
-  if (schema.type === "array") {
-    const items = parameterNode(schema.items, components);
-    if (
-      !["string", "number", "integer", "boolean"].includes(items.type as string)
-    ) {
-      fail("unsupported_parameter_schema");
-    }
-    return [...branches, "array"];
-  }
-  if (schema.type === "object") {
-    const properties = object(
-      schema.properties,
-      "unsupported_parameter_schema"
-    );
-    if (
-      schema.additionalProperties !== false ||
-      Object.values(properties).some((value) => {
-        const property = parameterNode(value, components);
-        return !["string", "number", "integer", "boolean"].includes(
-          property.type as string
-        );
-      })
-    ) {
-      fail("unsupported_parameter_schema");
-    }
-    return [...branches, "object"];
-  }
-  return fail("unsupported_parameter_schema");
-}
-
-function assertParameterSerialization(
-  parameter: JsonObject,
-  location: "header" | "path" | "query",
-  components: unknown
-): void {
-  const types = parameterTypes(parameter.schema, components);
-  if (location === "path" && types.some((type) => type !== "scalar")) {
-    fail("unsupported_parameter_schema");
-  }
-  const expectedStyle = location === "query" ? "form" : "simple";
-  const expectedExplode = location === "query";
-  if (
-    (parameter.style !== undefined && parameter.style !== expectedStyle) ||
-    (parameter.explode !== undefined &&
-      parameter.explode !== expectedExplode) ||
-    (parameter.allowReserved !== undefined &&
-      parameter.allowReserved !== false) ||
-    (parameter.allowEmptyValue !== undefined &&
-      parameter.allowEmptyValue !== false) ||
-    parameter.content !== undefined
-  ) {
-    fail("unsupported_parameter_serialization");
-  }
-}
-
-function isIdempotencyParameter(value: unknown): boolean {
-  if (!isObject(value)) {
-    return false;
-  }
-  return (
-    typeof value.name === "string" &&
-    value.name.toLowerCase() === "idempotency-key"
-  );
-}
-
-function idempotencyContract(
-  pathOperation: PathOperation,
-  components: unknown
-): Pick<Capability, "idempotency" | "idempotencyKeySchema"> {
-  const operationParameters =
-    pathOperation.operation.parameters === undefined
-      ? []
-      : parameterArray(pathOperation.operation.parameters);
-  const parameters = [
-    ...pathOperation.pathParameters,
-    ...operationParameters,
-  ].filter(isIdempotencyParameter);
-  if (parameters.length === 0) {
-    return { idempotency: "none" };
-  }
-  if (parameters.length !== 1) {
-    fail("unsupported_idempotency_parameter");
-  }
-  const parameter = object(parameters[0], "unsupported_idempotency_parameter");
-  const schema = object(parameter.schema, "unsupported_idempotency_parameter");
-  if (
-    parameter.in !== "header" ||
-    (parameter.style !== undefined && parameter.style !== "simple") ||
-    (parameter.explode !== undefined && parameter.explode !== false) ||
-    (parameter.allowReserved !== undefined &&
-      parameter.allowReserved !== false) ||
-    (parameter.allowEmptyValue !== undefined &&
-      parameter.allowEmptyValue !== false) ||
-    parameter.content !== undefined ||
-    schema.type !== "string"
-  ) {
-    fail("unsupported_idempotency_parameter");
-  }
-  return {
-    idempotency: "header",
-    idempotencyKeySchema: closeSchema(schema, components),
-  };
 }
 
 const definitionPrefix = "#/$defs/";
@@ -420,14 +231,12 @@ function typedBody(schema: JsonObject, definitions: unknown): JsonObject {
 }
 
 function inputSchema(
-  pathOperation: PathOperation,
+  parameters: ReturnType<typeof parameterInput>,
   components: unknown,
   asyncOperation: AsyncOperation | undefined,
   body: CompiledRequestBody | undefined
 ): JsonObject {
-  const { properties, required } = parameterPartitions(
-    groupedParameters(pathOperation, components)
-  );
+  const { properties, required } = parameters;
   let definitions: unknown;
   if (body) {
     const { $defs, ...schema } = body.schema;
@@ -564,74 +373,6 @@ function photonOperationShape(operation: Readonly<JsonObject>): boolean {
         (name) => properties[name] !== undefined && required.includes(name)
       );
     });
-}
-
-type ParameterGroups = Record<
-  "headers" | "path" | "query",
-  { properties: JsonObject; required: string[] }
->;
-
-function groupedParameters(
-  pathOperation: PathOperation,
-  components: unknown
-): ParameterGroups {
-  const groups: ParameterGroups = {
-    headers: { properties: {}, required: [] },
-    path: { properties: {}, required: [] },
-    query: { properties: {}, required: [] },
-  };
-  const seen = new Set<string>();
-  const operationParameters =
-    pathOperation.operation.parameters === undefined
-      ? []
-      : parameterArray(pathOperation.operation.parameters);
-
-  for (const candidate of [
-    ...pathOperation.pathParameters,
-    ...operationParameters,
-  ]) {
-    if (isIdempotencyParameter(candidate)) {
-      continue;
-    }
-    const parameter = parameterSchema(candidate, components);
-    if (parameter === undefined) {
-      continue;
-    }
-    const identity = `${parameter.group}:${parameter.name.toLowerCase()}`;
-    if (seen.has(identity)) {
-      fail("duplicate_parameter");
-    }
-    seen.add(identity);
-    groups[parameter.group].properties[parameter.name] = parameter.schema;
-    if (parameter.required) {
-      groups[parameter.group].required.push(parameter.name);
-    }
-  }
-  return groups;
-}
-
-function parameterPartitions(groups: ParameterGroups): {
-  readonly properties: JsonObject;
-  readonly required: string[];
-} {
-  const properties: JsonObject = {};
-  const required: string[] = [];
-  for (const group of ["path", "query", "headers"] as const) {
-    const item = groups[group];
-    if (Object.keys(item.properties).length === 0) {
-      continue;
-    }
-    properties[group] = {
-      additionalProperties: false,
-      properties: item.properties,
-      ...(item.required.length === 0 ? {} : { required: item.required }),
-      type: "object",
-    };
-    if (group === "path" || item.required.length > 0) {
-      required.push(group);
-    }
-  }
-  return { properties, required };
 }
 
 interface CompiledRequestBody {
@@ -932,14 +673,28 @@ export function operationTitle(
 export function compileCapability(
   pathOperation: PathOperation,
   components: unknown,
-  extension: McpOptions | undefined,
-  asyncOperation: AsyncOperation | undefined
+  {
+    asyncOperation,
+    extension,
+    pinnedHeaders,
+  }: Readonly<{
+    asyncOperation?: AsyncOperation | undefined;
+    extension?: McpOptions | undefined;
+    pinnedHeaders: ReleaseDocuments["pinnedHeaders"];
+  }>
 ): Capability {
   const { operation } = pathOperation;
   const method = supportedMethod(pathOperation.method);
   const id = operationId(operation);
   const body = requestBodySchema(operation, components);
   const success = outputSchema(operation, components);
+  const idempotency = idempotencyContract(pathOperation, components);
+  const parameters = parameterInput(
+    pathOperation,
+    id,
+    components,
+    pinnedHeaders
+  );
   return {
     annotations: {
       destructiveHint: extension?.destructive ?? method === "DELETE",
@@ -952,8 +707,8 @@ export function compileCapability(
       // Directories read the display name from the annotations.
       title: operationTitle(operation, id),
     },
-    ...idempotencyContract(pathOperation, components),
-    inputSchema: inputSchema(pathOperation, components, asyncOperation, body),
+    ...idempotency,
+    inputSchema: inputSchema(parameters, components, asyncOperation, body),
     method,
     operationId: id,
     ...(asyncOperation === undefined

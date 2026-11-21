@@ -20,8 +20,9 @@ assumptions about where it runs. `@modelcontextprotocol/server` is a peer
 dependency.
 
 The compile input requires `compilerPolicy.pinnedHeaders` (use `{}` for no
-pins). The compiler checks these non-secret values against the OpenAPI
-contract and keeps the headers out of tool input; the release sends them on
+pins). Each pin names a header parameter that at least one compiled operation
+declares, and its non-secret value must satisfy every such declaration. The
+compiler keeps pinned headers out of tool input; the release sends them on
 every request, including retries and polls.
 
 The `photon-mcp-compile` command compiles and verifies bundles from the command

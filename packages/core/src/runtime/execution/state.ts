@@ -289,7 +289,7 @@ async function pollOperation(
                   projectId: state.projectId,
                 },
               },
-              pinnedHeaders: request.execution.pinnedHeaders,
+              pinnedHeaders: getter.pinnedHeaders,
             },
             dependencies
           )

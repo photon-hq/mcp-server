@@ -4,12 +4,13 @@ import type {
   ToolAnnotations,
 } from "@modelcontextprotocol/server";
 import { CfWorkerJsonSchemaValidator } from "@modelcontextprotocol/server/validators/cf-worker";
+import { parseStoredPinnedHeaders } from "../pinned-headers.js";
 import {
   type Capability,
-  compareUtf8,
   parseRelease,
   type ReleaseDocuments,
 } from "../release.js";
+import { compareUtf8 } from "../utf8.js";
 
 interface RuntimeReleaseIdentity {
   readonly admissionModel: "producer_metadata_only";
@@ -563,7 +564,7 @@ export function bindVerifiedCapability(
       responses: capability.successRepresentations,
     },
     release.validator,
-    release.pinnedHeaders
+    parseStoredPinnedHeaders(release.pinnedHeaders)
   );
   deepFreeze(capability);
   return execution;

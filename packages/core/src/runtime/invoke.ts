@@ -1,4 +1,5 @@
-import { toolMayNotSetHeader } from "../headers.js";
+import { reservedHeaderName } from "../headers.js";
+import { pinnedHeaderValue } from "../pinned-headers.js";
 import type { Capability, ReleaseDocuments } from "../release.js";
 import type { ExecutionPrincipal } from "./principal.js";
 import type { Telemetry } from "./telemetry.js";
@@ -171,7 +172,10 @@ function requestHeaders(request: InvocationRequest): Headers {
   for (const [name, value] of Object.entries(
     object(object(request.input).headers)
   )) {
-    if (toolMayNotSetHeader(name, request.pinnedHeaders)) {
+    if (
+      reservedHeaderName.test(name) ||
+      pinnedHeaderValue(request.pinnedHeaders, name) !== undefined
+    ) {
       throw new InvocationError("forbidden_header");
     }
     headers.set(name, simple(value, false));
