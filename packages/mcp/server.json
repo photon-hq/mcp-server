@@ -3,7 +3,7 @@
   "name": "io.github.photon-hq/mcp",
   "title": "Photon",
   "description": "Messaging infrastructure for AI agents across iMessage, WhatsApp, Telegram and SMS.",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "websiteUrl": "https://photon.codes/docs/beta/ai-tools/mcp",
   "repository": {
     "url": "https://github.com/photon-hq/mcp-server",
@@ -20,7 +20,7 @@
     {
       "registryType": "npm",
       "identifier": "@photon-ai/mcp",
-      "version": "0.1.13",
+      "version": "0.1.14",
       "transport": {
         "type": "stdio"
       },
