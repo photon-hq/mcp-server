@@ -6488,6 +6488,16 @@
         ],
         "type": "object"
       },
+      "CheckProjectSlugAvailabilityBadRequestProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InvalidArgumentProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
+          }
+        ]
+      },
       "CheckProjectSlugAvailabilityForbiddenProblem": {
         "oneOf": [
           {
@@ -6779,6 +6789,9 @@
           },
           {
             "$ref": "#/components/schemas/InvalidArgumentProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
           }
         ]
       },
@@ -6805,6 +6818,16 @@
           },
           {
             "$ref": "#/components/schemas/RequestTimeoutProblem"
+          }
+        ]
+      },
+      "CommitAgentProfileAvatarGoneProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ProjectDeletedProblem"
+          },
+          {
+            "$ref": "#/components/schemas/RetiredApiVersionProblem"
           }
         ]
       },
@@ -7789,6 +7812,16 @@
           }
         ]
       },
+      "CountProjectsBadRequestProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InvalidArgumentProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
+          }
+        ]
+      },
       "CountProjectsForbiddenProblem": {
         "oneOf": [
           {
@@ -8167,6 +8200,16 @@
           },
           {
             "$ref": "#/components/schemas/RequestTimeoutProblem"
+          }
+        ]
+      },
+      "CreateAgentProfileAvatarUploadGoneProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ProjectDeletedProblem"
+          },
+          {
+            "$ref": "#/components/schemas/RetiredApiVersionProblem"
           }
         ]
       },
@@ -9739,6 +9782,9 @@
           },
           {
             "$ref": "#/components/schemas/InvalidArgumentProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
           }
         ]
       },
@@ -9755,6 +9801,16 @@
           },
           {
             "$ref": "#/components/schemas/ResourceMismatchProblem"
+          }
+        ]
+      },
+      "CreateProjectApiKeyGoneProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ProjectDeletedProblem"
+          },
+          {
+            "$ref": "#/components/schemas/RetiredApiVersionProblem"
           }
         ]
       },
@@ -9827,6 +9883,9 @@
           },
           {
             "$ref": "#/components/schemas/InvalidArgumentProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
           }
         ]
       },
@@ -12448,6 +12507,9 @@
           },
           {
             "$ref": "#/components/schemas/IdempotencyKeyInvalidProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
           }
         ]
       },
@@ -19360,6 +19422,16 @@
           }
         ]
       },
+      "GetAgentProfileGoneProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ProjectDeletedProblem"
+          },
+          {
+            "$ref": "#/components/schemas/RetiredApiVersionProblem"
+          }
+        ]
+      },
       "GetAppInstallationApprovalBadRequestProblem": {
         "oneOf": [
           {
@@ -23044,6 +23116,16 @@
           }
         ]
       },
+      "GetProjectClosureStatusBadRequestProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InvalidArgumentProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
+          }
+        ]
+      },
       "GetProjectClosureStatusForbiddenProblem": {
         "oneOf": [
           {
@@ -23071,7 +23153,7 @@
         ]
       },
       "GetProjectClosureStatusResponse": {
-        "additionalProperties": {},
+        "additionalProperties": false,
         "properties": {
           "deletionOperationId": {
             "anyOf": [
@@ -23132,6 +23214,16 @@
           },
           {
             "$ref": "#/components/schemas/RequestTimeoutProblem"
+          }
+        ]
+      },
+      "GetProjectGoneProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ProjectDeletedProblem"
+          },
+          {
+            "$ref": "#/components/schemas/RetiredApiVersionProblem"
           }
         ]
       },
@@ -31142,6 +31234,16 @@
         ],
         "type": "object"
       },
+      "ListProjectApiKeysBadRequestProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InvalidArgumentProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
+          }
+        ]
+      },
       "ListProjectApiKeysForbiddenProblem": {
         "oneOf": [
           {
@@ -31155,6 +31257,16 @@
           },
           {
             "$ref": "#/components/schemas/ResourceMismatchProblem"
+          }
+        ]
+      },
+      "ListProjectApiKeysGoneProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ProjectDeletedProblem"
+          },
+          {
+            "$ref": "#/components/schemas/RetiredApiVersionProblem"
           }
         ]
       },
@@ -31275,6 +31387,16 @@
           "subscriptions"
         ],
         "type": "object"
+      },
+      "ListProjectsBadRequestProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InvalidArgumentProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
+          }
+        ]
       },
       "ListProjectsForbiddenProblem": {
         "oneOf": [
@@ -39375,36 +39497,6 @@
             "format": "date-time",
             "type": "string"
           },
-          "createdByAccountId": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "createdByActorId": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "createdByActorKind": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ProjectCreatedByActorKind"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
           "deletedAt": {
             "anyOf": [
               {
@@ -39438,9 +39530,6 @@
         "required": [
           "agentProfile",
           "createdAt",
-          "createdByAccountId",
-          "createdByActorId",
-          "createdByActorKind",
           "deletedAt",
           "name",
           "organizationId",
@@ -39532,7 +39621,7 @@
         "type": "string"
       },
       "ProjectClosureDomainStatus": {
-        "additionalProperties": {},
+        "additionalProperties": false,
         "properties": {
           "blockers": {
             "items": {
@@ -39567,13 +39656,6 @@
           "count"
         ],
         "type": "object"
-      },
-      "ProjectCreatedByActorKind": {
-        "enum": [
-          "account",
-          "service_identity"
-        ],
-        "type": "string"
       },
       "ProjectCreditSubject": {
         "additionalProperties": false,
@@ -42905,6 +42987,9 @@
           },
           {
             "$ref": "#/components/schemas/IdempotencyKeyInvalidProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
           }
         ]
       },
@@ -42931,6 +43016,16 @@
           },
           {
             "$ref": "#/components/schemas/RequestTimeoutProblem"
+          }
+        ]
+      },
+      "ResetAgentProfileAvatarGoneProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ProjectDeletedProblem"
+          },
+          {
+            "$ref": "#/components/schemas/RetiredApiVersionProblem"
           }
         ]
       },
@@ -44752,6 +44847,9 @@
           },
           {
             "$ref": "#/components/schemas/InvalidArgumentProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
           }
         ]
       },
@@ -44768,6 +44866,16 @@
           },
           {
             "$ref": "#/components/schemas/ResourceMismatchProblem"
+          }
+        ]
+      },
+      "RevokeProjectApiKeyGoneProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ProjectDeletedProblem"
+          },
+          {
+            "$ref": "#/components/schemas/RetiredApiVersionProblem"
           }
         ]
       },
@@ -54443,6 +54551,9 @@
           },
           {
             "$ref": "#/components/schemas/IdempotencyKeyInvalidProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
           }
         ]
       },
@@ -54469,6 +54580,16 @@
           },
           {
             "$ref": "#/components/schemas/RequestTimeoutProblem"
+          }
+        ]
+      },
+      "UpdateAgentProfileGoneProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ProjectDeletedProblem"
+          },
+          {
+            "$ref": "#/components/schemas/RetiredApiVersionProblem"
           }
         ]
       },
@@ -55899,6 +56020,9 @@
           },
           {
             "$ref": "#/components/schemas/InvalidArgumentProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
           }
         ]
       },
@@ -55915,6 +56039,16 @@
           },
           {
             "$ref": "#/components/schemas/ResourceMismatchProblem"
+          }
+        ]
+      },
+      "UpdateProjectApiKeyGoneProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ProjectDeletedProblem"
+          },
+          {
+            "$ref": "#/components/schemas/RetiredApiVersionProblem"
           }
         ]
       },
@@ -55961,6 +56095,9 @@
           },
           {
             "$ref": "#/components/schemas/IdempotencyKeyInvalidProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
           }
         ]
       },
@@ -55987,6 +56124,16 @@
           },
           {
             "$ref": "#/components/schemas/RequestTimeoutProblem"
+          }
+        ]
+      },
+      "UpdateProjectGoneProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ProjectDeletedProblem"
+          },
+          {
+            "$ref": "#/components/schemas/RetiredApiVersionProblem"
           }
         ]
       },
@@ -116046,6 +116193,15 @@
         "operationId": "listProjects",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "organizationId",
             "required": true,
@@ -116112,11 +116268,67 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
               "Link": {
                 "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
               },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
@@ -116142,11 +116354,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InvalidArgumentProblem"
+                  "$ref": "#/components/schemas/ListProjectsBadRequestProblem"
                 }
               }
             },
-            "description": "INVALID_ARGUMENT: Invalid Argument",
+            "description": "INVALID_ARGUMENT: Invalid Argument; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -116291,6 +116503,45 @@
                   "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
                   "type": "string"
                 }
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
               }
             }
           },
@@ -116540,9 +116791,18 @@
         ]
       },
       "post": {
-        "description": "Creates in the authorized organization. In addition to account credentials, explicitly granted Service Identity API keys and M2M tokens may create projects. Project API keys cannot create projects. Creator and private credential evidence come only from the trusted authorization context. The caller-selected slug is immutable, must be 3 to 63 lowercase ASCII alphanumerics separated by single hyphens, and cannot be reserved or held by any active or deleted project.",
+        "description": "Creates in the authorized organization. In addition to account credentials, explicitly granted Service Identity API keys and M2M tokens may create projects. Project API keys cannot create projects. Caller identity and credential evidence come only from the trusted authorization context. The caller-selected slug is immutable, must be 3 to 63 lowercase ASCII alphanumerics separated by single hyphens, and cannot be reserved or held by any active or deleted project.",
         "operationId": "createProject",
         "parameters": [
+          {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
           {
             "description": "Identifies one logical mutation across retries.",
             "in": "header",
@@ -116594,6 +116854,12 @@
               "Link": {
                 "$ref": "#/components/headers/Link"
               },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
               },
@@ -116640,6 +116906,12 @@
                   "type": "string"
                 }
               },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
               },
@@ -116672,7 +116944,7 @@
                 }
               }
             },
-            "description": "IDEMPOTENCY_KEY_REQUIRED: Idempotency Key Required; IDEMPOTENCY_KEY_INVALID: Idempotency Key Invalid; INVALID_ARGUMENT: Invalid Argument",
+            "description": "IDEMPOTENCY_KEY_REQUIRED: Idempotency Key Required; IDEMPOTENCY_KEY_INVALID: Idempotency Key Invalid; INVALID_ARGUMENT: Invalid Argument; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -116829,6 +117101,45 @@
               }
             },
             "description": "SLUG_TAKEN: Slug Already Taken",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -117150,6 +117461,15 @@
         "operationId": "getProjectClosureStatus",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "organizationId",
             "required": true,
@@ -117180,11 +117500,67 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
               "Link": {
                 "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
               },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
@@ -117210,11 +117586,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InvalidArgumentProblem"
+                  "$ref": "#/components/schemas/GetProjectClosureStatusBadRequestProblem"
                 }
               }
             },
-            "description": "INVALID_ARGUMENT: Invalid Argument",
+            "description": "INVALID_ARGUMENT: Invalid Argument; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -117371,6 +117747,45 @@
               }
             },
             "description": "PROJECT_NOT_FOUND: Project Not Found",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -117653,6 +118068,15 @@
         "operationId": "countProjects",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "organizationId",
             "required": true,
@@ -117701,11 +118125,67 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
               "Link": {
                 "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
               },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
@@ -117731,11 +118211,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InvalidArgumentProblem"
+                  "$ref": "#/components/schemas/CountProjectsBadRequestProblem"
                 }
               }
             },
-            "description": "INVALID_ARGUMENT: Invalid Argument",
+            "description": "INVALID_ARGUMENT: Invalid Argument; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -117880,6 +118360,45 @@
                   "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
                   "type": "string"
                 }
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
               }
             }
           },
@@ -118135,6 +118654,15 @@
         "operationId": "checkProjectSlugAvailability",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "organizationId",
             "required": true,
@@ -118168,11 +118696,67 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
               "Link": {
                 "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
               },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
@@ -118198,11 +118782,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InvalidArgumentProblem"
+                  "$ref": "#/components/schemas/CheckProjectSlugAvailabilityBadRequestProblem"
                 }
               }
             },
-            "description": "INVALID_ARGUMENT: Invalid Argument",
+            "description": "INVALID_ARGUMENT: Invalid Argument; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -118347,6 +118931,45 @@
                   "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
                   "type": "string"
                 }
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
               }
             }
           },
@@ -193611,6 +194234,15 @@
         "operationId": "deleteProject",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "description": "Identifies one logical mutation across retries.",
             "in": "header",
             "name": "Idempotency-Key",
@@ -193651,6 +194283,12 @@
               "Link": {
                 "$ref": "#/components/headers/Link"
               },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
               },
@@ -193679,7 +194317,7 @@
                 }
               }
             },
-            "description": "IDEMPOTENCY_KEY_REQUIRED: Idempotency Key Required; IDEMPOTENCY_KEY_INVALID: Idempotency Key Invalid",
+            "description": "IDEMPOTENCY_KEY_REQUIRED: Idempotency Key Required; IDEMPOTENCY_KEY_INVALID: Idempotency Key Invalid; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -193836,6 +194474,45 @@
               }
             },
             "description": "PROJECT_NOT_FOUND: Project Not Found",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -194155,6 +194832,15 @@
         "operationId": "getProject",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "projectId",
             "required": true,
@@ -194173,6 +194859,101 @@
               }
             },
             "description": "The requested project.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidApiVersionProblem"
+                }
+              }
+            },
+            "description": "INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -194363,11 +195144,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectDeletedProblem"
+                  "$ref": "#/components/schemas/GetProjectGoneProblem"
                 }
               }
             },
-            "description": "PROJECT_DELETED: Project Deleted",
+            "description": "PROJECT_DELETED: Project Deleted; RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -194648,6 +195429,15 @@
         "operationId": "updateProject",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "description": "Identifies one logical mutation across retries.",
             "in": "header",
             "name": "Idempotency-Key",
@@ -194698,6 +195488,12 @@
               "Link": {
                 "$ref": "#/components/headers/Link"
               },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
               },
@@ -194726,7 +195522,7 @@
                 }
               }
             },
-            "description": "IDEMPOTENCY_KEY_REQUIRED: Idempotency Key Required; IDEMPOTENCY_KEY_INVALID: Idempotency Key Invalid",
+            "description": "IDEMPOTENCY_KEY_REQUIRED: Idempotency Key Required; IDEMPOTENCY_KEY_INVALID: Idempotency Key Invalid; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -194917,11 +195713,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectDeletedProblem"
+                  "$ref": "#/components/schemas/UpdateProjectGoneProblem"
                 }
               }
             },
-            "description": "PROJECT_DELETED: Project Deleted",
+            "description": "PROJECT_DELETED: Project Deleted; RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -195243,6 +196039,15 @@
         "operationId": "getAgentProfile",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "projectId",
             "required": true,
@@ -195261,6 +196066,101 @@
               }
             },
             "description": "The Project's agent profile.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidApiVersionProblem"
+                }
+              }
+            },
+            "description": "INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -195451,11 +196351,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectDeletedProblem"
+                  "$ref": "#/components/schemas/GetAgentProfileGoneProblem"
                 }
               }
             },
-            "description": "PROJECT_DELETED: Project Deleted",
+            "description": "PROJECT_DELETED: Project Deleted; RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -195736,6 +196636,15 @@
         "operationId": "updateAgentProfile",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "description": "Identifies one logical mutation across retries.",
             "in": "header",
             "name": "Idempotency-Key",
@@ -195786,6 +196695,12 @@
               "Link": {
                 "$ref": "#/components/headers/Link"
               },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
               },
@@ -195814,7 +196729,7 @@
                 }
               }
             },
-            "description": "IDEMPOTENCY_KEY_REQUIRED: Idempotency Key Required; IDEMPOTENCY_KEY_INVALID: Idempotency Key Invalid",
+            "description": "IDEMPOTENCY_KEY_REQUIRED: Idempotency Key Required; IDEMPOTENCY_KEY_INVALID: Idempotency Key Invalid; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -196005,11 +196920,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectDeletedProblem"
+                  "$ref": "#/components/schemas/UpdateAgentProfileGoneProblem"
                 }
               }
             },
-            "description": "PROJECT_DELETED: Project Deleted",
+            "description": "PROJECT_DELETED: Project Deleted; RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -196331,6 +197246,15 @@
         "operationId": "resetAgentProfileAvatar",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "description": "Identifies one logical mutation across retries.",
             "in": "header",
             "name": "Idempotency-Key",
@@ -196371,6 +197295,12 @@
               "Link": {
                 "$ref": "#/components/headers/Link"
               },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
               },
@@ -196399,7 +197329,7 @@
                 }
               }
             },
-            "description": "IDEMPOTENCY_KEY_REQUIRED: Idempotency Key Required; IDEMPOTENCY_KEY_INVALID: Idempotency Key Invalid",
+            "description": "IDEMPOTENCY_KEY_REQUIRED: Idempotency Key Required; IDEMPOTENCY_KEY_INVALID: Idempotency Key Invalid; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -196590,11 +197520,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectDeletedProblem"
+                  "$ref": "#/components/schemas/ResetAgentProfileAvatarGoneProblem"
                 }
               }
             },
-            "description": "PROJECT_DELETED: Project Deleted",
+            "description": "PROJECT_DELETED: Project Deleted; RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -196875,6 +197805,15 @@
         "operationId": "commitAgentProfileAvatar",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "description": "Identifies one logical mutation across retries.",
             "in": "header",
             "name": "Idempotency-Key",
@@ -196925,6 +197864,12 @@
               "Link": {
                 "$ref": "#/components/headers/Link"
               },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
               },
@@ -196953,7 +197898,7 @@
                 }
               }
             },
-            "description": "IDEMPOTENCY_KEY_REQUIRED: Idempotency Key Required; IDEMPOTENCY_KEY_INVALID: Idempotency Key Invalid; INVALID_ARGUMENT: Invalid Argument",
+            "description": "IDEMPOTENCY_KEY_REQUIRED: Idempotency Key Required; IDEMPOTENCY_KEY_INVALID: Idempotency Key Invalid; INVALID_ARGUMENT: Invalid Argument; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -197144,11 +198089,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectDeletedProblem"
+                  "$ref": "#/components/schemas/CommitAgentProfileAvatarGoneProblem"
                 }
               }
             },
-            "description": "PROJECT_DELETED: Project Deleted",
+            "description": "PROJECT_DELETED: Project Deleted; RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -197470,6 +198415,15 @@
         "operationId": "createAgentProfileAvatarUpload",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "projectId",
             "required": true,
@@ -197498,6 +198452,51 @@
               }
             },
             "description": "A short-lived, project-bound presigned S3 POST.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidApiVersionProblem"
+                }
+              }
+            },
+            "description": "INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -197688,11 +198687,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectDeletedProblem"
+                  "$ref": "#/components/schemas/CreateAgentProfileAvatarUploadGoneProblem"
                 }
               }
             },
-            "description": "PROJECT_DELETED: Project Deleted",
+            "description": "PROJECT_DELETED: Project Deleted; RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -197975,6 +198974,15 @@
         "operationId": "listProjectApiKeys",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "projectId",
             "required": true,
@@ -197997,11 +199005,67 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
               "Link": {
                 "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
               },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
@@ -198027,11 +199091,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InvalidArgumentProblem"
+                  "$ref": "#/components/schemas/ListProjectApiKeysBadRequestProblem"
                 }
               }
             },
-            "description": "INVALID_ARGUMENT: Invalid Argument",
+            "description": "INVALID_ARGUMENT: Invalid Argument; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -198222,11 +199286,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectDeletedProblem"
+                  "$ref": "#/components/schemas/ListProjectApiKeysGoneProblem"
                 }
               }
             },
-            "description": "PROJECT_DELETED: Project Deleted",
+            "description": "PROJECT_DELETED: Project Deleted; RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -198480,6 +199544,15 @@
         "operationId": "createProjectApiKey",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "description": "Identifies one logical mutation across retries.",
             "in": "header",
             "name": "Idempotency-Key",
@@ -198530,6 +199603,12 @@
               "Link": {
                 "$ref": "#/components/headers/Link"
               },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
               },
@@ -198558,7 +199637,7 @@
                 }
               }
             },
-            "description": "IDEMPOTENCY_KEY_REQUIRED: Idempotency Key Required; IDEMPOTENCY_KEY_INVALID: Idempotency Key Invalid; INVALID_ARGUMENT: Invalid Argument",
+            "description": "IDEMPOTENCY_KEY_REQUIRED: Idempotency Key Required; IDEMPOTENCY_KEY_INVALID: Idempotency Key Invalid; INVALID_ARGUMENT: Invalid Argument; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -198788,11 +199867,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectDeletedProblem"
+                  "$ref": "#/components/schemas/CreateProjectApiKeyGoneProblem"
                 }
               }
             },
-            "description": "PROJECT_DELETED: Project Deleted",
+            "description": "PROJECT_DELETED: Project Deleted; RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -199087,6 +200166,15 @@
         "operationId": "revokeProjectApiKey",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "description": "Identifies one logical mutation across retries.",
             "in": "header",
             "name": "Idempotency-Key",
@@ -199124,7 +200212,7 @@
                 }
               }
             },
-            "description": "The revoked key. Repeating the delete returns the same revokedAt.",
+            "description": "The revoked key metadata. Repeated revocation is stable and never returns a secret.",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -199134,6 +200222,12 @@
               },
               "Link": {
                 "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
               },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
@@ -199163,7 +200257,7 @@
                 }
               }
             },
-            "description": "IDEMPOTENCY_KEY_REQUIRED: Idempotency Key Required; IDEMPOTENCY_KEY_INVALID: Idempotency Key Invalid; INVALID_ARGUMENT: Invalid Argument",
+            "description": "IDEMPOTENCY_KEY_REQUIRED: Idempotency Key Required; IDEMPOTENCY_KEY_INVALID: Idempotency Key Invalid; INVALID_ARGUMENT: Invalid Argument; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -199354,11 +200448,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectDeletedProblem"
+                  "$ref": "#/components/schemas/RevokeProjectApiKeyGoneProblem"
                 }
               }
             },
-            "description": "PROJECT_DELETED: Project Deleted",
+            "description": "PROJECT_DELETED: Project Deleted; RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -199612,6 +200706,15 @@
         "operationId": "updateProjectApiKey",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "description": "Identifies one logical mutation across retries.",
             "in": "header",
             "name": "Idempotency-Key",
@@ -199659,7 +200762,7 @@
                 }
               }
             },
-            "description": "The key with its new permission list. Sending the list it already holds returns it unchanged.",
+            "description": "The key with its new permission list. Sending the list it already holds returns it unchanged and never returns a secret.",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -199669,6 +200772,12 @@
               },
               "Link": {
                 "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
               },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
@@ -199698,7 +200807,7 @@
                 }
               }
             },
-            "description": "IDEMPOTENCY_KEY_REQUIRED: Idempotency Key Required; IDEMPOTENCY_KEY_INVALID: Idempotency Key Invalid; INVALID_ARGUMENT: Invalid Argument",
+            "description": "IDEMPOTENCY_KEY_REQUIRED: Idempotency Key Required; IDEMPOTENCY_KEY_INVALID: Idempotency Key Invalid; INVALID_ARGUMENT: Invalid Argument; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -199928,11 +201037,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectDeletedProblem"
+                  "$ref": "#/components/schemas/UpdateProjectApiKeyGoneProblem"
                 }
               }
             },
-            "description": "PROJECT_DELETED: Project Deleted",
+            "description": "PROJECT_DELETED: Project Deleted; RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
