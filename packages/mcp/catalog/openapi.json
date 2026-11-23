@@ -127020,6 +127020,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -127029,10 +127035,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -127640,10 +127687,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -128399,10 +128443,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -129099,6 +129140,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -129108,10 +129155,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -129761,10 +129849,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -129816,10 +129901,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -130560,10 +130642,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -131305,6 +131384,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -131314,10 +131399,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -131964,10 +132090,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -132699,10 +132822,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -133394,6 +133514,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -133403,10 +133529,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -134032,6 +134199,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -134041,10 +134214,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -134626,6 +134840,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -134635,10 +134855,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -135288,10 +135549,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -135343,10 +135601,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -136126,10 +136381,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -136889,6 +137141,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -136898,10 +137156,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -137512,6 +137811,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -137521,10 +137826,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -143418,6 +143764,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -143427,10 +143779,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -143969,10 +144362,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -144629,6 +145019,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -144638,10 +145034,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -145225,10 +145662,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -145807,6 +146241,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -145816,10 +146256,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -146365,6 +146846,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -146374,10 +146861,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -146905,6 +147433,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -146914,10 +147448,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -147489,6 +148064,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -147498,10 +148079,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -148095,6 +148717,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -148104,10 +148732,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -148674,6 +149343,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -148683,10 +149358,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -149277,6 +149993,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -149286,10 +150008,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -149885,10 +150648,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -150511,10 +151271,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -151126,6 +151883,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -151135,10 +151898,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -151782,10 +152586,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -152458,10 +153259,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -152517,10 +153315,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -153138,6 +153933,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -153147,10 +153948,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -153793,10 +154635,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -153841,10 +154680,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -154532,10 +155368,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -154580,10 +155413,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -155269,10 +156099,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -155317,10 +156144,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -155996,10 +156820,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -156644,6 +157465,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -156653,10 +157480,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -157240,10 +158108,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -157858,6 +158723,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -157867,10 +158738,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -158452,6 +159364,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -158461,10 +159379,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -158479,6 +159394,57 @@
                   "minimum": 0,
                   "type": "integer"
                 }
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Assignment and operation responses must not be cached.",
+                "schema": {
+                  "example": "no-store",
+                  "type": "string"
+                }
+              },
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
               },
               "Sunset": {
                 "$ref": "#/components/headers/Sunset"
@@ -159091,10 +160057,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -159781,6 +160744,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -159790,10 +160759,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -160384,10 +161394,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -160443,10 +161450,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -161101,6 +162105,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -161110,10 +162120,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -161771,6 +162822,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -161780,10 +162837,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -162424,6 +163522,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -162433,10 +163537,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -163093,10 +164238,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -163155,10 +164297,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -163820,6 +164959,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -163829,10 +164974,58 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Assignment and operation responses must not be cached.",
+                "schema": {
+                  "example": "no-store",
                   "type": "string"
+                }
+              },
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -164489,10 +165682,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -164551,10 +165741,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -165241,10 +166428,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -165908,6 +167092,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -165917,10 +167107,57 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Private cache with the remaining five-minute service-cache lifetime.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -166487,6 +167724,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -166496,10 +167739,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -167104,10 +168388,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -167736,10 +169017,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -168404,10 +169682,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -169058,6 +170333,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -169067,10 +170348,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -169701,10 +171023,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -170373,6 +171692,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -170382,10 +171707,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -170969,10 +172335,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -171578,6 +172941,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -171587,10 +172956,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -172213,10 +173623,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -172878,10 +174285,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -172926,10 +174330,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -173562,10 +174963,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -174216,6 +175614,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -174225,10 +175629,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -174859,10 +176304,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -175534,10 +176976,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -176207,10 +177646,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -176883,10 +178319,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -176931,10 +178364,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -177609,10 +179039,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -178282,10 +179709,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -178967,10 +180391,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -179015,10 +180436,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -179744,10 +181162,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -180395,6 +181810,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -180404,10 +181825,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -180995,10 +182457,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -181050,10 +182509,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -181700,6 +183156,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -181709,10 +183171,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -182318,6 +183821,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -182327,10 +183836,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -182974,10 +184524,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -183683,6 +185230,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -183692,10 +185245,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -184328,6 +185922,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -184337,10 +185937,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -184936,10 +186577,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -185562,10 +187200,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -186177,6 +187812,12 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -186186,10 +187827,51 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
                   "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -186833,10 +188515,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -187509,10 +189188,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
@@ -187568,10 +189244,7 @@
               "Photon-Version": {
                 "description": "The selected API contract date, also returned on errors after selection.",
                 "schema": {
-                  "enum": [
-                    "2026-07-01"
-                  ],
-                  "type": "string"
+                  "$ref": "#/components/schemas/PhotonVersion"
                 }
               },
               "RateLimit": {
