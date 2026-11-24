@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.photon-hq/mcp",
   "title": "Photon",
-  "description": "Messaging infrastructure for AI agents across iMessage, WhatsApp, Telegram and SMS.",
+  "description": "Enterprise-ready messaging infrastructure for AI agents across iMessage, WhatsApp, Telegram and SMS.",
   "version": "0.1.16",
   "websiteUrl": "https://photon.codes/docs/beta/ai-tools/mcp",
   "repository": {
