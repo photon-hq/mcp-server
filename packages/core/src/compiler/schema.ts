@@ -670,6 +670,18 @@ export function operationTitle(
   return summary || fallback;
 }
 
+function operationTags(
+  operation: Readonly<JsonObject>
+): readonly string[] | undefined {
+  if (!Array.isArray(operation.tags)) {
+    return;
+  }
+  const tags = operation.tags.filter(
+    (tag): tag is string => typeof tag === "string" && tag.length > 0
+  );
+  return tags.length > 0 ? tags : undefined;
+}
+
 export function compileCapability(
   pathOperation: PathOperation,
   components: unknown,
@@ -695,6 +707,7 @@ export function compileCapability(
     components,
     pinnedHeaders
   );
+  const tags = operationTags(operation);
   return {
     annotations: {
       destructiveHint: extension?.destructive ?? method === "DELETE",
@@ -722,6 +735,7 @@ export function compileCapability(
     ...(body === undefined ? {} : { requestMediaType: body.mediaType }),
     requiredPermissions: operationPermissions(operation),
     successRepresentations: success.representations,
+    ...(tags === undefined ? {} : { tags }),
   };
 }
 

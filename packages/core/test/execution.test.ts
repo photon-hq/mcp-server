@@ -5,9 +5,11 @@ import {
   type CapabilityExecutionRequest,
   executeCapability,
   type RuntimeDependencies,
+  toolErrorCode,
 } from "../src/runtime/execution/index.js";
 import type { ExecutionPrincipal } from "../src/runtime/principal.js";
 import { activateRuntimeRelease } from "../src/runtime/runtime-release.js";
+import type { ToolObserver } from "../src/runtime/telemetry.js";
 import { makeRuntimeRelease } from "./runtime-release.fixture.js";
 
 const auth: ExecutionPrincipal = {
@@ -869,6 +871,69 @@ describe("capability execution lifecycle and responses", () => {
         "mcp.tool.name": "getItem",
       },
       name: "photon.mcp.tool.event",
+    });
+  });
+
+  it("observes the unprojected error without changing the response or record", async () => {
+    const makeDependencies = (overrides: Partial<RuntimeDependencies>) =>
+      dependencies(new Response(null, { status: 204 }), undefined, overrides)
+        .dependency;
+    const record = vi.fn<RuntimeDependencies["record"]>();
+    const execution = request("project-1");
+    const baseline = await executeCapability(
+      execution,
+      makeDependencies({ record })
+    );
+    const baselineRecords = [...record.mock.calls];
+    record.mockClear();
+    const observe = vi.fn<ToolObserver>(() => {
+      throw new Error("observer failure");
+    });
+
+    const observed = await executeCapability(
+      execution,
+      makeDependencies({ observe, record })
+    );
+
+    expect(JSON.stringify(observed)).toBe(JSON.stringify(baseline));
+    expect(record.mock.calls).toEqual(baselineRecords);
+    expect(observe).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({
+        capability: projectCapability,
+        durationMs: 0,
+        input: execution.input,
+        kind: "completed",
+        result: "error",
+      })
+    );
+    const event = observe.mock.calls[0]?.[0];
+    expect(event?.kind === "completed" && toolErrorCode(event.outcome)).toBe(
+      "upstream_contract_violation"
+    );
+  });
+
+  it("observes an in-flight abort once and rethrows the abort reason", async () => {
+    const controller = new AbortController();
+    const reason = new Error("caller aborted");
+    const observe = vi.fn<ToolObserver>();
+    const { dependency } = dependencies(
+      undefined,
+      () => {
+        controller.abort(reason);
+        return Promise.reject(reason);
+      },
+      { observe }
+    );
+    const execution = request("project-1");
+
+    await expect(
+      executeCapability({ ...execution, signal: controller.signal }, dependency)
+    ).rejects.toBe(reason);
+    expect(observe).toHaveBeenCalledExactlyOnceWith({
+      capability: projectCapability,
+      durationMs: 0,
+      input: execution.input,
+      kind: "aborted",
     });
   });
 

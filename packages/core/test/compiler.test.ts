@@ -1928,6 +1928,18 @@ describe("compileRelease", () => {
     );
   });
 
+  it("preserves ordered nonempty OpenAPI tags as capability metadata", () => {
+    const result = compileRelease(
+      makeCompileInput({ operation: { tags: ["Projects", "", "Read"] } })
+    );
+
+    expect(capability(result).tags).toEqual(["Projects", "Read"]);
+    expect(result.tools[0]).not.toHaveProperty("tags");
+    expect(capability(compileRelease(makeCompileInput()))).not.toHaveProperty(
+      "tags"
+    );
+  });
+
   it("prefers the producer's externalDocs link and omits a link without a tag", () => {
     const linked = compileRelease(
       makeCompileInput({
