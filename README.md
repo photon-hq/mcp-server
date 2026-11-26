@@ -6,6 +6,22 @@ If your client supports remote MCP servers with OAuth (Claude, ChatGPT, Cursor),
 connect to the hosted server instead: `https://mcp.photon.codes/mcp`. No key is
 needed. Use this local server when your client only runs stdio servers.
 
+## Coding agents
+
+Install the Photon skill so your agent knows how Photon works, then connect it
+to the hosted server above:
+
+```sh
+npx skills add photon-hq/skills --skill photon
+```
+
+To have the agent set up a project for you, paste this into it, with your
+project ID from the Photon dashboard:
+
+```text
+Set up Photon for me (project pho_prj_...). Fetch https://photon.codes/setup.md and follow it.
+```
+
 ## Setup
 
 1. Create an Account Service Key (`pho_ask_...`) in the Photon dashboard.
