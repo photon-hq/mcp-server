@@ -7329,6 +7329,9 @@
           },
           {
             "$ref": "#/components/schemas/EmailDomainCapExceededProblem"
+          },
+          {
+            "$ref": "#/components/schemas/EmailOwnershipHandoffRequiredProblem"
           }
         ]
       },
@@ -8885,6 +8888,9 @@
           },
           {
             "$ref": "#/components/schemas/IdempotencyKeyInvalidProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
           }
         ]
       },
@@ -8968,6 +8974,16 @@
           },
           {
             "$ref": "#/components/schemas/ValidationFailedProblem"
+          }
+        ]
+      },
+      "CreateOrGetUserBadRequestProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/HttpErrorProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
           }
         ]
       },
@@ -11847,6 +11863,9 @@
           },
           {
             "$ref": "#/components/schemas/ResourceMismatchProblem"
+          },
+          {
+            "$ref": "#/components/schemas/WhatsappPersonalNotAvailableProblem"
           }
         ]
       },
@@ -16226,6 +16245,61 @@
           "updatedAt",
           "recipientsPer24Hours",
           "recipientsPerMinute"
+        ],
+        "type": "object"
+      },
+      "EmailOwnershipHandoffRequiredProblem": {
+        "additionalProperties": {
+          "$ref": "#/components/schemas/JsonValue"
+        },
+        "example": {
+          "code": "EMAIL_OWNERSHIP_HANDOFF_REQUIRED",
+          "remediation": {
+            "action": "Contact support@photon.codes to move the project's Email to its current payer, then send the request again."
+          },
+          "status": 409,
+          "title": "Email Ownership Handoff Required",
+          "type": "https://photon.codes/docs/problems/email-ownership-handoff-required"
+        },
+        "properties": {
+          "code": {
+            "const": "EMAIL_OWNERSHIP_HANDOFF_REQUIRED",
+            "type": "string"
+          },
+          "detail": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "instance": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "remediation": {
+            "$ref": "#/components/schemas/ProblemRemediation"
+          },
+          "requestId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "status": {
+            "const": 409,
+            "type": "number"
+          },
+          "title": {
+            "const": "Email Ownership Handoff Required",
+            "type": "string"
+          },
+          "type": {
+            "const": "https://photon.codes/docs/problems/email-ownership-handoff-required",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "remediation",
+          "status",
+          "title",
+          "type"
         ],
         "type": "object"
       },
@@ -21003,6 +21077,9 @@
           },
           {
             "$ref": "#/components/schemas/InvalidParameterProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
           }
         ]
       },
@@ -21197,6 +21274,9 @@
           },
           {
             "$ref": "#/components/schemas/InvalidParameterProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
           }
         ]
       },
@@ -22124,6 +22204,16 @@
           }
         ]
       },
+      "GetMessageMetricsBackfillBadRequestProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InvalidArgumentProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
+          }
+        ]
+      },
       "GetMessageMetricsBackfillForbiddenProblem": {
         "oneOf": [
           {
@@ -22141,7 +22231,7 @@
         ]
       },
       "GetMessageMetricsBackfillResponse": {
-        "additionalProperties": {},
+        "additionalProperties": false,
         "properties": {
           "failedWrites": {
             "maximum": 9007199254740991,
@@ -22183,6 +22273,16 @@
           "version"
         ],
         "type": "object"
+      },
+      "GetMessageMetricsSqlSchemaBadRequestProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InvalidArgumentProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
+          }
+        ]
       },
       "GetMessageMetricsSqlSchemaForbiddenProblem": {
         "oneOf": [
@@ -29868,6 +29968,9 @@
           },
           {
             "$ref": "#/components/schemas/InvalidParameterProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
           }
         ]
       },
@@ -30050,6 +30153,9 @@
           },
           {
             "$ref": "#/components/schemas/InvalidParameterProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
           }
         ]
       },
@@ -30448,6 +30554,16 @@
           "nextCursor"
         ],
         "type": "object"
+      },
+      "ListMessagesBadRequestProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InvalidPageTokenProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
+          }
+        ]
       },
       "ListMessagesForbiddenProblem": {
         "oneOf": [
@@ -31918,6 +32034,16 @@
           }
         ]
       },
+      "ListSpacesBadRequestProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InvalidPageTokenProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
+          }
+        ]
+      },
       "ListSpacesForbiddenProblem": {
         "oneOf": [
           {
@@ -32739,6 +32865,16 @@
           }
         ]
       },
+      "ListUsersBadRequestProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InvalidPageTokenProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
+          }
+        ]
+      },
       "ListUsersForbiddenProblem": {
         "oneOf": [
           {
@@ -33080,6 +33216,16 @@
       "ManagerId": {
         "pattern": "^pho_mgr_[0-7][0-9a-hjkmnp-tv-z]{25}$",
         "type": "string"
+      },
+      "MarkMessageReadBadRequestProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InvalidRequestProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
+          }
+        ]
       },
       "MarkMessageReadConflictProblem": {
         "oneOf": [
@@ -40553,6 +40699,9 @@
           },
           {
             "$ref": "#/components/schemas/InvalidParameterProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
           }
         ]
       },
@@ -40665,6 +40814,16 @@
           },
           {
             "$ref": "#/components/schemas/UnsupportedTypeProblem"
+          }
+        ]
+      },
+      "QueryMessageMetricsBadRequestProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InvalidArgumentProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
           }
         ]
       },
@@ -44441,34 +44600,27 @@
         "properties": {
           "eventId": {
             "type": "string"
-          },
-          "eventType": {
-            "pattern": "^[a-z][a-z0-9-]*(?:\\.[a-z][a-z0-9_-]*)+$",
-            "type": "string"
-          },
-          "expectedAttemptCount": {
-            "maximum": 4294967295,
-            "minimum": 0,
-            "type": "integer"
           }
         },
         "required": [
-          "eventId",
-          "eventType",
-          "expectedAttemptCount"
+          "eventId"
         ],
         "type": "object"
       },
       "RetryWebhookDeliveryResponse": {
         "additionalProperties": false,
         "properties": {
-          "status": {
-            "const": "accepted",
+          "destinationId": {
+            "pattern": "^pho_whd_[0-7][0-9a-hjkmnp-tv-z]{25}$",
+            "type": "string"
+          },
+          "eventId": {
             "type": "string"
           }
         },
         "required": [
-          "status"
+          "destinationId",
+          "eventId"
         ],
         "type": "object"
       },
@@ -45610,6 +45762,7 @@
         "type": "object"
       },
       "SelectableWebhookApiVersionStatus": {
+        "description": "Lifecycle of this date's webhook payload contract. `preview`: selectable, but the contract is not frozen yet and may still change. `latest`: the recommended date; its contract is frozen. `maintain`: still selectable and frozen, superseded by `successor`.",
         "enum": [
           "preview",
           "latest",
@@ -45950,6 +46103,16 @@
           "parts"
         ],
         "type": "object"
+      },
+      "SendMessageBadRequestProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InvalidRequestProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
+          }
+        ]
       },
       "SendMessageConflictProblem": {
         "oneOf": [
@@ -47259,11 +47422,21 @@
           }
         ]
       },
+      "SetSpaceTypingBadRequestProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/HttpErrorProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
+          }
+        ]
+      },
       "SetSpaceTypingConstraint": {
         "additionalProperties": true,
         "properties": {
           "content": {
-            "$ref": "#/components/schemas/SetSpaceTypingContent"
+            "$ref": "#/components/schemas/SpaceTypingUpdateContent"
           },
           "status": {
             "const": "dispatched",
@@ -47273,23 +47446,6 @@
         "required": [
           "content",
           "status"
-        ],
-        "type": "object"
-      },
-      "SetSpaceTypingContent": {
-        "additionalProperties": false,
-        "properties": {
-          "type": {
-            "const": "space.typing.update",
-            "type": "string"
-          },
-          "typing": {
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "type",
-          "typing"
         ],
         "type": "object"
       },
@@ -47492,6 +47648,16 @@
         ],
         "type": "object"
       },
+      "ShareSpaceProfileBadRequestProblem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/HttpErrorProblem"
+          },
+          {
+            "$ref": "#/components/schemas/InvalidApiVersionProblem"
+          }
+        ]
+      },
       "ShareSpaceProfileConflictProblem": {
         "oneOf": [
           {
@@ -47506,7 +47672,7 @@
         "additionalProperties": true,
         "properties": {
           "content": {
-            "$ref": "#/components/schemas/ShareSpaceProfileContent"
+            "$ref": "#/components/schemas/SpaceProfileShareContent"
           },
           "status": {
             "const": "dispatched",
@@ -47516,19 +47682,6 @@
         "required": [
           "content",
           "status"
-        ],
-        "type": "object"
-      },
-      "ShareSpaceProfileContent": {
-        "additionalProperties": false,
-        "properties": {
-          "type": {
-            "const": "space.profile.share",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type"
         ],
         "type": "object"
       },
@@ -64785,6 +64938,57 @@
           "UNKNOWN"
         ],
         "type": "string"
+      },
+      "WhatsappPersonalNotAvailableProblem": {
+        "additionalProperties": {
+          "$ref": "#/components/schemas/JsonValue"
+        },
+        "example": {
+          "code": "WHATSAPP_PERSONAL_NOT_AVAILABLE",
+          "status": 403,
+          "title": "WhatsApp Personal Not Available",
+          "type": "https://photon.codes/docs/problems/whatsapp-personal-not-available"
+        },
+        "properties": {
+          "code": {
+            "const": "WHATSAPP_PERSONAL_NOT_AVAILABLE",
+            "type": "string"
+          },
+          "detail": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "instance": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "remediation": {
+            "not": {}
+          },
+          "requestId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "status": {
+            "const": 403,
+            "type": "number"
+          },
+          "title": {
+            "const": "WhatsApp Personal Not Available",
+            "type": "string"
+          },
+          "type": {
+            "const": "https://photon.codes/docs/problems/whatsapp-personal-not-available",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "status",
+          "title",
+          "type"
+        ],
+        "type": "object"
       },
       "WhatsappPhoneNumberOwnership": {
         "enum": [
@@ -138450,6 +138654,15 @@
         "operationId": "listAttachments",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "id",
             "required": true,
@@ -138546,6 +138759,101 @@
               }
             },
             "description": "A page of Project Attachments in the requested order.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidApiVersionProblem"
+                }
+              }
+            },
+            "description": "INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -138690,6 +138998,45 @@
                   "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
                   "type": "string"
                 }
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
               }
             }
           },
@@ -139621,6 +139968,15 @@
         "operationId": "getAttachment",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "attachmentId",
             "required": true,
@@ -139649,6 +140005,101 @@
               }
             },
             "description": "The Attachment resource.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidApiVersionProblem"
+                }
+              }
+            },
+            "description": "INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -139865,6 +140316,45 @@
                 "schema": {
                   "$ref": "#/components/schemas/AttachmentNotReadyRetryAfter"
                 }
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
               },
               "Sunset": {
                 "$ref": "#/components/headers/Sunset"
@@ -140700,6 +141190,15 @@
         "operationId": "listMessages",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "id",
             "required": true,
@@ -140859,7 +141358,7 @@
                 "$ref": "#/components/headers/Deprecation"
               },
               "ETag": {
-                "description": "Validator for the selected Message representation.",
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
                 "schema": {
                   "type": "string"
                 }
@@ -140869,6 +141368,62 @@
               },
               "Link": {
                 "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Private revalidation policy for this Message representation.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
               },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
@@ -140894,11 +141449,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InvalidPageTokenProblem"
+                  "$ref": "#/components/schemas/ListMessagesBadRequestProblem"
                 }
               }
             },
-            "description": "INVALID_PAGE_TOKEN: Invalid Page Token",
+            "description": "INVALID_PAGE_TOKEN: Invalid Page Token; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -141043,6 +141598,45 @@
                   "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
                   "type": "string"
                 }
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
               }
             }
           },
@@ -141323,6 +141917,15 @@
         "operationId": "sendMessage",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "id",
             "required": true,
@@ -141380,6 +141983,12 @@
               "Link": {
                 "$ref": "#/components/headers/Link"
               },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
               },
@@ -141404,11 +142013,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InvalidRequestProblem"
+                  "$ref": "#/components/schemas/SendMessageBadRequestProblem"
                 }
               }
             },
-            "description": "INVALID_REQUEST: Invalid Request",
+            "description": "INVALID_REQUEST: Invalid Request; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -141643,6 +142252,45 @@
               }
             },
             "description": "ATTACHMENT_NOT_READY: Attachment Not Ready; SENDER_NOT_SENDABLE: Sender Not Sendable; SMS_CAMPAIGN_NOT_ELIGIBLE: SMS Campaign Not Eligible; EMAIL_ADMISSION_ENDED: Email Admission Ended; SPACE_NOT_SENDABLE: Space Not Sendable",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -141991,6 +142639,15 @@
         "operationId": "countMessages",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "id",
             "required": true,
@@ -142121,6 +142778,101 @@
               }
             },
             "description": "Matching Message count, optional direction groups and daily buckets",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidApiVersionProblem"
+                }
+              }
+            },
+            "description": "INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -142265,6 +143017,45 @@
                   "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
                   "type": "string"
                 }
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
               }
             }
           },
@@ -142552,6 +143343,15 @@
         "operationId": "getMessage",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "id",
             "required": true,
@@ -142599,7 +143399,7 @@
                 "$ref": "#/components/headers/Deprecation"
               },
               "ETag": {
-                "description": "Validator for the selected Message representation.",
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
                 "schema": {
                   "type": "string"
                 }
@@ -142609,6 +143409,12 @@
               },
               "Link": {
                 "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
               },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
@@ -142631,7 +143437,7 @@
             }
           },
           "304": {
-            "description": "The request's If-None-Match validator matches the current representation.",
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
             "headers": {
               "Cache-Control": {
                 "description": "Private revalidation policy for this Message representation.",
@@ -142643,10 +143449,55 @@
                 "$ref": "#/components/headers/Deprecation"
               },
               "ETag": {
-                "description": "Validator for the selected Message representation.",
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
                 "schema": {
                   "type": "string"
                 }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidApiVersionProblem"
+                }
+              }
+            },
+            "description": "INVALID_API_VERSION: Invalid API Version",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
               },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
@@ -142800,6 +143651,45 @@
               }
             },
             "description": "MESSAGE_NOT_FOUND: Message Not Found",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -143109,6 +143999,15 @@
         "operationId": "markMessageRead",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "id",
             "required": true,
@@ -143156,6 +144055,12 @@
               "Link": {
                 "$ref": "#/components/headers/Link"
               },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
               },
@@ -143180,11 +144085,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InvalidRequestProblem"
+                  "$ref": "#/components/schemas/MarkMessageReadBadRequestProblem"
                 }
               }
             },
-            "description": "INVALID_REQUEST: Invalid Request",
+            "description": "INVALID_REQUEST: Invalid Request; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -143380,6 +144285,45 @@
               }
             },
             "description": "SENDER_NOT_SENDABLE: Sender Not Sendable; SPACE_NOT_SENDABLE: Space Not Sendable; MESSAGE_NOT_READABLE: Message Not Readable",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -144584,6 +145528,45 @@
               }
             }
           },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectNotFoundProblem"
+                }
+              }
+            },
+            "description": "PROJECT_NOT_FOUND: Project Not Found",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
           "409": {
             "content": {
               "application/problem+json": {
@@ -144592,7 +145575,7 @@
                 }
               }
             },
-            "description": "PROJECT_CLOSING: Project Is Closing; PROJECT_INITIALIZING: Project Initializing; EMAIL_DOMAIN_ALREADY_CONNECTED: Email Domain Already Connected; EMAIL_DOMAIN_CAP_EXCEEDED: Email Domain Cap Exceeded",
+            "description": "PROJECT_CLOSING: Project Is Closing; PROJECT_INITIALIZING: Project Initializing; EMAIL_DOMAIN_ALREADY_CONNECTED: Email Domain Already Connected; EMAIL_DOMAIN_CAP_EXCEEDED: Email Domain Cap Exceeded; EMAIL_OWNERSHIP_HANDOFF_REQUIRED: Email Ownership Handoff Required",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -146479,6 +147462,45 @@
               }
             }
           },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectNotFoundProblem"
+                }
+              }
+            },
+            "description": "PROJECT_NOT_FOUND: Project Not Found",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
           "410": {
             "content": {
               "application/problem+json": {
@@ -147084,6 +148106,45 @@
               }
             }
           },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectNotFoundProblem"
+                }
+              }
+            },
+            "description": "PROJECT_NOT_FOUND: Project Not Found",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
           "410": {
             "content": {
               "application/problem+json": {
@@ -147668,6 +148729,45 @@
                   "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
                   "type": "string"
                 }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectNotFoundProblem"
+                }
+              }
+            },
+            "description": "PROJECT_NOT_FOUND: Project Not Found",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
               }
             }
           },
@@ -186695,7 +187795,7 @@
                 }
               }
             },
-            "description": "FORBIDDEN: Forbidden; RESOURCE_MISMATCH: Resource Mismatch\n\nFORBIDDEN: Forbidden; INSUFFICIENT_SCOPE: Insufficient Scope; ORGANIZATION_SSO_REQUIRED: Organization SSO Required",
+            "description": "FORBIDDEN: Forbidden; RESOURCE_MISMATCH: Resource Mismatch; WHATSAPP_PERSONAL_NOT_AVAILABLE: WhatsApp Personal Not Available\n\nFORBIDDEN: Forbidden; INSUFFICIENT_SCOPE: Insufficient Scope; ORGANIZATION_SSO_REQUIRED: Organization SSO Required",
             "headers": {
               "Deprecation": {
                 "description": "RFC 9745 structured-field Date at which the operation was or will be deprecated: `@` followed by Unix seconds, for example `@1767225599`.",
@@ -189823,6 +190923,15 @@
         "operationId": "listSpaces",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "id",
             "required": true,
@@ -190003,7 +191112,7 @@
                 "$ref": "#/components/headers/Deprecation"
               },
               "ETag": {
-                "description": "Validator for the selected Space representation.",
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
                 "schema": {
                   "type": "string"
                 }
@@ -190013,6 +191122,62 @@
               },
               "Link": {
                 "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Private revalidation policy for this Space representation.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
               },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
@@ -190038,11 +191203,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InvalidPageTokenProblem"
+                  "$ref": "#/components/schemas/ListSpacesBadRequestProblem"
                 }
               }
             },
-            "description": "INVALID_PAGE_TOKEN: Invalid Page Token",
+            "description": "INVALID_PAGE_TOKEN: Invalid Page Token; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -190187,6 +191352,45 @@
                   "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
                   "type": "string"
                 }
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
               }
             }
           },
@@ -190472,6 +191676,15 @@
         "operationId": "createOrGetSpace",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "id",
             "required": true,
@@ -190532,6 +191745,12 @@
               "Link": {
                 "$ref": "#/components/headers/Link"
               },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
               },
@@ -190584,6 +191803,12 @@
                   "type": "string"
                 }
               },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
               },
@@ -190612,7 +191837,7 @@
                 }
               }
             },
-            "description": "HTTP_ERROR: Request Failed; INVALID_REQUEST: Invalid Request; IDEMPOTENCY_KEY_REQUIRED: Idempotency Key Required; IDEMPOTENCY_KEY_INVALID: Idempotency Key Invalid",
+            "description": "HTTP_ERROR: Request Failed; INVALID_REQUEST: Invalid Request; IDEMPOTENCY_KEY_REQUIRED: Idempotency Key Required; IDEMPOTENCY_KEY_INVALID: Idempotency Key Invalid; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -190808,6 +192033,45 @@
               }
             },
             "description": "SPACE_AMBIGUOUS: Multiple Matching Spaces",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -191161,6 +192425,15 @@
         "operationId": "countSpaces",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "id",
             "required": true,
@@ -191293,6 +192566,101 @@
               }
             },
             "description": "Number of matching Spaces",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidApiVersionProblem"
+                }
+              }
+            },
+            "description": "INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -191437,6 +192805,45 @@
                   "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
                   "type": "string"
                 }
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
               }
             }
           },
@@ -191724,6 +193131,15 @@
         "operationId": "getSpace",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "id",
             "required": true,
@@ -191771,7 +193187,7 @@
                 "$ref": "#/components/headers/Deprecation"
               },
               "ETag": {
-                "description": "Validator for the selected Space representation.",
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
                 "schema": {
                   "type": "string"
                 }
@@ -191781,6 +193197,12 @@
               },
               "Link": {
                 "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
               },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
@@ -191803,7 +193225,7 @@
             }
           },
           "304": {
-            "description": "The request's If-None-Match validator matches the current representation.",
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
             "headers": {
               "Cache-Control": {
                 "description": "Private revalidation policy for this Space representation.",
@@ -191815,10 +193237,55 @@
                 "$ref": "#/components/headers/Deprecation"
               },
               "ETag": {
-                "description": "Validator for the selected Space representation.",
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
                 "schema": {
                   "type": "string"
                 }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidApiVersionProblem"
+                }
+              }
+            },
+            "description": "INVALID_API_VERSION: Invalid API Version",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
               },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
@@ -191972,6 +193439,45 @@
               }
             },
             "description": "SPACE_NOT_FOUND: Space Not Found",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -192286,6 +193792,15 @@
         "operationId": "shareSpaceProfile",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "id",
             "required": true,
@@ -192340,6 +193855,12 @@
               "Link": {
                 "$ref": "#/components/headers/Link"
               },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
               },
@@ -192364,11 +193885,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HttpErrorProblem"
+                  "$ref": "#/components/schemas/ShareSpaceProfileBadRequestProblem"
                 }
               }
             },
-            "description": "HTTP_ERROR: Request Failed",
+            "description": "HTTP_ERROR: Request Failed; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -192564,6 +194085,45 @@
               }
             },
             "description": "PROFILE_NOT_READY: Profile Not Ready; PROFILE_UNAVAILABLE: Profile Unavailable",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -192917,6 +194477,15 @@
         "operationId": "setSpaceTyping",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "id",
             "required": true,
@@ -192971,6 +194540,12 @@
               "Link": {
                 "$ref": "#/components/headers/Link"
               },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
               },
@@ -192995,11 +194570,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HttpErrorProblem"
+                  "$ref": "#/components/schemas/SetSpaceTypingBadRequestProblem"
                 }
               }
             },
-            "description": "HTTP_ERROR: Request Failed",
+            "description": "HTTP_ERROR: Request Failed; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -193156,6 +194731,45 @@
               }
             },
             "description": "SPACE_NOT_FOUND: Space Not Found; USER_NOT_FOUND: User Not Found",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -193509,6 +195123,15 @@
         "operationId": "listUsers",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "id",
             "required": true,
@@ -193670,7 +195293,7 @@
                 "$ref": "#/components/headers/Deprecation"
               },
               "ETag": {
-                "description": "Validator for the selected User representation.",
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
                 "schema": {
                   "type": "string"
                 }
@@ -193680,6 +195303,62 @@
               },
               "Link": {
                 "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Cache-Control": {
+                "description": "Private revalidation policy for this User representation.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
               },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
@@ -193705,11 +195384,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InvalidPageTokenProblem"
+                  "$ref": "#/components/schemas/ListUsersBadRequestProblem"
                 }
               }
             },
-            "description": "INVALID_PAGE_TOKEN: Invalid Page Token",
+            "description": "INVALID_PAGE_TOKEN: Invalid Page Token; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -193854,6 +195533,45 @@
                   "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
                   "type": "string"
                 }
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
               }
             }
           },
@@ -194139,6 +195857,15 @@
         "operationId": "createOrGetUser",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "id",
             "required": true,
@@ -194177,6 +195904,12 @@
               },
               "Link": {
                 "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
               },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
@@ -194224,6 +195957,12 @@
                   "type": "string"
                 }
               },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
               },
@@ -194248,11 +195987,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HttpErrorProblem"
+                  "$ref": "#/components/schemas/CreateOrGetUserBadRequestProblem"
                 }
               }
             },
-            "description": "HTTP_ERROR: Request Failed",
+            "description": "HTTP_ERROR: Request Failed; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -194409,6 +196148,45 @@
               }
             },
             "description": "USER_IDENTITY_CONFLICT: User Identity Conflict",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -194762,6 +196540,15 @@
         "operationId": "countUsers",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "id",
             "required": true,
@@ -194875,6 +196662,101 @@
               }
             },
             "description": "Number of matching Users",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidApiVersionProblem"
+                }
+              }
+            },
+            "description": "INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -195019,6 +196901,45 @@
                   "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
                   "type": "string"
                 }
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
               }
             }
           },
@@ -195306,6 +197227,15 @@
         "operationId": "getUser",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "id",
             "required": true,
@@ -195353,7 +197283,7 @@
                 "$ref": "#/components/headers/Deprecation"
               },
               "ETag": {
-                "description": "Validator for the selected User representation.",
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
                 "schema": {
                   "type": "string"
                 }
@@ -195363,6 +197293,12 @@
               },
               "Link": {
                 "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
               },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
@@ -195385,7 +197321,7 @@
             }
           },
           "304": {
-            "description": "The request's If-None-Match validator matches the reconciled representation.",
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
             "headers": {
               "Cache-Control": {
                 "description": "Private revalidation policy for this User representation.",
@@ -195397,10 +197333,55 @@
                 "$ref": "#/components/headers/Deprecation"
               },
               "ETag": {
-                "description": "Validator for the selected User representation.",
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
                 "schema": {
                   "type": "string"
                 }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidApiVersionProblem"
+                }
+              }
+            },
+            "description": "INVALID_API_VERSION: Invalid API Version",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
               },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
@@ -195593,6 +197574,45 @@
               }
             },
             "description": "USER_IDENTITY_CONFLICT: User Identity Conflict",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -205586,6 +207606,15 @@
         "operationId": "listDeveloperOtelLogs",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "projectId",
             "required": true,
@@ -205691,11 +207720,67 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
               "Link": {
                 "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
               },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
@@ -205725,7 +207810,7 @@
                 }
               }
             },
-            "description": "INVALID_ARGUMENT: Invalid Argument; INVALID_QUERY: Invalid Developer OTel Query; FORBIDDEN_SQL: Forbidden Developer OTel SQL; INVALID_PARAMETER: Invalid Developer OTel Query Parameter",
+            "description": "INVALID_ARGUMENT: Invalid Argument; INVALID_QUERY: Invalid Developer OTel Query; FORBIDDEN_SQL: Forbidden Developer OTel SQL; INVALID_PARAMETER: Invalid Developer OTel Query Parameter; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -205870,6 +207955,45 @@
                   "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
                   "type": "string"
                 }
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
               }
             }
           },
@@ -206235,6 +208359,15 @@
         "operationId": "getDeveloperOtelQuerySchema",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "projectId",
             "required": true,
@@ -206258,11 +208391,67 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
               "Link": {
                 "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
               },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
@@ -206292,7 +208481,7 @@
                 }
               }
             },
-            "description": "INVALID_ARGUMENT: Invalid Argument; INVALID_QUERY: Invalid Developer OTel Query; FORBIDDEN_SQL: Forbidden Developer OTel SQL; INVALID_PARAMETER: Invalid Developer OTel Query Parameter",
+            "description": "INVALID_ARGUMENT: Invalid Argument; INVALID_QUERY: Invalid Developer OTel Query; FORBIDDEN_SQL: Forbidden Developer OTel SQL; INVALID_PARAMETER: Invalid Developer OTel Query Parameter; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -206437,6 +208626,45 @@
                   "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
                   "type": "string"
                 }
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
               }
             }
           },
@@ -206800,6 +209028,15 @@
         "operationId": "queryDeveloperOtel",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "projectId",
             "required": true,
@@ -206839,6 +209076,12 @@
               "Link": {
                 "$ref": "#/components/headers/Link"
               },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
               },
@@ -206867,7 +209110,7 @@
                 }
               }
             },
-            "description": "INVALID_ARGUMENT: Invalid Argument; INVALID_QUERY: Invalid Developer OTel Query; FORBIDDEN_SQL: Forbidden Developer OTel SQL; INVALID_PARAMETER: Invalid Developer OTel Query Parameter",
+            "description": "INVALID_ARGUMENT: Invalid Argument; INVALID_QUERY: Invalid Developer OTel Query; FORBIDDEN_SQL: Forbidden Developer OTel SQL; INVALID_PARAMETER: Invalid Developer OTel Query Parameter; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -207012,6 +209255,45 @@
                   "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
                   "type": "string"
                 }
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
               }
             }
           },
@@ -207377,6 +209659,15 @@
         "operationId": "listDeveloperTraces",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "projectId",
             "required": true,
@@ -207529,11 +209820,67 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
               "Link": {
                 "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
               },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
@@ -207563,7 +209910,7 @@
                 }
               }
             },
-            "description": "INVALID_ARGUMENT: Invalid Argument; INVALID_QUERY: Invalid Developer OTel Query; FORBIDDEN_SQL: Forbidden Developer OTel SQL; INVALID_PARAMETER: Invalid Developer OTel Query Parameter",
+            "description": "INVALID_ARGUMENT: Invalid Argument; INVALID_QUERY: Invalid Developer OTel Query; FORBIDDEN_SQL: Forbidden Developer OTel SQL; INVALID_PARAMETER: Invalid Developer OTel Query Parameter; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -207708,6 +210055,45 @@
                   "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
                   "type": "string"
                 }
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
               }
             }
           },
@@ -208073,6 +210459,15 @@
         "operationId": "getDeveloperTrace",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "projectId",
             "required": true,
@@ -208104,11 +210499,67 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
               "Link": {
                 "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
               },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
@@ -208138,7 +210589,7 @@
                 }
               }
             },
-            "description": "INVALID_ARGUMENT: Invalid Argument; INVALID_QUERY: Invalid Developer OTel Query; FORBIDDEN_SQL: Forbidden Developer OTel SQL; INVALID_PARAMETER: Invalid Developer OTel Query Parameter",
+            "description": "INVALID_ARGUMENT: Invalid Argument; INVALID_QUERY: Invalid Developer OTel Query; FORBIDDEN_SQL: Forbidden Developer OTel SQL; INVALID_PARAMETER: Invalid Developer OTel Query Parameter; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -208295,6 +210746,45 @@
               }
             },
             "description": "DEVELOPER_TRACE_NOT_FOUND: Developer Trace Not Found",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -208687,21 +211177,20 @@
         "operationId": "getMessageMetricsBackfill",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "projectId",
             "required": true,
             "schema": {
               "pattern": "^pho_prj_[0-7][0-9a-hjkmnp-tv-z]{25}$",
-              "type": "string"
-            }
-          },
-          {
-            "description": "API schema date. Defaults to the latest served version; resolves to the latest served date on or before this value.",
-            "in": "header",
-            "name": "x-photon-version",
-            "schema": {
-              "format": "date",
-              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
               "type": "string"
             }
           }
@@ -208720,11 +211209,67 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
               "Link": {
                 "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
               },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
@@ -208750,11 +211295,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InvalidArgumentProblem"
+                  "$ref": "#/components/schemas/GetMessageMetricsBackfillBadRequestProblem"
                 }
               }
             },
-            "description": "INVALID_ARGUMENT: Invalid Argument",
+            "description": "INVALID_ARGUMENT: Invalid Argument; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -208902,6 +211447,45 @@
               }
             }
           },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
           "500": {
             "content": {
               "application/problem+json": {
@@ -208941,6 +211525,45 @@
                 "schema": {
                   "type": "string"
                 }
+              }
+            }
+          },
+          "502": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpstreamFailureProblem"
+                }
+              }
+            },
+            "description": "UPSTREAM_FAILURE: Upstream Service Failure",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
               }
             }
           },
@@ -209042,21 +211665,20 @@
         "operationId": "getMessageMetricsSqlSchema",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "projectId",
             "required": true,
             "schema": {
               "pattern": "^pho_prj_[0-7][0-9a-hjkmnp-tv-z]{25}$",
-              "type": "string"
-            }
-          },
-          {
-            "description": "API schema date. Defaults to the latest served version; resolves to the latest served date on or before this value.",
-            "in": "header",
-            "name": "x-photon-version",
-            "schema": {
-              "format": "date",
-              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
               "type": "string"
             }
           }
@@ -209075,11 +211697,67 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
               "Link": {
                 "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
               },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
@@ -209105,11 +211783,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InvalidArgumentProblem"
+                  "$ref": "#/components/schemas/GetMessageMetricsSqlSchemaBadRequestProblem"
                 }
               }
             },
-            "description": "INVALID_ARGUMENT: Invalid Argument",
+            "description": "INVALID_ARGUMENT: Invalid Argument; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -209257,6 +211935,45 @@
               }
             }
           },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
           "500": {
             "content": {
               "application/problem+json": {
@@ -209296,6 +212013,45 @@
                 "schema": {
                   "type": "string"
                 }
+              }
+            }
+          },
+          "502": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpstreamFailureProblem"
+                }
+              }
+            },
+            "description": "UPSTREAM_FAILURE: Upstream Service Failure",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
               }
             }
           },
@@ -209368,21 +212124,20 @@
         "operationId": "queryMessageMetrics",
         "parameters": [
           {
+            "description": "Selects the API contract date. Without it, the request is served as 2026-07-01.",
+            "in": "header",
+            "name": "Photon-Version",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PhotonVersion"
+            }
+          },
+          {
             "in": "path",
             "name": "projectId",
             "required": true,
             "schema": {
               "pattern": "^pho_prj_[0-7][0-9a-hjkmnp-tv-z]{25}$",
-              "type": "string"
-            }
-          },
-          {
-            "description": "API schema date. Defaults to the latest served version; resolves to the latest served date on or before this value.",
-            "in": "header",
-            "name": "x-photon-version",
-            "schema": {
-              "format": "date",
-              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
               "type": "string"
             }
           }
@@ -209417,6 +212172,12 @@
               "Link": {
                 "$ref": "#/components/headers/Link"
               },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
               "RateLimit": {
                 "$ref": "#/components/headers/RateLimit"
               },
@@ -209441,11 +212202,11 @@
             "content": {
               "application/problem+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InvalidArgumentProblem"
+                  "$ref": "#/components/schemas/QueryMessageMetricsBadRequestProblem"
                 }
               }
             },
-            "description": "INVALID_ARGUMENT: Invalid Argument",
+            "description": "INVALID_ARGUMENT: Invalid Argument; INVALID_API_VERSION: Invalid API Version",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
@@ -209590,6 +212351,45 @@
                   "pattern": "^(?!0{32}$)[0-9a-f]{32}$",
                   "type": "string"
                 }
+              }
+            }
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetiredApiVersionProblem"
+                }
+              }
+            },
+            "description": "RETIRED_API_VERSION: Retired API Version",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
               }
             }
           },
@@ -213382,7 +216182,7 @@
     },
     "/v1/projects/{projectId}/webhooks/destinations/{destinationId}/retries": {
       "post": {
-        "description": "Requests an immediate attempt of the selected delivery if it is still the waiting head for its destination and event type. expectedAttemptCount is the failed-attempt counter recorded on the delivery and fences stale requests. This overrides the current backoff, including Retry-After, once. It preserves event identity and the retry budget. Delivered, active, disabled and dead-lettered deliveries cannot be retried. A 202 acknowledges the wake-up, not successful delivery. Supply an Idempotency-Key and retain it when retrying an ambiguous failure.",
+        "description": "Requests an immediate attempt of the selected delivery if it is still the waiting head for its destination and event type. This overrides the current backoff, including Retry-After, once. It preserves event identity and the retry budget. Delivered, active, disabled and dead-lettered deliveries cannot be retried. A 202 acknowledges the wake-up, not successful delivery. Supply an Idempotency-Key and retain it when retrying an ambiguous failure.",
         "operationId": "retryWebhookDelivery",
         "parameters": [
           {
@@ -213444,7 +216244,7 @@
                 }
               }
             },
-            "description": "The waiting delivery was made eligible for an immediate attempt.",
+            "description": "The waiting delivery was made eligible for an immediate attempt. The body echoes its eventId and destinationId.",
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
