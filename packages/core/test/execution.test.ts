@@ -874,7 +874,15 @@ describe("capability execution lifecycle and responses", () => {
     });
   });
 
-  it("observes the unprojected error without changing the response or record", async () => {
+  it.each<[string, ToolObserver]>([
+    [
+      "throws",
+      () => {
+        throw new Error("observer failure");
+      },
+    ],
+    ["rejects", () => Promise.reject(new Error("observer failure"))],
+  ])("observes the unprojected error without changing the response or record when the observer %s", async (_name, failingObserver) => {
     const makeDependencies = (overrides: Partial<RuntimeDependencies>) =>
       dependencies(new Response(null, { status: 204 }), undefined, overrides)
         .dependency;
@@ -886,9 +894,13 @@ describe("capability execution lifecycle and responses", () => {
     );
     const baselineRecords = [...record.mock.calls];
     record.mockClear();
-    const observe = vi.fn<ToolObserver>(() => {
-      throw new Error("observer failure");
-    });
+    const seen = vi.fn<ToolObserver>();
+    // vi.fn would handle a returned rejection itself, so the failing observer
+    // is passed through a plain function.
+    const observe: ToolObserver = (toolEvent) => {
+      seen(toolEvent);
+      return failingObserver(toolEvent);
+    };
 
     const observed = await executeCapability(
       execution,
@@ -897,7 +909,7 @@ describe("capability execution lifecycle and responses", () => {
 
     expect(JSON.stringify(observed)).toBe(JSON.stringify(baseline));
     expect(record.mock.calls).toEqual(baselineRecords);
-    expect(observe).toHaveBeenCalledExactlyOnceWith(
+    expect(seen).toHaveBeenCalledExactlyOnceWith(
       expect.objectContaining({
         capability: projectCapability,
         durationMs: 0,
@@ -906,7 +918,7 @@ describe("capability execution lifecycle and responses", () => {
         result: "error",
       })
     );
-    const event = observe.mock.calls[0]?.[0];
+    const event = seen.mock.calls[0]?.[0];
     expect(event?.kind === "completed" && toolErrorCode(event.outcome)).toBe(
       "upstream_contract_violation"
     );

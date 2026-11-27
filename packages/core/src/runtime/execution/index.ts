@@ -194,7 +194,11 @@ function notify(
   event: RuntimeToolEvent
 ): void {
   try {
-    observe?.(event);
+    // An async function is assignable to ToolObserver; swallow its rejection.
+    const pending: unknown = observe?.(event);
+    if (pending instanceof Promise) {
+      pending.catch(() => undefined);
+    }
   } catch {
     // Observer failures must never change tool execution or responses.
   }

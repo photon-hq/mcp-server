@@ -1930,7 +1930,9 @@ describe("compileRelease", () => {
 
   it("preserves ordered nonempty OpenAPI tags as capability metadata", () => {
     const result = compileRelease(
-      makeCompileInput({ operation: { tags: ["Projects", "", "Read"] } })
+      makeCompileInput({
+        operation: { tags: [" Projects ", "", "  ", "Read"] },
+      })
     );
 
     expect(capability(result).tags).toEqual(["Projects", "Read"]);

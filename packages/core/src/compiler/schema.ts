@@ -676,9 +676,10 @@ function operationTags(
   if (!Array.isArray(operation.tags)) {
     return;
   }
-  const tags = operation.tags.filter(
-    (tag): tag is string => typeof tag === "string" && tag.length > 0
-  );
+  const tags = operation.tags
+    .filter((tag): tag is string => typeof tag === "string")
+    .map((tag) => tag.trim())
+    .filter((tag) => tag.length > 0);
   return tags.length > 0 ? tags : undefined;
 }
 

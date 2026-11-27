@@ -96,7 +96,7 @@ const capabilitySchema = z
     requestMediaType: z.string().optional(),
     requiredPermissions: z.array(z.string()),
     successRepresentations: z.array(successRepresentationSchema).min(1),
-    tags: z.array(z.string()).optional(),
+    tags: z.array(z.string().min(1)).min(1).optional(),
   })
   .strict()
   .superRefine((capability, context) => {
