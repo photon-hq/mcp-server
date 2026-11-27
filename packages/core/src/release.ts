@@ -42,6 +42,7 @@ export interface Capability {
   readonly requestMediaType?: string;
   readonly requiredPermissions: readonly string[];
   readonly successRepresentations: readonly SuccessRepresentation[];
+  readonly tags?: readonly string[];
 }
 
 export interface ReleaseDocuments {
@@ -95,6 +96,7 @@ const capabilitySchema = z
     requestMediaType: z.string().optional(),
     requiredPermissions: z.array(z.string()),
     successRepresentations: z.array(successRepresentationSchema).min(1),
+    tags: z.array(z.string().min(1)).min(1).optional(),
   })
   .strict()
   .superRefine((capability, context) => {
@@ -494,6 +496,7 @@ function normalizeCapability(
     operationPollLimit,
     requestMediaType,
     successRepresentations,
+    tags,
     ...requiredFields
   } = capability;
 
@@ -519,5 +522,6 @@ function normalizeCapability(
           requestMediaType:
             normalizeJsonMediaType(requestMediaType) ?? requestMediaType,
         }),
+    ...(tags === undefined ? {} : { tags }),
   };
 }

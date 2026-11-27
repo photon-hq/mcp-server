@@ -5,7 +5,12 @@ import type {
 import { type InvocationDependencies, InvocationError } from "../invoke.js";
 import type { ExecutionPrincipal } from "../principal.js";
 import type { ActivatedRuntimeRelease } from "../runtime-release.js";
-import type { Telemetry } from "../telemetry.js";
+import type {
+  RuntimeToolEvent,
+  Telemetry,
+  ToolObserver,
+  ToolResult,
+} from "../telemetry.js";
 import {
   errorResult,
   type Result,
@@ -20,6 +25,7 @@ import {
 
 export interface RuntimeDependencies extends InvocationDependencies {
   readonly event?: Telemetry["event"];
+  readonly observe?: ToolObserver;
   readonly randomBytes: (length: number) => Uint8Array;
   readonly record: (
     event: Readonly<{ durationMs?: number; name: string; result: string }>
@@ -161,7 +167,7 @@ async function executeCapabilityInner(
 function toolOutcomeName(
   outcome: Result,
   disposition?: LifecycleDisposition
-): string {
+): ToolResult {
   if (disposition !== undefined) {
     return disposition;
   }
@@ -173,6 +179,29 @@ function toolOutcomeName(
     return "cancelled";
   }
   return outcome.isError === true ? "error" : "complete";
+}
+
+export function toolErrorCode(outcome: Result): string | undefined {
+  if (outcome.isError !== true) {
+    return;
+  }
+  const { code } = object(outcome.structuredContent);
+  return typeof code === "string" ? code : undefined;
+}
+
+function notify(
+  observe: ToolObserver | undefined,
+  event: RuntimeToolEvent
+): void {
+  try {
+    // An async function is assignable to ToolObserver; swallow its rejection.
+    const pending: unknown = observe?.(event);
+    if (pending instanceof Promise) {
+      pending.catch(() => undefined);
+    }
+  } catch {
+    // Observer failures must never change tool execution or responses.
+  }
 }
 
 // MCP clients validate any structuredContent against the tool's outputSchema,
@@ -206,10 +235,17 @@ export async function executeCapability(
     request.signal.throwIfAborted();
   } catch (error) {
     if (request.signal.aborted) {
+      const durationMs = Math.max(0, dependencies.now() - startedAt);
       dependencies.record({
-        durationMs: Math.max(0, dependencies.now() - startedAt),
+        durationMs,
         name: request.execution.capability.operationId,
         result: "cancelled",
+      });
+      notify(dependencies.observe, {
+        capability: request.execution.capability,
+        durationMs,
+        input: request.input,
+        kind: "aborted",
       });
       dependencies.log?.("photon.mcp.tool.event", {
         "mcp.result": "cancelled",
@@ -220,16 +256,21 @@ export async function executeCapability(
   }
   const { outcome } = execution;
   const outcomeName = toolOutcomeName(outcome, execution.disposition);
+  const durationMs = Math.max(0, dependencies.now() - startedAt);
   dependencies.record({
-    durationMs: Math.max(0, dependencies.now() - startedAt),
+    durationMs,
     name: request.execution.capability.operationId,
     result: outcomeName,
   });
-  const structured = object(outcome.structuredContent);
-  const errorType =
-    outcome.isError === true && typeof structured.code === "string"
-      ? structured.code
-      : undefined;
+  const errorType = toolErrorCode(outcome);
+  notify(dependencies.observe, {
+    capability: request.execution.capability,
+    durationMs,
+    input: request.input,
+    kind: "completed",
+    outcome,
+    result: outcomeName,
+  });
   dependencies.log?.("photon.mcp.tool.event", {
     ...(errorType === undefined ? {} : { "error.type": errorType }),
     "mcp.result": outcomeName,

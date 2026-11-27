@@ -231,6 +231,8 @@ describe("parseRelease", () => {
         successRepresentations: [{ status: 204 }, { status: 204 }],
       },
     ],
+    ["empty tags", { ...capability, tags: [] }],
+    ["an empty tag", { ...capability, tags: [""] }],
     [
       "wrong representation order",
       {
