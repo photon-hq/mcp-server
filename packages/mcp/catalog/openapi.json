@@ -6760,6 +6760,7 @@
         "additionalProperties": false,
         "properties": {
           "uploadId": {
+            "description": "The pho_upl_ id that createAccountProfilePictureUpload returned. Commit it only after the file upload to uploadUrl succeeds.",
             "pattern": "^pho_upl_[0-9a-z]{26}$",
             "type": "string"
           }
@@ -8138,12 +8139,14 @@
         "additionalProperties": false,
         "properties": {
           "expiresAt": {
+            "description": "When the key stops working, as a UTC timestamp ending in Z, such as 2030-01-01T00:00:00Z. It must be in the future and at most 3,650 days away. Omit it for a key that never expires.",
             "example": "2030-01-01T00:00:00Z",
             "format": "date-time",
             "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
             "type": "string"
           },
           "name": {
+            "description": "Label shown when you list your keys, from 1 to 128 characters after surrounding whitespace is trimmed.",
             "maxLength": 128,
             "minLength": 1,
             "type": "string"
@@ -11756,6 +11759,7 @@
         "additionalProperties": false,
         "properties": {
           "apiVersion": {
+            "example": "2026-07-01",
             "format": "date",
             "type": "string"
           },
@@ -13616,13 +13620,15 @@
           "successor": {
             "anyOf": [
               {
+                "example": "2026-07-01",
                 "format": "date",
                 "type": "string"
               },
               {
                 "type": "null"
               }
-            ]
+            ],
+            "example": null
           },
           "version": {
             "format": "date",
@@ -13673,13 +13679,15 @@
           "successor": {
             "anyOf": [
               {
+                "example": "2026-07-01",
                 "format": "date",
                 "type": "string"
               },
               {
                 "type": "null"
               }
-            ]
+            ],
+            "example": null
           }
         },
         "required": [
@@ -39570,7 +39578,8 @@
         "additionalProperties": false,
         "properties": {
           "contentType": {
-            "$ref": "#/components/schemas/ProfilePictureContentType"
+            "$ref": "#/components/schemas/ProfilePictureContentType",
+            "description": "Media type of the image you will upload: image/jpeg, image/png or image/webp. The returned form fields fix this type for the upload, and the commit rejects a file whose bytes are another type."
           }
         },
         "required": [
@@ -45739,15 +45748,18 @@
           "successor": {
             "anyOf": [
               {
+                "example": "2026-07-01",
                 "format": "date",
                 "type": "string"
               },
               {
                 "type": "null"
               }
-            ]
+            ],
+            "example": null
           },
           "version": {
+            "example": "2026-07-01",
             "format": "date",
             "type": "string"
           }
@@ -45774,6 +45786,7 @@
         "additionalProperties": false,
         "properties": {
           "apiVersion": {
+            "example": "2026-07-01",
             "format": "date",
             "type": "string"
           },
@@ -45811,13 +45824,15 @@
           "successor": {
             "anyOf": [
               {
+                "example": "2026-07-01",
                 "format": "date",
                 "type": "string"
               },
               {
                 "type": "null"
               }
-            ]
+            ],
+            "example": null
           }
         },
         "required": [
@@ -54668,6 +54683,7 @@
         "additionalProperties": false,
         "properties": {
           "firstName": {
+            "description": "First name to set, from 1 to 256 characters after surrounding whitespace is trimmed. Omit it to keep the current first name; it can't be cleared.",
             "maxLength": 256,
             "minLength": 1,
             "type": "string"
@@ -54682,7 +54698,8 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "description": "Last name to set, from 1 to 256 characters after surrounding whitespace is trimmed. Send null to clear it, or omit it to keep the current last name."
           }
         },
         "type": "object"
@@ -61892,6 +61909,7 @@
         "additionalProperties": false,
         "properties": {
           "apiVersion": {
+            "example": "2026-07-01",
             "format": "date",
             "type": "string"
           },
@@ -67159,6 +67177,56 @@
             "headers": {
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
               },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
@@ -73489,6 +73557,56 @@
               "Deprecation": {
                 "$ref": "#/components/headers/Deprecation"
               },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replayed": {
+                "$ref": "#/components/headers/Idempotent-Replayed"
+              },
+              "Link": {
+                "$ref": "#/components/headers/Link"
+              },
+              "Photon-Version": {
+                "description": "The selected API contract date, also returned on errors after selection.",
+                "schema": {
+                  "$ref": "#/components/schemas/PhotonVersion"
+                }
+              },
+              "RateLimit": {
+                "$ref": "#/components/headers/RateLimit"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/RateLimit-Policy"
+              },
+              "Retry-After": {
+                "$ref": "#/components/headers/Retry-After"
+              },
+              "Sunset": {
+                "$ref": "#/components/headers/Sunset"
+              },
+              "X-Request-ID": {
+                "$ref": "#/components/headers/X-Request-ID"
+              },
+              "X-Trace-ID": {
+                "$ref": "#/components/headers/X-Trace-ID"
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. Sent only when If-None-Match matches the ETag of an earlier 200 response for the same representation; no body.",
+            "headers": {
+              "Deprecation": {
+                "$ref": "#/components/headers/Deprecation"
+              },
+              "ETag": {
+                "description": "Hash of this representation, set by the framework when the response is not `no-store`, has no `Content-Encoding`, has an eligible content type and fits the size limit. Send it in If-None-Match to get 304 when the representation is unchanged.",
+                "schema": {
+                  "type": "string"
+                }
+              },
               "Idempotent-Replayed": {
                 "$ref": "#/components/headers/Idempotent-Replayed"
               },
@@ -74682,6 +74800,7 @@
             }
           },
           {
+            "description": "ID of the service key to revoke, a pho_ask_ id from listAccountServiceKeys or createAccountServiceKey.",
             "in": "path",
             "name": "serviceKeyId",
             "required": true,
@@ -161788,10 +161907,19 @@
             }
           },
           {
+            "description": "Only resources with this ability enabled now. Abilities are not platform types: phone calls are pstn_voice, and WhatsApp is whatsapp_business or whatsapp_personal.",
             "in": "query",
             "name": "ability",
             "schema": {
-              "minLength": 1,
+              "enum": [
+                "email",
+                "imessage",
+                "pstn_voice",
+                "sms",
+                "telegram",
+                "whatsapp_business",
+                "whatsapp_personal"
+              ],
               "type": "string"
             }
           },
@@ -161825,7 +161953,13 @@
             "in": "query",
             "name": "type",
             "schema": {
-              "minLength": 1,
+              "enum": [
+                "cosmos_line",
+                "email_domain",
+                "telegram_bot",
+                "voip_line",
+                "whatsapp_sender"
+              ],
               "type": "string"
             }
           }
@@ -217993,6 +218127,7 @@
             "name": "apiVersion",
             "required": true,
             "schema": {
+              "example": "2026-07-01",
               "format": "date",
               "type": "string"
             }
@@ -218572,6 +218707,7 @@
             "name": "apiVersion",
             "required": true,
             "schema": {
+              "example": "2026-07-01",
               "format": "date",
               "type": "string"
             }
