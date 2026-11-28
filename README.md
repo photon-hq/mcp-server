@@ -13,7 +13,9 @@ Connect in one of two ways:
 - **Local server**, this package (`@photon-ai/mcp`), for clients that only run
   stdio servers, or where you can't complete an OAuth sign-in, such as in CI.
 
-Both offer the same tools. Setup for each client is in the
+Both offer the same tools, with one difference: the hosted server works in the
+organization you choose when you sign in, and the local server can list and use
+every organization you belong to. Setup for each client is in the
 [Photon MCP docs](https://photon.codes/docs/beta/ai-tools/mcp).
 
 ## What your agent can do
@@ -29,7 +31,7 @@ clients:
 | Usage | Count messages, query message metrics, read the project's logs and traces |
 | Webhooks | List event types and their schemas; view, update and delete webhook destinations |
 | Billing | Read the billing overview, credit, invoices and plans; preview a plan change |
-| Account | Read and update your profile; list your organizations and their members |
+| Account | Read and update your profile; read your organization and list its members |
 
 API keys, account security, SSO, organization members, payment methods and plan
 changes are managed in the Photon dashboard.
