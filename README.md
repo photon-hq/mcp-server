@@ -42,7 +42,7 @@ changes are managed in the Photon dashboard.
 
 ## Requirements
 
-- A Photon account.
+- A Photon account. New projects start on the Free plan.
 - Hosted server: an MCP client with OAuth support. Each connection works in the
   one organization you choose when you sign in.
 - Local server: Node.js 22 or newer and an Account Service Key (`pho_ask_...`).
@@ -54,10 +54,12 @@ an action, the tool returns an error and nothing changes. For the examples
 above:
 
 - Reading and counting messages needs read access to the project
-  (`project:read`).
+  (`project:read`) and works on every plan.
 - Adding a contact to a shared iMessage line needs permission to manage the
-  project's channels (`platforms:write`) and uses one seat of the project's
-  shared-line plan.
+  project's channels (`platforms:write`) and uses one of the project's
+  shared-line seats: 25 on the Free plan, 100 on Pro. When every seat is
+  assigned, the call returns an error until you release one. Business projects
+  use dedicated iMessage lines instead of shared seats.
 
 Your client decides when to ask before running a tool. Keep approval on for
 tools that send messages, buy numbers or lines, or change and delete resources.
